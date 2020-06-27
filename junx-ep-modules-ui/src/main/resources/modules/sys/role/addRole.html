@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新增角色</title>
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet" media="all"/>
+    <link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all"/>
+</head>
+
+<body>
+<script src="../../plugins/layui/layui.all.js"></script>
+<script src="../../plugins/jquery.min.js"></script>
+<script src="../../js/javascript.util.js"></script>
+
+<form class="layui-form layui-form-pane" style="padding-top: 40px;padding-left: 20%">
+    <input id="roleId" hidden="hidden"/>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">角色名：</label>
+            <div class="layui-input-block">
+                <input type="text" id="roleName" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">角色标签：</label>
+            <div class="layui-input-block">
+                <input type="text" id="roleTag" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">菜单权限：</label>
+            <div class="layui-input-block"  id="menuTree">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" style="padding-top: 20px;text-align: center;padding-right: 20%">
+        <div>
+            <button type="button" class="layui-btn layui-btn-primary" onclick="closePage()">取消</button>
+            <button type="button" class="layui-btn" onclick="addRole()">确定</button>
+        </div>
+    </div>
+</form>
+<script src="addRole.js"></script>
+</body>
+</html>

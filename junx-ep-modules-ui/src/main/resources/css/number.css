@@ -1,0 +1,29 @@
+.box{
+	height: 44px;
+	position: absolute;
+	overflow: hidden;
+	margin-top: -20px;
+	margin-left: -30px;
+}
+.box span{
+	display: inline-block;
+	 background-image: -webkit-gradient(linear,0 0,0 bottom,from(#b16e0b),to(#f90));
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	width: 30px;
+	height: 44px;
+	font-size: 44px;
+	line-height: 44px;
+}
+.box .sign-box span{
+width: 15px;
+}
+.box .digit-container{
+width: 30px;
+text-align: center;
+overflow: hidden;
+font-size: 0;
+}
+.l{
+float: left;
+}

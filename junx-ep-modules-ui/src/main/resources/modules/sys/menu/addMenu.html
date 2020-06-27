@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href="../../css/components.min.css" rel="stylesheet" media="all" />
+    <link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all" />
+    <link rel="stylesheet" href="../../css/font_tnyc012u2rlwstt9.css" media="all" />
+</head>
+
+<body>
+<!-- END EXAMPLE TABLE PORTLET-->
+<script src="../../plugins/layui/layui.all.js"></script>
+<script src="../../plugins/jquery.min.js"></script>
+
+<script src="../../js/javascript.util.js"></script>
+<script src="../../js/jquery.util.js"></script>
+<style>
+    .div-inline{ display:inline}
+</style>
+<div class="layui-container">
+	<div class="layui-row">
+		<div class="layui-col-md9">
+		 	<form id="menuForm" class="layui-form layui-form-pane" lay-filter="menuForm" style="margin-top:20px">
+			    <input type="hidden"  name="id" value="">
+			    <input type="hidden" id="parentId" name="parentId" value="0">
+			    <div class="layui-inline" style="width:100%;">
+			            <div class="layui-form-item"></div>
+			            <div class="layui-form-item">
+			                <div class="layui-inline">
+			                    <label class=" layui-form-label">菜单类型：</label>
+			                    <div class="layui-input-inline">
+			                        <select id="type" type="text" lay-verify="required" name="type" lay-filter="type" autocomplete="off"  class="layui-input">
+			                            <option value="0">菜单</option>
+			                            <option value="1">权限</option>
+			                            <option value="2">目录</option>
+			                        </select>
+			                    </div>
+			                </div>
+			                <div class="layui-inline">
+			                    <label class=" layui-form-label">上级菜单：</label>
+			                    <div class="layui-input-inline">
+			                        <input id="parentName" type="text" placeholder="请输入父菜单编码" name="parentName" value="根目录" autocomplete="off"  class="layui-input" lay-verify="required"
+			                               readonly="readonly">
+			                    </div>
+			                </div>
+			            </div>
+			            <div class="layui-form-item">
+			                <div class="layui-inline">
+			                    <label class=" layui-form-label">菜单名称：</label>
+			                    <div class="layui-input-inline">
+			                        <input id="name" type="text" lay-verify="required" placeholder="请输入菜单名称" name="name"  autocomplete="off"  class="layui-input">
+			                    </div>
+			                </div>
+			                <div class="layui-inline">
+			
+			                </div>
+			            </div>
+			            <div id="marki" class="layui-form-item">
+			                <label class="layui-form-label">权限标识：</label>
+			                <div class="layui-input-block">
+			                    <input id="mark" type="text" placeholder="请输入权限项标记，用于判断页面权限" name="mark"  autocomplete="off"  class="layui-input" style="width:550px">
+			                </div>
+			            </div>
+			            <div id="urli" class="layui-form-item">
+			                <label class="layui-form-label">菜单链接：</label>
+			                <div class="layui-input-block">
+			                    <input id="url" type="text" placeholder="请输入菜单链接" name="url"  autocomplete="off"  class="layui-input" style="width:550px">
+			                </div>
+			            </div>
+			            <div class="layui-form-item">
+			                <div class="layui-inline">
+			                    <label class="layui-form-label">菜单图标：</label>
+			                    <div class="layui-input-inline">
+			                        <input id="icon" type="text"  placeholder="请输入菜单图标" name="icon"  autocomplete="off"  class="layui-input">
+			                    </div>
+			                </div>
+			                <div class="layui-inline">
+			                    <label class="layui-form-label">排序：</label>
+			                    <div class="layui-input-inline">
+			                        <input id="sort" type="text" placeholder="请输入排序" name="sort"  autocomplete="off"  class="layui-input">
+			                    </div>
+			                </div>
+			            </div>
+			    </div>
+			    <div class="layui-form-item" style="text-align: center">
+			        <div>
+			            <button type="button" class="layui-btn layui-btn-primary" onclick="closePage()">取消</button>
+			            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+			        </div>
+			    </div>
+			</form>
+    	</div>
+    	<div class="layui-col-md3">
+   			<div id="Tree" class="layui-input-inline" style="float:left;text-align:left" >父菜单选择：<div id="menuTree"></div></div>
+    	</div>
+	</div>
+</div>
+<script type="text/javascript" src="addMenu.js"></script>
+</body>
+
+</html>

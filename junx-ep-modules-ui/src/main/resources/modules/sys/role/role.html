@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>角色管理</title>
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet" media="all"/>
+    <link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all"/>
+</head>
+
+<body>
+<script src="../../js/javascript.util.js"></script>
+<script src="../../plugins/layui/layui.js"></script>
+<script src="../../plugins/jquery.min.js"></script>
+<script src="../../js/javascript.util.js"></script>
+<script src="role.js"></script>
+
+<form class="layui-form"style="padding-top: 20px">
+    <div class="layui-form-item" style="float: right;">
+        <div class="layui-inline">
+        </div>
+        <div class="layui-inline">
+            <div>
+                <button type="button" class="layui-btn layui-btn-normal" onclick="addRolePage()"><i class="fa fa-plus-square"></i> 新增</button>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <input id="queryStr" placeholder="角色名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <div class="layui-input-inline">
+                <button type="button" class="layui-btn" onclick="queryTableData()"><i class="fa fa-search"></i> 查询</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table id="roleTable" class="layui-table">
+</table>
+
+
+<script type="text/html" id="operateTp">
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addRolePage({{d.id}},'{{d.roleName}}','{{d.roleTag}}')">
+        <i class="layui-icon">&#xe642;</i>修改
+    </button>
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRole({{d.id}})">
+        <i class="layui-icon">&#xe640;</i>删除
+    </button>
+</script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href="../../css/components.min.css" rel="stylesheet" media="all" />
+    <link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all" />
+    <link rel="stylesheet" href="../../css/font_tnyc012u2rlwstt9.css" media="all" />
+</head>
+<body>
+<script src="../../plugins/jquery.min.js"></script>
+<script src="../../plugins/layui/layui.js"></script>
+<script src="../../js/javascript.util.js"></script>
+<script type="text/javascript" src="schedule.js"></script>
+
+
+<div class="layui-tab" lay-filter="demo">
+  <ul class="layui-tab-title">
+    <li class="layui-this">任务管理</li>
+    <li>任务日志</li>
+  </ul>
+  <div class="layui-tab-content">
+    <div class="layui-tab-item layui-show">
+		    <div class="portlet light" id="form_wizard_1">
+		    <div class="portlet-title">
+		        <div class="caption">
+		            <i class="fa fa-paste"></i>
+		            <span class="caption-subject font-green sbold uppercase">定时任务管理</span>
+		        </div>
+		    </div>
+		    <div class="portlet-title">
+		        <div class="div-inline" style="clear:both">
+		            <div class="layui-form-item">
+		                <div class="layui-inline">
+		                    <label class="layui-form-label" style="width:100px">任务名称：</label>
+		                    <div class="layui-input-inline" >
+		                        <input id="remark" type="text" lay-verify="required" name="remark"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <div class="layui-inline">
+		                    <label class=" layui-form-label" style="width:100px">Bean名称：</label>
+		                    <div class="layui-input-inline">
+		                        <input id="bean_name" type="text" lay-verify="required" name="bean_name"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <button class="layui-btn" onclick="search()"><i class="fa fa-search"></i> 查询</button>
+		                <button class="layui-btn layui-btn-normal" onclick="add()"><i class="fa fa-plus-circle"></i> 增加</button>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="portlet-body">
+		        <div class="dataTables_wrapper" style="margin-top: 0px!important" >
+		            <table class="layui-hide" id="jobsTable" lay-filter="jobsTable"></table>
+		        </div>
+		    </div>
+		</div>
+		<!--操作部分-->
+		<script type="text/html" id="operBar">
+    		<button class="layui-btn layui-btn-xs" onclick="editJob('{{ d.jobId }}')"><i class="fa fa-file-text-o"></i>修改</button>
+			 {{#  if(d.status === 1){ }}
+    			<button class="layui-btn layui-btn-xs" onclick="resume('{{ d.jobId }}')"><i class="fa fa-check"></i>恢复</button>
+			{{#  } else { }}
+				<button class="layui-btn layui-btn-xs" onclick="pause('{{ d.jobId }}')"><i class="fa fa-coffee"></i>暂停</button>
+			{{#  } }}
+    		<button class="layui-btn layui-btn-xs" onclick="exec('{{ d.jobId }}')"><i class="fa fa-cog"></i>立即执行</button>
+    		<button class="layui-btn layui-btn-xs layui-btn-danger" onclick="del('{{ d.jobId }}')"><i class="fa fa-remove"></i>删除</button>
+		</script>
+    </div>
+    <div class="layui-tab-item">
+    	<div class="portlet light" id="form_wizard_1">
+		    <div class="portlet-title">
+		        <div class="caption">
+		            <i class="fa fa-paste"></i>
+		            <span class="caption-subject font-green sbold uppercase">任务日志</span>
+		            <button class="layui-btn layui-btn-xs" onclick="refreshLogs()"><i class="fa fa-retweet"></i>刷新</button>
+		        </div>
+		    </div>
+		    <div class="portlet-body">
+		        <div class="dataTables_wrapper" style="margin-top: 0px!important" >
+		            <table class="layui-hide" id="jobLogTable" lay-filter="jobLogTable"></table>
+		        </div>
+		    </div>
+		</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

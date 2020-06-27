@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link href="../../plugins/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href="../../css/components.min.css" rel="stylesheet" media="all" />
+    <link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all" />
+    <link rel="stylesheet" href="../../css/font_tnyc012u2rlwstt9.css" media="all" />
+</head>
+
+<body>
+<div class="portlet light" id="form_wizard_1">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-beer"></i>
+            <span class="caption-subject font-green sbold uppercase">组织管理</span>
+        </div>
+    </div>
+    <div class="portlet-title">
+        <div class="div-inline" style="clear:both">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:100px">组织名称：</label>
+                    <div class="layui-input-inline" >
+                        <input id="orgName" type="text" lay-verify="required" name="orgName"  autocomplete="off"  class="layui-input">
+                    </div>
+                </div>
+                <button class="layui-btn" id="search"><i class="fa fa-search"></i> 定位</button>
+                <button class="layui-btn" id="closeAll" onclick="closeAll();"><i class="fa fa-folder"></i> 全部折叠</button>
+                <button class="layui-btn" id="openAll" onclick="openAll();"><i class="fa fa-columns"></i> 全部展开</button>
+                <button class="layui-btn layui-btn-normal" onclick="edit();"><i class="fa fa-plus-circle"></i> 新增</button>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="dataTables_wrapper" style="margin-top: 0px!important" >
+            <table class="layui-table layui-form" id="tree-table"></table>
+        </div>
+    </div>
+</div>
+<!-- END EXAMPLE TABLE PORTLET-->
+<script src="../../plugins/layui/layui.all.js"></script>
+<script src="../../plugins/jquery.min.js"></script>
+
+<script src="../../js/javascript.util.js"></script>
+<script src="../../js/jquery.util.js"></script>
+<style>
+    .div-inline{ display:inline}
+</style>
+<script type="text/javascript" src="org.js"></script>
+</body>
+
+</html>
