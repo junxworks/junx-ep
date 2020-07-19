@@ -36,10 +36,11 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.github.junxworks.ep.core.Result;
+import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.sys.annotations.OpLog;
 import io.github.junxworks.ep.sys.dto.MenuPageable;
 import io.github.junxworks.ep.sys.dto.RoleInfoDto;
-import io.github.junxworks.ep.sys.dto.RolePageable;
+import io.github.junxworks.ep.sys.dto.RoleConditionDto;
 import io.github.junxworks.ep.sys.service.MenuService;
 import io.github.junxworks.ep.sys.service.RoleService;
 import io.github.junxworks.ep.sys.vo.MenuInfoVo;
@@ -73,11 +74,9 @@ public class RoleController {
 	 * @return role list 属性
 	 */
 	@GetMapping(value = "/roles")
-	public Result getRoleList(RolePageable pageable) {
-		Result result = Result.ok();
-		PageInfo<RoleInfoVo> rolePage = roleService.findRoleListByPage(pageable);
-		result.setData(rolePage);
-		return result;
+	public Result getRoleList(RoleConditionDto condition) {
+		PageUtils.setPage(condition);
+		return Result.ok(new PageInfo<RoleInfoVo>(roleService.findRoleListByCondition(condition)));
 	}
 
 	/**

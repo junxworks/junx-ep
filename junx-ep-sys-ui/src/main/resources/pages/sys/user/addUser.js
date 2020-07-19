@@ -1,76 +1,45 @@
-var isEdit=false;
 layui.config({
     base: '../../../plugins/layui-extend/' //这是你存放拓展模块的根目录
 });
-layui.use(['form','xmSelect'], function () {
+layui.use(['form','xmSelect','transfer'], function () {
     var form = layui.form;
     var xmSelect = layui.xmSelect;
+    var transfer=layui.transfer;
     var userId = getParam("userId");
-    if(userId != null && typeof(userId) != "undefined" && userId != "undefined"){
-    	isEdit=true;
+    if(!isNull(userId)){
     	io.get('/ep/sys/users/' + userId,function(result){
     		$("#password").remove();
             var data = result.data;
             var form = layui.form;
             //表单初始赋值
-            form.val('userForm', {
-                "id": data.id
-                ,"userName": data.userName
-                ,"name": data.name
-                ,"mobile": data.mobile
-                ,"idCard": data.idCard
-                ,"email": data.email
-                ,"status": data.status
-            });
+            form.val('userForm', data);
             initOrgTree(data.orgNo);
+            $("#userName").attr("disabled","disabled");
     	});
     }else{
         userId = 0;
         initOrgTree();
     }
     //初始化角色信息
-    io.get('/ep/sys/users/'+userId+'/roles',function(result){
-        var roleList = result.data;
-        var roleCheck = '';
-        $.each(roleList,function(i,role) {
-            var checked = role.checked ? 'checked' : '';
-            roleCheck = roleCheck + '<input type="checkbox" name="role" title="'+role.roleName+'" value="'+role.id+'" '+checked+'>';
-        });
-        $('#roleDiv').append(roleCheck);
-        var form = layui.form;
-        form.render();
-    });
-    //监听提交
-    form.on('submit(save)', function (data) {
-        var reqData = $('#userForm').serializeObject();
-        $.ajax({
-            url: appendCtx('/ep/sys/users'),
-            type: "post",
-            data: JSON.stringify(reqData),
-            contentType: 'application/json; charset=utf-8',
-            beforeSend: function () {
-                layer.msg('保存中', {icon: 16,shade: 0.01});
-            },
-            success: function (result) {
-                if(result.code == 0){
-                    //提示信息
-                    layer.msg('保存成功',{
-                        zIndex:layer.zIndex
-                    });
-                    //关闭当前页
-                    setTimeout(function(){return closePage();},1000);
-                    //刷新列表
-                    window.parent.refreshTableData();
-                }else{
-                	layer.alert(result.msg, {icon: 2});
-                }
-
-            },
-            error: function (data) {
-            	layer.alert(data.responseText, {icon: 2});
-            }
-        });
-        return false;
+    io.get('/ep/sys/users/'+userId+'/roles',function(res){
+    	transfer.render({
+    		  id:"roles"
+    		  ,elem: '#roleDiv'
+    		  ,title: ['备选角色', '已有角色']
+    		  ,data: res.data
+    		  ,height:300
+    		  ,width:250
+    		  ,showSearch: true
+    		  ,parseData: function(res){
+    		    return {
+    		      "value": res.id //数据值
+    		      ,"title": res.roleName //数据标题
+    		      ,"disabled": false  //是否禁用
+    		      ,"checked": false //是否选中
+    		    }
+    		  }
+    		 ,value:res.attr.checked
+    		});
     });
     
     function initOrgTree(selectId){
@@ -99,32 +68,33 @@ layui.use(['form','xmSelect'], function () {
         		},
         		height: 'auto',
         		data(){
-        			initSelect(res.data,selectId);
+        			initXMTreeSelect(res.data,selectId);
         			return res.data;
         		}
         	});
     	});
     }
     
-    function initSelect(treeData,selectId){
-    	if(isNull(selectId)){
-    		return;
-    	}
-    	for(var i in treeData){
-			var item = treeData[i];
-			if(item.value==selectId){
-				item.selected=true;
-				return;
-			}
-			if(item.children!=null){
-				initSelect(item.children,selectId);
-			}
-		}
-    }
+    //监听提交
+    form.on('submit(save)', function (form) {
+        var data = form.field;
+        if(isNull(data.orgNo)){
+        	layer.msg("请选择组织", {icon: 2});
+        	return false;
+        }
+        data.roles = transfer.getData('roles');
+        io.post('/ep/sys/users',JSON.stringify(data),function(res){
+        	 //关闭当前页
+            setTimeout(function(){return closePage();},1000);
+            //刷新列表
+            window.parent.refreshTableData();
+        });
+        return false;
+    });
     
 });
 
-$.fn.serializeObject = function() {
+/*$.fn.serializeObject = function() {
     var o = {};
     var a = this.serializeArray();
     $.each(a, function() {
@@ -139,7 +109,7 @@ $.fn.serializeObject = function() {
         }
     });
     return o;
-}
+}*/
 
 function closePage(){
     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引

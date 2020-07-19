@@ -26,16 +26,17 @@ import io.github.junxworks.ep.core.Pageable;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-public class RolePageable extends Pageable {
+public class RoleConditionDto extends Pageable {
 
-    /** query. */
-    private String query;
+	/** query. */
+	private String roleName;
 
-    public String getQuery() {
-        return query;
-    }
+	public String getRoleName() {
+		return roleName;
+	}
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
 }

@@ -23,10 +23,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.github.pagehelper.Page;
 import io.github.junxworks.ep.core.orm.BaseMapper;
-import io.github.junxworks.ep.sys.dto.DictionaryPageable;
-import io.github.junxworks.ep.sys.vo.DictionaryInfoVo;
+import io.github.junxworks.ep.sys.dto.DictConditionDto;
+import io.github.junxworks.ep.sys.vo.DictVo;
 
 /**
  * {类的详细说明}.
@@ -46,7 +45,7 @@ public interface DictMapper extends BaseMapper{
 	 * @return the dictionary info vo
 	 */
 	@Select("select * from s_dict where id=#{id}")
-	public DictionaryInfoVo selectById(Long id);
+	public DictVo selectById(Long id);
 
 	/**
 	 * Delete by id.
@@ -64,22 +63,19 @@ public interface DictMapper extends BaseMapper{
 	 * @return the page
 	 */
 	@Select("<script>" +
-			"select * from s_dict where 1=1" +
-			"<if test='status!=null '> " +
-			"and status = #{status} " +
-			"</if>" +
-			"<if test='parentCode!=null and parentCode.length>0 '> " +
-			"and parentCode like CONCAT('%',#{parentCode},'%') " +
-			"</if>" +
-			"<if test='dataValue!=null and dataValue.length>0 '> " +
-			"and dataValue like CONCAT('%',#{dataValue},'%')  " +
-			"</if>" +
-			"<if test='dataCode!=null and dataCode.length>0 '> " +
-			"and dataCode =#{dataCode}   " +
-			"</if>" +
-			" order by parentCode desc,sort asc"+
+				"select * from s_dict where status=0 " +
+					"<if test='parentCode!=null and parentCode.length>0 '> " +
+					" and parentCode like CONCAT('%',#{parentCode},'%') " +
+					"</if>" +
+					"<if test='dataLabel!=null and dataLabel.length>0 '> " +
+					" and dataLabel like CONCAT('%',#{dataLabel},'%')  " +
+					"</if>" +
+					"<if test='dataCode!=null and dataCode.length>0 '> " +
+					" and dataCode =#{dataCode}   " +
+					"</if>" +
+				" order by parentCode desc,sort asc"+
 			"</script>")
-	public Page<DictionaryInfoVo> selectAll(DictionaryPageable entity);
+	public List<DictVo> selectByCondition(DictConditionDto entity);
 
 	/**
 	 * Select by code.
@@ -87,36 +83,8 @@ public interface DictMapper extends BaseMapper{
 	 * @param entity the entity
 	 * @return the dictionary info vo
 	 */
-	@Select("<script>" +
-			"select * from s_dict where 1=1" +
-			"<if test='status!=null '> " +
-			"and status = #{status} " +
-			"</if>" +
-			"<if test='parentCode!=null and parentCode.length>0 '> " +
-			"and parentCode=#{parentCode} " +
-			"</if>" +
-			"<if test='dataValue!=null and dataValue.length>0 '> " +
-			"and dataValue=#{dataValue}  " +
-			"</if>" +
-			"<if test='dataCode!=null and dataCode.length>0 '> " +
-			"and dataCode =#{dataCode}   " +
-			"</if>" +
-			" order by parentCode desc,sort asc"+
-			"</script>")
-	public DictionaryInfoVo selectByCode(DictionaryPageable entity);
-
-	/**
-	 * Select parent code.
-	 *
-	 * @param entity the entity
-	 * @return the list
-	 */
-	@Select("<script> SELECT * FROM s_dict where 1=1" +
-			"<if test='parentCode!=null and parentCode.length>0 '> " +
-			"and parentCode=#{parentCode} " +
-			"</if>"+
-			" GROUP BY parentCode"+ "</script>")
-	public List<DictionaryInfoVo> selectParentCode(DictionaryPageable entity);
+	@Select(" select * from s_dict where status=0 and dataCode =#{dataCode} and parentCode=#{parentCode}")
+	public DictVo selectByCode(@Param("parentCode")String parentCode,@Param("dataCode")String dataCode);
 
 	/**
 	 * Select by parent code.
@@ -125,6 +93,6 @@ public interface DictMapper extends BaseMapper{
 	 * @return the list
 	 */
 	@Select("select * from s_dict where parentCode=#{parentCode} and status=0")
-	public List<DictionaryInfoVo> selectByParentCode(@Param("parentCode")String parentCode);
+	public List<DictVo> selectByParentCode(@Param("parentCode")String parentCode);
 	
 }

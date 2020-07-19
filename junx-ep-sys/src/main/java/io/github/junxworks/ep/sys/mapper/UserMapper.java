@@ -24,9 +24,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import com.github.pagehelper.Page;
 import io.github.junxworks.ep.core.orm.BaseMapper;
-import io.github.junxworks.ep.sys.dto.UserPageable;
+import io.github.junxworks.ep.sys.dto.UserListConditionDto;
 import io.github.junxworks.ep.sys.entity.SUser;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
 
@@ -133,7 +132,7 @@ public interface UserMapper extends BaseMapper{
 			"</if>"+
 			" order by u.id asc"+
 			"</script>")
-	Page<UserInfoVo> selectAll(UserPageable condition);
+	List<UserInfoVo> selectAll(UserListConditionDto condition);
 
 	/**
 	 * 返回 user list by auth 属性.
@@ -154,7 +153,7 @@ public interface UserMapper extends BaseMapper{
 			" and m.mark=#{auth} " +
 			"</if>" +
 			"</script>")
-	Page<UserInfoVo> getUserListByAuth(@Param("auth") String auth);
+	List<UserInfoVo> getUserListByAuth(@Param("auth") String auth);
 	 
 	/**
 	 * 返回 user list by role id 属性.

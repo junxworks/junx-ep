@@ -1,11 +1,11 @@
 create table  `s_dict`
 (
        `id`              bigint(20) auto_increment primary key not null comment '编号',
-       `parentCode`      VARCHAR(50) comment '父编码',
-       `dataCode`        VARCHAR(50) comment '数据编码',
-       `dataValue`       VARCHAR(200) comment '数据值',
+       `parentCode`      VARCHAR(100) comment '父编码',
+       `dataCode`        VARCHAR(100) comment '数据项编码',
+       `dataLabel`       VARCHAR(200) comment '数据项名称',
        `sort`            INT comment '排序',
-       `memo`            VARCHAR(200) comment '字段描述',
+       `remark`          VARCHAR(200) comment '备注',
        `status`          tinyint comment '状态 -1已删除 0正常',
        `creatorId`       bigint(20) comment '创建人编号',
        `createDate`      DATETIME comment '创建日期',

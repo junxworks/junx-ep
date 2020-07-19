@@ -16,22 +16,25 @@
  */
 package io.github.junxworks.ep.sys.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import io.github.junxworks.ep.sys.dto.DictionaryPageable;
-import io.github.junxworks.ep.sys.entity.SDict;
-import io.github.junxworks.ep.sys.mapper.DictMapper;
-import io.github.junxworks.ep.sys.service.DictionaryService;
-import io.github.junxworks.ep.sys.vo.DictionaryInfoVo;
-import io.github.junxworks.ep.core.utils.PageUtils;
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import io.github.junxworks.ep.auth.model.UserModel;
+import io.github.junxworks.ep.core.exception.BusinessException;
+import io.github.junxworks.ep.sys.constants.RecordStatus;
+import io.github.junxworks.ep.sys.dto.DictConditionDto;
+import io.github.junxworks.ep.sys.dto.SDictDto;
+import io.github.junxworks.ep.sys.entity.SDict;
+import io.github.junxworks.ep.sys.mapper.DictMapper;
+import io.github.junxworks.ep.sys.service.DictionaryService;
+import io.github.junxworks.ep.sys.vo.DictVo;
 
 /**
  * {类的详细说明}.
@@ -54,11 +57,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 * @param pageable the pageable
 	 * @return dictionary list by page 属性
 	 */
-	public PageInfo<DictionaryInfoVo> getDictionaryListByPage(DictionaryPageable pageable) {
-		PageUtils.setPage(pageable);
-		Page<DictionaryInfoVo> dictionaryList = dictMapper.selectAll(pageable);
-		PageInfo<DictionaryInfoVo> voPageInfo = new PageInfo<DictionaryInfoVo>(dictionaryList);
-		return voPageInfo;
+	public List<DictVo> getDictionaryListByCondition(DictConditionDto condition) {
+		return dictMapper.selectByCondition(condition);
 	}
 
 	/**
@@ -67,44 +67,20 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 * @param id the id
 	 * @return dictionary info by id 属性
 	 */
-	public DictionaryInfoVo getDictionaryInfoById(Long id) {
-		DictionaryInfoVo dctionary = dictMapper.selectById(id);
-		return dctionary;
-	}
-
-	/**
-	 * Post dictionary info.
-	 *
-	 * @param DictionaryInfoVo the dictionary info vo
-	 * @return the int
-	 */
-	public int postDictionaryInfo(DictionaryInfoVo DictionaryInfoVo) {
-		SDict dictionary = new SDict();
-		BeanUtils.copyProperties(DictionaryInfoVo, dictionary);
-		return dictMapper.insertWithoutNull(dictionary);
-	}
-
-	/**
-	 * Put dictionary info.
-	 *
-	 * @param DictionaryInfoVo the dictionary info vo
-	 * @return the int
-	 */
-	public int putDictionaryInfo(DictionaryInfoVo DictionaryInfoVo) {
-		SDict dictionary = new SDict();
-		BeanUtils.copyProperties(DictionaryInfoVo, dictionary);
-		return dictMapper.updateWithNull(dictionary);
+	public DictVo getDictionaryInfoById(Long id) {
+		return dictMapper.selectById(id);
 	}
 
 	/**
 	 * Delete dictionary info.
 	 *
-	 * @param DictionaryInfoVo the dictionary info vo
+	 * @param DictVo the dictionary info vo
 	 * @return the int
 	 */
-	public int deleteDictionaryInfo(DictionaryInfoVo DictionaryInfoVo) {
+	public int deleteDictById(Long id) {
 		SDict dictionary = new SDict();
-		BeanUtils.copyProperties(DictionaryInfoVo, dictionary);
+		dictionary.setId(id);
+		dictionary.setStatus(RecordStatus.DELETED.getValue());
 		return dictMapper.updateWithoutNull(dictionary);
 	}
 
@@ -114,8 +90,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 * @param dto the dto
 	 * @return dic by code 属性
 	 */
-	public DictionaryInfoVo getDicByCode(DictionaryPageable dto) {
-		return dictMapper.selectByCode(dto);
+	public DictVo getDicByCode(String parentCode, String dataCode) {
+		return dictMapper.selectByCode(parentCode, dataCode);
 	}
 
 	/**
@@ -124,8 +100,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 * @param dto the dto
 	 * @return parent code 属性
 	 */
-	public List<DictionaryInfoVo> getParentCode(DictionaryPageable dto) {
-		return dictMapper.selectParentCode(dto);
+	public List<DictVo> getDictListByParentCode(String parent) {
+		return dictMapper.selectByParentCode(parent);
 	}
 
 	/**
@@ -136,7 +112,29 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 */
 	@Override
 	public Map<String, String> getDictByParentCode(String parentCode) {
-		List<DictionaryInfoVo> dicts = dictMapper.selectByParentCode(parentCode);
-		return dicts.stream().collect(Collectors.toMap(DictionaryInfoVo::getDataCode, DictionaryInfoVo::getDataValue));
+		List<DictVo> dicts = dictMapper.selectByParentCode(parentCode);
+		return dicts.stream().collect(Collectors.toMap(DictVo::getDataCode, DictVo::getDataLabel));
 	}
+
+	@Override
+	public int saveDict(SDictDto dictDto) {
+		DictVo info = getDicByCode(dictDto.getParentCode(), dictDto.getDataCode());
+		if (info != null && !info.getId().equals(dictDto.getId())) {
+			throw new BusinessException("已存在该编码数据字典");
+		}
+		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
+		SDict entity = new SDict();
+		BeanUtils.copyProperties(dictDto, entity);
+		if (dictDto.getId() == null) {
+			entity.setCreatorId(user.getId());
+			entity.setCreateDate(new Date());
+			entity.setStatus(RecordStatus.NORMAL.getValue());
+			return dictMapper.insertWithoutNull(entity);
+		} else {
+			entity.setModifierId(user.getId());
+			entity.setModifyDate(new Date());
+			return dictMapper.updateWithoutNull(entity);
+		}
+	}
+
 }

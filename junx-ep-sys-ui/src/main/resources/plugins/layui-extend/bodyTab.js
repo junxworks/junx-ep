@@ -604,7 +604,7 @@ layui.define(['element', 'layer', 'jquery'], function (drdrdr) {
 function dictionaryInit() {
     var DICT_PREFIX="$global_dictionary_";
     $.ajax({
-        url: appendCtx("/ep/sys/parentCode/dictionaries")
+        url: appendCtx("/ep/sys/dictionaries/0/children")
         ,type: "get"
         ,sync: false
         ,success: function(res){

@@ -16,11 +16,8 @@
  */
 package io.github.junxworks.ep.sys.controller;
 
-import java.util.Date;
 import java.util.List;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,14 +28,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
-import io.github.junxworks.ep.core.Result;
-import io.github.junxworks.ep.sys.annotations.OpLog;
-import io.github.junxworks.ep.sys.constants.RecordStatus;
-import io.github.junxworks.ep.sys.dto.DictionaryPageable;
-import io.github.junxworks.ep.sys.service.DictionaryService;
-import io.github.junxworks.ep.sys.vo.DictionaryInfoVo;
-import io.github.junxworks.ep.auth.model.UserModel;
 
+import io.github.junxworks.ep.core.Result;
+import io.github.junxworks.ep.core.utils.PageUtils;
+import io.github.junxworks.ep.sys.annotations.OpLog;
+import io.github.junxworks.ep.sys.dto.DictConditionDto;
+import io.github.junxworks.ep.sys.dto.SDictDto;
+import io.github.junxworks.ep.sys.service.DictionaryService;
+import io.github.junxworks.ep.sys.vo.DictVo;
 
 /**
  * {类的详细说明}.
@@ -49,134 +46,78 @@ import io.github.junxworks.ep.auth.model.UserModel;
  * @since:  v1.0
  */
 @RestController
-@RequestMapping("/ep/sys")
+@RequestMapping("/ep/sys/dictionaries")
 public class DictionaryController {
-    
-    /** dictionary service. */
-    @Autowired
-    private DictionaryService dictionaryService;
 
-    /**
-     * 返回 dictionary list 属性.
-     *
-     * @param pageable the pageable
-     * @return dictionary list 属性
-     */
-    @GetMapping(value="/dictionaries")
-    public Result getdictionaryList(DictionaryPageable pageable){
-        Result result = Result.ok();
-        pageable.setStatus(RecordStatus.NORMAL.getValue());
-        PageInfo<DictionaryInfoVo> dictionaryPage = dictionaryService.getDictionaryListByPage(pageable);
-        result.setData(dictionaryPage);
-        return result;
-    }
+	/** dictionary service. */
+	@Autowired
+	private DictionaryService dictionaryService;
 
-    /**
-     * Save dictionary info.
-     *
-     * @param dictionaryInfo the dictionary info
-     * @return the result
-     */
-    @PostMapping(value = "/dictionaries", consumes = "application/json")
-    @OpLog("保存数据字典信息")
-    public Result saveDictionaryInfo(@RequestBody DictionaryInfoVo dictionaryInfo){
-        Result result = Result.ok();
-        try {
-            DictionaryPageable dto = new DictionaryPageable();
-            dto.setParentCode(dictionaryInfo.getParentCode());
-            dto.setDataCode(dictionaryInfo.getDataCode());
-            dto.setStatus(RecordStatus.NORMAL.getValue());
-            DictionaryInfoVo info = dictionaryService.getDicByCode(dto);
-            if(info!=null&&!info.getId().equals(dictionaryInfo.getId())){
-                return Result.warn("已存在该编码数据字典");
-            }
-            Subject sub = SecurityUtils.getSubject();
-            UserModel user =(UserModel)sub.getPrincipal();
-            dictionaryInfo.setCreatorId(user.getId());
-            dictionaryInfo.setCreateDate(new Date());
-            if(dictionaryInfo.getId()==null) {
-                dictionaryInfo.setStatus(RecordStatus.NORMAL.getValue());
-                dictionaryService.postDictionaryInfo(dictionaryInfo);
-            }else {
-                DictionaryInfoVo newdata = dictionaryService.getDictionaryInfoById(dictionaryInfo.getId());
-                newdata.setParentCode(dictionaryInfo.getParentCode());
-                newdata.setDataCode(dictionaryInfo.getDataCode());
-                newdata.setDataValue(dictionaryInfo.getDataValue());
-                newdata.setMemo(dictionaryInfo.getMemo());
-                newdata.setSort(dictionaryInfo.getSort());
-                newdata.setModifierId(user.getId());
-                newdata.setModifyDate(new Date());
-                dictionaryService.putDictionaryInfo(newdata);
-            }
-        }catch(Exception e)
-        {
-            return Result.error(e.getMessage());
-        }
-        return result;
-    }
-    
-    /**
-     * 返回 dictionary info by id 属性.
-     *
-     * @param id the id
-     * @return dictionary info by id 属性
-     */
-    @GetMapping("/dictionaries/{id}")
-    public Result getDictionaryInfoById(@PathVariable Long id)
-    {
-        Result result = new Result();
-        DictionaryInfoVo condition = new DictionaryInfoVo();
-        try {
-            condition=dictionaryService.getDictionaryInfoById(id);
-            result.setData(condition);
-        } catch (Exception e) {
-            //log.error("查询还款方式配置异常", e);
-            result.setMsg("查询异常");
-            result.setCode(Result.Status.ERROR.getCode());
-        }
-        return result;
-    }
-    
-    /**
-     * Put dictionary info.
-     *
-     * @param id the id
-     * @return the result
-     */
-    @DeleteMapping("/dictionaries/{id}")
-    @OpLog("删除数据字典信息")
-    public Result putDictionaryInfo(@PathVariable("id") Long id) {
-        try {
-            DictionaryInfoVo dictionaryInfo = new DictionaryInfoVo();
-            dictionaryInfo.setId(id);
-            dictionaryInfo.setStatus(RecordStatus.DELETED.getValue());
-            dictionaryService.deleteDictionaryInfo(dictionaryInfo);
-        }catch(Exception e)
-        {
-            return Result.error(e.getMessage());
-        }
-        return Result.ok();
-    }
+	/**
+	 * 返回 dictionary list 属性.
+	 *
+	 * @param pageable the pageable
+	 * @return dictionary list 属性
+	 */
+	@GetMapping()
+	public Result getdictionaryList(DictConditionDto condition) {
+		PageUtils.setPage(condition);
+		return Result.ok(new PageInfo<DictVo>(dictionaryService.getDictionaryListByCondition(condition)));
+	}
 
-    /**
-     * 返回 dictionary group parent code 属性.
-     *
-     * @param pageable the pageable
-     * @return dictionary group parent code 属性
-     */
-    @GetMapping(value="/parentCode/dictionaries")
-    public Result getDictionaryGroupParentCode(DictionaryPageable pageable){
-        Result result = Result.ok();
-        pageable.setPageNo(0);
-        pageable.setPageSize(Integer.MAX_VALUE);
-        pageable.setStatus(RecordStatus.NORMAL.getValue());
-        List<DictionaryInfoVo> dictionary = dictionaryService.getParentCode(pageable);
-        for (DictionaryInfoVo dicVo : dictionary){
-            pageable.setParentCode(dicVo.getParentCode());
-            List<DictionaryInfoVo> childList = dictionaryService.getDictionaryListByPage(pageable).getList();
-            dicVo.setList(childList);
-        }
-        result.setData(dictionary);
-        return result;
-    }
+	/**
+	 * Save dictionary info.
+	 *
+	 * @param dictionaryInfo the dictionary info
+	 * @return the result
+	 */
+	@PostMapping()
+	@OpLog("保存数据字典信息")
+	public Result saveDictionaryInfo(@RequestBody SDictDto dictDto) {
+		return Result.ok(dictionaryService.saveDict(dictDto));
+	}
+
+	/**
+	 * 返回 dictionary info by id 属性.
+	 *
+	 * @param id the id
+	 * @return dictionary info by id 属性
+	 */
+	@GetMapping("/{id}")
+	public Result getDictionaryInfoById(@PathVariable Long id) {
+		return Result.ok(dictionaryService.getDictionaryInfoById(id));
+	}
+
+	/**
+	 * Put dictionary info.
+	 *
+	 * @param id the id
+	 * @return the result
+	 */
+	@DeleteMapping("/{id}")
+	@OpLog("删除数据字典信息")
+	public Result putDictionaryInfo(@PathVariable("id") Long id) {
+		dictionaryService.deleteDictById(id);
+		return Result.ok();
+	}
+
+	/**
+	 * 返回 dictionary group parent code 属性.
+	 *
+	 * @param pageable the pageable
+	 * @return dictionary group parent code 属性
+	 */
+	@GetMapping(value = "/{parentCode}/children")
+	public Result getDictionaryGroupParentCode(@PathVariable("parentCode") String parent) {
+		Result result = Result.ok();
+		List<DictVo> dictionary = dictionaryService.getDictListByParentCode(parent);
+		DictConditionDto condition = new DictConditionDto();
+		for (DictVo dicVo : dictionary) {
+			condition.setParentCode(dicVo.getDataCode());
+			List<DictVo> childList = dictionaryService.getDictionaryListByCondition(condition);
+			dicVo.setList(childList);
+		}
+		result.setData(dictionary);
+		return result;
+	}
 }

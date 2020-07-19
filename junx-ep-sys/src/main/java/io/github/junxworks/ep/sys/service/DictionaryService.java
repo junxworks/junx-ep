@@ -19,10 +19,9 @@ package io.github.junxworks.ep.sys.service;
 import java.util.List;
 import java.util.Map;
 
-import com.github.pagehelper.PageInfo;
-
-import io.github.junxworks.ep.sys.dto.DictionaryPageable;
-import io.github.junxworks.ep.sys.vo.DictionaryInfoVo;
+import io.github.junxworks.ep.sys.dto.DictConditionDto;
+import io.github.junxworks.ep.sys.dto.SDictDto;
+import io.github.junxworks.ep.sys.vo.DictVo;
 
 /**
  * {类的详细说明}.
@@ -34,14 +33,14 @@ import io.github.junxworks.ep.sys.vo.DictionaryInfoVo;
  */
 
 public interface DictionaryService {
-	
+
 	/**
 	 * 返回 dictionary list by page 属性.
 	 *
 	 * @param pageable the pageable
 	 * @return dictionary list by page 属性
 	 */
-	PageInfo<DictionaryInfoVo> getDictionaryListByPage(DictionaryPageable pageable);
+	List<DictVo> getDictionaryListByCondition(DictConditionDto condition);
 
 	/**
 	 * 返回 dictionary info by id 属性.
@@ -49,15 +48,7 @@ public interface DictionaryService {
 	 * @param id the id
 	 * @return dictionary info by id 属性
 	 */
-	DictionaryInfoVo getDictionaryInfoById(Long id);
-
-	/**
-	 * Post dictionary info.
-	 *
-	 * @param dictionaryInfoVo the dictionary info vo
-	 * @return the int
-	 */
-	int postDictionaryInfo(DictionaryInfoVo dictionaryInfoVo);
+	DictVo getDictionaryInfoById(Long id);
 
 	/**
 	 * Put dictionary info.
@@ -65,7 +56,7 @@ public interface DictionaryService {
 	 * @param dictionaryInfoVo the dictionary info vo
 	 * @return the int
 	 */
-	int putDictionaryInfo(DictionaryInfoVo dictionaryInfoVo);
+	int saveDict(SDictDto dictDto);
 
 	/**
 	 * Delete dictionary info.
@@ -73,7 +64,7 @@ public interface DictionaryService {
 	 * @param dictionaryInfoVo the dictionary info vo
 	 * @return the int
 	 */
-	int deleteDictionaryInfo(DictionaryInfoVo dictionaryInfoVo);
+	int deleteDictById(Long id);
 
 	/**
 	 * 返回 dic by code 属性.
@@ -81,7 +72,7 @@ public interface DictionaryService {
 	 * @param dto the dto
 	 * @return dic by code 属性
 	 */
-	DictionaryInfoVo getDicByCode(DictionaryPageable dto);
+	DictVo getDicByCode(String parentCode, String dataCode);
 
 	/**
 	 * 返回 parent code 属性.
@@ -89,7 +80,7 @@ public interface DictionaryService {
 	 * @param dto the dto
 	 * @return parent code 属性
 	 */
-	List<DictionaryInfoVo> getParentCode(DictionaryPageable dto);
+	List<DictVo> getDictListByParentCode(String parentCode);
 
 	/**
 	 * 返回 dict by parent code 属性.

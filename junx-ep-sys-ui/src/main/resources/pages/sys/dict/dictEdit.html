@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link href="../../../css/components.min.css" rel="stylesheet" media="all" />
+    <link rel="stylesheet" href="../../../css/font_tnyc012u2rlwstt9.css" media="all" />
+    <link href="../../../plugins/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href="../../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all" />
+</head>
+
+<body>
+ <form id="dictForm" class="layui-form layui-form-pane" lay-filter="dictForm" style="padding-top: 20px;">
+ 	 <input name="id" hidden="hidden"/>
+     <div class="layui-form-item">
+         <div class="layui-inline">
+             <label class=" layui-form-label" style="width:120px">上级编码：</label>
+             <div class="layui-input-inline" >
+                 <input type="text" lay-verify="required" name="parentCode"  autocomplete="off"  class="layui-input">
+             </div>
+         </div>
+         <div class="layui-inline">
+             <label class=" layui-form-label" style="width:120px">数据项编码：</label>
+             <div class="layui-input-inline">
+                 <input type="text" lay-verify="required" name="dataCode"  autocomplete="off"  class="layui-input">
+             </div>
+         </div>
+     </div>
+     <div class="layui-form-item">
+         <div class="layui-inline">
+             <label class=" layui-form-label" style="width:120px">数据项名称：</label>
+             <div class="layui-input-inline">
+                 <input type="text" lay-verify="required" name="dataLabel"  autocomplete="off"  class="layui-input">
+             </div>
+         </div>
+         <div class="layui-inline">
+             <label class=" layui-form-label" style="width:120px">排序：</label>
+             <div class="layui-input-inline">
+                 <input id="sort" type="text" name="sort"  autocomplete="off"  class="layui-input">
+             </div>
+         </div>
+     </div>
+     <div class="layui-form-item">
+         <label class="layui-form-label" style="width:120px">字段描述：</label>
+         <div class="layui-input-block">
+             <textarea type="text" name="remark"  autocomplete="off"  class="layui-input" style="width:550px; height: 150px"></textarea>
+         </div>
+     </div>
+     <div class="layui-form-item" style="padding-top: 20px;text-align: center">
+	       <div class="layui-inline">
+	       <button type="button" class="layui-btn layui-btn-primary" onclick="closePage()">取消</button>
+	        <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+		</div>
+	</div>
+  </form>
+<!-- END EXAMPLE TABLE PORTLET-->
+<script src="../../../plugins/jquery.min.js"></script>
+<script src="../../../plugins/layui/layui.js"></script>
+<script src="../../../js/base.js"></script>
+<script type="text/javascript" src="dictEdit.js"></script>
+</body>
+</html>

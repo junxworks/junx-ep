@@ -16,23 +16,25 @@
  */
 package io.github.junxworks.ep.sys.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 
+import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.exception.BusinessException;
-import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.sys.constants.EPConstants;
+import io.github.junxworks.ep.sys.dto.TransferDto;
 import io.github.junxworks.ep.sys.dto.UserInfoDto;
-import io.github.junxworks.ep.sys.dto.UserPageable;
+import io.github.junxworks.ep.sys.dto.UserListConditionDto;
 import io.github.junxworks.ep.sys.entity.SUser;
 import io.github.junxworks.ep.sys.entity.SUserRole;
 import io.github.junxworks.ep.sys.mapper.UserMapper;
@@ -67,14 +69,13 @@ public class UserServiceImpl implements UserService {
 	 * @return the page info
 	 */
 	@Override
-	public PageInfo<UserInfoVo> findUserListByPage(UserPageable cond) {
-		PageUtils.setPage(cond);
+	public List<UserInfoVo> findUserListByCondition(UserListConditionDto cond) {
 		if (StringUtils.notNull(cond.getRoles())) {
 			cond.setRoleIds(Lists.newArrayList(cond.getRoles().split(",")).stream().flatMap(l -> {
 				return Stream.of(Long.valueOf(l));
 			}).collect(Collectors.toList()));
 		}
-		return new PageInfo<>(userMapper.selectAll(cond));
+		return userMapper.selectAll(cond);
 	}
 
 	/**
@@ -99,36 +100,36 @@ public class UserServiceImpl implements UserService {
 		//更新用户基本信息
 		SUser user = new SUser();
 		BeanUtils.copyProperties(dto, user);
-		SUser existsUser = null;
-		if (StringUtils.notNull(dto.getUserName())) {
-			existsUser = userMapper.selectByUserName(dto.getUserName());
-		}
+		UserModel operator = (UserModel) SecurityUtils.getSubject().getPrincipal();
+		Long operatorId = operator.getId();
 		if (user.getId() == null) {//新增
+			SUser existsUser = userMapper.selectByUserName(dto.getUserName());
 			if (existsUser != null) {
 				throw new BusinessException("用户名已被用户：" + existsUser.getName() + "注册");
 			}
+			user.setCreatorId(operatorId);
+			user.setCreateDate(new Date());
 			user.setPassword(EPConstants.DEFAULT_PASSWORD);//设置默认密码
 			userMapper.insertWithoutNull(user);
 		} else {//修改
-			if (existsUser != null && !dto.getId().equals(existsUser.getId())) {
-				throw new BusinessException("用户名被用户：" + existsUser.getName() + "注册");
-			}
+			user.setModifierId(operatorId);
+			user.setModifyDate(new Date());
 			userMapper.updateWithoutNull(user);
 		}
+		Long userId = user.getId();
 		//更新用户角色信息
 		//删除历史角色，然后全量更新
-		userRoleMapper.deleteByUserId(user.getId());
-
-		if (StringUtils.isNotBlank(dto.getRole())) {
-			String[] roleArr = dto.getRole().split(",");
-			for (String role : roleArr) {
+		userRoleMapper.deleteByUserId(userId);
+		if (dto.getRoles() != null) {
+			List<SUserRole> roles = Lists.newArrayList();
+			for (TransferDto role : dto.getRoles()) {
 				SUserRole userRole = new SUserRole();
-				userRole.setRoleId(Long.valueOf(role));
-				userRole.setUserId(user.getId());
-				userRoleMapper.insertWithoutNull(userRole);
+				userRole.setRoleId(Long.valueOf(role.getValue()));
+				userRole.setUserId(userId);
+				roles.add(userRole);
 			}
+			userRoleMapper.insertBatch(roles);
 		}
-
 	}
 
 	/**
@@ -161,8 +162,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public List<UserInfoVo> getUserListByAuth(String auth) {
-		List<UserInfoVo> list = userMapper.getUserListByAuth(auth);
-		return list;
+		return userMapper.getUserListByAuth(auth);
 	}
 
 	/**

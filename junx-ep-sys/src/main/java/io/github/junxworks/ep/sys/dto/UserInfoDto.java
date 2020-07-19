@@ -66,7 +66,7 @@ public class UserInfoDto {
 	private Byte status;
 
 	/** role. */
-	private String role;
+	private List<TransferDto> roles;
 
 	/** pass. */
 	private String pass;
@@ -178,12 +178,12 @@ public class UserInfoDto {
 		this.status = status;
 	}
 
-	public String getRole() {
-		return role;
+	public List<TransferDto> getRoles() {
+		return roles;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setRoles(List<TransferDto> roles) {
+		this.roles = roles;
 	}
 
 	public String getPass() {

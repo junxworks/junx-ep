@@ -43,6 +43,10 @@
 		    <groupId>io.github.junxworks</groupId>
 		    <artifactId>junx-ep-sys</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>io.github.junxworks</groupId>
+		    <artifactId>junx-ep-scheduler-ui</artifactId>
+		</dependency>
 		<!-- ***********************************内部jar引入 end************************************** -->
 	</dependencies>
 	<build>

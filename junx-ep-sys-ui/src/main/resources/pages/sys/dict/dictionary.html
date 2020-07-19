@@ -22,28 +22,30 @@
     </div>
     <div class="portlet-title">
         <div class="div-inline" style="clear:both">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label" style="width:100px">上级编码：</label>
-                    <div class="layui-input-inline" >
-                        <input id="parentCode" type="text" lay-verify="required" name="parentCode"  autocomplete="off"  class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class=" layui-form-label" style="width:100px">数据编码：</label>
-                    <div class="layui-input-inline">
-                        <input id="dataCode" type="text" lay-verify="required" name="dataCode"  autocomplete="off"  class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class=" layui-form-label" style="width:100px">数据值：</label>
-                    <div class="layui-input-inline">
-                        <input id="dataValue" type="text" lay-verify="required" name="dataValue"  autocomplete="off"  class="layui-input">
-                    </div>
-                </div>
-                <button class="layui-btn" onclick="search();"><i class="fa fa-search"></i> 查询</button>
-                <button class="layui-btn layui-btn-normal" onclick="update();"><i class="fa fa-plus-circle"></i> 新增</button>
-            </div>
+			<form class="layui-form" style="padding-top: 20px">
+	            <div class="layui-form-item">
+	                <div class="layui-inline">
+	                    <label class="layui-form-label" style="width:100px">上级编码：</label>
+	                    <div class="layui-input-inline" >
+	                        <input type="text" name="parentCode"  autocomplete="off"  class="layui-input">
+	                    </div>
+	                </div>
+	                <div class="layui-inline">
+	                    <label class=" layui-form-label" style="width:100px">数据项编码：</label>
+	                    <div class="layui-input-inline">
+	                        <input type="text" name="dataCode"  autocomplete="off"  class="layui-input">
+	                    </div>
+	                </div>
+	                <div class="layui-inline">
+	                    <label class=" layui-form-label" style="width:100px">数据项名称：</label>
+	                    <div class="layui-input-inline">
+	                        <input type="text" name="dataLabel"  autocomplete="off"  class="layui-input">
+	                    </div>
+	                </div>
+	                <button type="button" class="layui-btn" lay-submit="" lay-filter="search"><i class="fa fa-search"></i> 查询</button>
+	            	<button type="button" class="layui-btn layui-btn-normal" onclick="editDict()"><i class="fa fa-plus-square"></i> 新增</button>
+	            </div>
+            </form>
         </div>
     </div>
     <div class="portlet-body">
@@ -52,50 +54,7 @@
         </div>
     </div>
 </div>
-<div class="portlet box" id="divDialog">
-    <div  class="portlet-body form">
-        <form id="dictionaryForm" class="layui-form layui-form-pane" lay-filter="dictionaryForm" style="padding-top: 40px;padding-left: 40px">
-        <input type="hidden"  name="id" value="">
-        <div>
-            <div class="layui-form-item"></div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class=" layui-form-label">上级编码：</label>
-                    <div class="layui-input-inline" >
-                        <input id="div_parentCode" type="text" lay-verify="required" name="div_parentCode"  autocomplete="off"  class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class=" layui-form-label">数据编码：</label>
-                    <div class="layui-input-inline">
-                        <input id="div_dataCode" type="text" lay-verify="required" name="div_dataCode"  autocomplete="off"  class="layui-input">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class=" layui-form-label">数据值：</label>
-                    <div class="layui-input-inline">
-                        <input id="div_dataValue" type="text" lay-verify="required" name="div_dataValue"  autocomplete="off"  class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class=" layui-form-label">排序：</label>
-                    <div class="layui-input-inline">
-                        <input id="sort" type="text" lay-verify="required" name="sort"  autocomplete="off"  class="layui-input">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">字段描述：</label>
-                <div class="layui-input-block">
-                    <textarea id="memo" type="text" lay-verify="required" name="memo"  autocomplete="off"  class="layui-input" style="width:550px; height: 150px"></textarea>
-                </div>
-            </div>
-        </div>
-        </form>
-    </div>
-</div>
+
 <!-- END EXAMPLE TABLE PORTLET-->
 <script src="../../../plugins/jquery.min.js"></script>
 <script src="../../../plugins/layui/layui.js"></script>
@@ -103,8 +62,8 @@
 <script type="text/javascript" src="dictionary.js"></script>
 <!--操作部分-->
 <script type="text/html" id="operBar">
-    <button class="layui-btn layui-btn-xs" onclick="update('{{ d.id }}')"><i class="fa fa-edit"></i>修改 </button>
-    <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="deleteFunc('{{ d.id }}')"><i class="fa fa-remove"></i>删除 </button>
+    <button class="layui-btn layui-btn-xs" onclick="editDict('{{ d.id }}')"><i class="fa fa-edit"></i>修改 </button>
+    <button class="layui-btn layui-btn-xs layui-btn-danger" onclick="delDict('{{ d.id }}')"><i class="fa fa-remove"></i>删除 </button>
 </script>
 </body>
 </html>

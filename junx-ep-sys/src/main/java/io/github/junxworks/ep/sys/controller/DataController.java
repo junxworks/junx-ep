@@ -33,7 +33,7 @@ import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.sys.service.DataService;
 
 /**
- * {类的详细说明}.
+ * 基于string template进行字符串解析，可用于直接配置sql进行条件查询操作
  *
  * @ClassName:  DataController
  * @author: Michael

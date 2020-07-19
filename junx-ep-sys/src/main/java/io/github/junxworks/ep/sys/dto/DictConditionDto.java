@@ -26,49 +26,49 @@ import io.github.junxworks.ep.core.Pageable;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-public class DictionaryPageable extends Pageable {
-    
-    /** status. */
-    private byte status;
-    
-    /** parent code. */
-    private String parentCode;
-    
-    /** data value. */
-    private String dataValue;
-    
-    /** data code. */
-    private String dataCode;
+public class DictConditionDto extends Pageable {
 
-    public byte getStatus() {
-        return status;
-    }
+	/** status. */
+	private byte status;
 
-    public void setStatus(byte status) {
-        this.status = status;
-    }
+	/** parent code. */
+	private String parentCode;
 
-    public String getParentCode() {
-        return parentCode;
-    }
+	/** data value. */
+	private String dataLabel;
 
-    public void setParentCode(String parentCode) {
-        this.parentCode = parentCode;
-    }
+	/** data code. */
+	private String dataCode;
 
-    public String getDataValue() {
-        return dataValue;
-    }
+	public byte getStatus() {
+		return status;
+	}
 
-    public void setDataValue(String dataValue) {
-        this.dataValue = dataValue;
-    }
+	public void setStatus(byte status) {
+		this.status = status;
+	}
 
-    public String getDataCode() {
-        return dataCode;
-    }
+	public String getParentCode() {
+		return parentCode;
+	}
 
-    public void setDataCode(String dataCode) {
-        this.dataCode = dataCode;
-    }
+	public void setParentCode(String parentCode) {
+		this.parentCode = parentCode;
+	}
+
+	public String getDataLabel() {
+		return dataLabel;
+	}
+
+	public void setDataLabel(String dataLabel) {
+		this.dataLabel = dataLabel;
+	}
+
+	public String getDataCode() {
+		return dataCode;
+	}
+
+	public void setDataCode(String dataCode) {
+		this.dataCode = dataCode;
+	}
 }

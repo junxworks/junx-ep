@@ -55,13 +55,12 @@ layui.use(['table','form','xmSelect'], function () {
           elem: '#userTable'
         , url: appendCtx('/ep/sys/users')
         , page: true
-        , height: 500
         , cols: [[ //表头
               {field: 'id', title: '用户ID',width:80}
             , {field: 'userName', title: '账号',width:180}
             , {field: 'name', title: '用户姓名',width:120}
             , {field: 'orgName', title: '所属组织',width:180}
-            , {field: 'mobile', title: '手机号',align:'center',width:120}
+            , {field: 'mobile', title: '手机号',align:'center',width:140}
             , {field: 'email', title: '邮箱',width:300}
             , {field: 'roleName', title: '角色',width:200}
             , {field: 'status', title: '状态',align:'center',width:100, templet: '#statusTp'}
@@ -110,7 +109,7 @@ function addUserPage(userId) {
         type: 2,
         title: typeof(userId) != "undefined" ? '修改用户' : '新增用户',
         shadeClose: true,
-        area: ['800px', '600px'],
+        area: ['800px', '720px'],
         content: 'addUser.html?userId=' + userId,
     });
 }

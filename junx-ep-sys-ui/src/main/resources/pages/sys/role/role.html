@@ -31,20 +31,15 @@
 			<form class="layui-form"style="padding-top: 20px">
 			    <div class="layui-form-item" style="float: left;">
 			        <div class="layui-inline">
-			        </div>
-			        <div class="layui-inline">
-			            <div>
-			                <button type="button" class="layui-btn layui-btn-normal" onclick="addRolePage()"><i class="fa fa-plus-square"></i> 新增</button>
-			            </div>
-			        </div>
-			        <div class="layui-inline">
+			        	<label class="layui-form-label">角色名称：</label>
 			            <div class="layui-input-inline">
-			                <input id="queryStr" placeholder="角色名" class="layui-input">
+			                <input id="roleName" autocomplete="off" placeholder="角色名" class="layui-input">
 			            </div>
 			        </div>
 			        <div class="layui-inline">
 			            <div class="layui-input-inline">
 			                <button type="button" class="layui-btn" onclick="queryTableData()"><i class="fa fa-search"></i> 查询</button>
+			                <button type="button" class="layui-btn layui-btn-normal" onclick="addRolePage()"><i class="fa fa-plus-square"></i> 新增</button>
 			            </div>
 			        </div>
 			    </div>

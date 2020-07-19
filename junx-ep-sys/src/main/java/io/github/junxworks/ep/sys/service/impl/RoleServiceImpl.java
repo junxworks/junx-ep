@@ -28,16 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 
 import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.exception.BusinessException;
-import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.sys.constants.RecordStatus;
+import io.github.junxworks.ep.sys.dto.RoleConditionDto;
 import io.github.junxworks.ep.sys.dto.RoleInfoDto;
-import io.github.junxworks.ep.sys.dto.RolePageable;
 import io.github.junxworks.ep.sys.entity.SRole;
 import io.github.junxworks.ep.sys.entity.SRoleMenu;
 import io.github.junxworks.ep.sys.mapper.RoleMapper;
@@ -73,11 +70,8 @@ public class RoleServiceImpl implements RoleService {
 	 * @return the page info
 	 */
 	@Override
-	public PageInfo<RoleInfoVo> findRoleListByPage(RolePageable pageable) {
-		PageUtils.setPage(pageable);
-		Page<RoleInfoVo> roleList = roleMapper.selectAll(pageable.getQuery());
-		PageInfo<RoleInfoVo> voPageInfo = new PageInfo<>(roleList);
-		return voPageInfo;
+	public List<RoleInfoVo> findRoleListByCondition(RoleConditionDto condition) {
+		return roleMapper.selectAll(condition);
 	}
 
 	/**
@@ -87,8 +81,7 @@ public class RoleServiceImpl implements RoleService {
 	 */
 	@Override
 	public List<RoleInfoVo> findAllRoleList() {
-		List<RoleInfoVo> roleList = roleMapper.selectAll(null);
-		return roleList;
+		return roleMapper.selectAll(null);
 	}
 
 	/**
@@ -177,8 +170,8 @@ public class RoleServiceImpl implements RoleService {
 	 * @return the list
 	 */
 	@Override
-	public List<RoleInfoVo> findRoleListByUserId(Long userId) {
-		return roleMapper.selectByUserId(userId);
+	public List<Long> findRoleIdsByUserId(Long userId) {
+		return roleMapper.selectIdsByUserId(userId);
 	}
 
 	/**

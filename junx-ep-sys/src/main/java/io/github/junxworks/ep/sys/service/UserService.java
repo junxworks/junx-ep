@@ -16,15 +16,13 @@
  */
 package io.github.junxworks.ep.sys.service;
 
-import com.github.pagehelper.PageInfo;
-
-import io.github.junxworks.ep.sys.dto.UserInfoDto;
-import io.github.junxworks.ep.sys.dto.UserPageable;
-import io.github.junxworks.ep.sys.vo.UserInfoVo;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.List;
+import io.github.junxworks.ep.sys.dto.UserInfoDto;
+import io.github.junxworks.ep.sys.dto.UserListConditionDto;
+import io.github.junxworks.ep.sys.vo.UserInfoVo;
 
 /**
  * {类的详细说明}.
@@ -42,7 +40,7 @@ public interface UserService {
 	 * @param pageable the pageable
 	 * @return the page info
 	 */
-	PageInfo<UserInfoVo> findUserListByPage(UserPageable pageable);
+	List<UserInfoVo> findUserListByCondition(UserListConditionDto cond);
 
 	/**
 	 * Find user info by id.

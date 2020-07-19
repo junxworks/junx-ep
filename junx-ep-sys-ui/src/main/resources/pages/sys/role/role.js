@@ -6,7 +6,6 @@ layui.use('table', function () {
         elem: '#roleTable'
         ,url: appendCtx('/ep/sys/roles')
         , page: true
-        , height: 500
         , cols: [[ //表头
             {field: 'id',width:100, title: '角色ID'}
             , {field: 'roleName',width:300, title: '角色名称'}
@@ -28,10 +27,10 @@ layui.use('table', function () {
 });
 
 function queryTableData() {
-    var whereStr = $('#queryStr').val();
+    var roleName = $('#roleName').val();
     tableIns.reload({
         where: { //设定异步数据接口的额外参数，任意设
-            'query': whereStr
+            'roleName': roleName
         }
         , page: {
             curr: 1 //重新从第 1 页开始

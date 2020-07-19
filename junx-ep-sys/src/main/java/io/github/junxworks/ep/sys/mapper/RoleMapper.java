@@ -5,7 +5,7 @@
  * @Package io.github.junxworks.ep.sys.mapper   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:17:48   
+ * @date:   2020-7-19 13:51:52   
  * @version V1.0 
  * @Copyright: 2020 Junxworks. All rights reserved. 
  * 注意：
@@ -23,8 +23,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.github.pagehelper.Page;
 import io.github.junxworks.ep.core.orm.BaseMapper;
+import io.github.junxworks.ep.sys.dto.RoleConditionDto;
 import io.github.junxworks.ep.sys.entity.SRole;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
@@ -58,6 +58,15 @@ public interface RoleMapper extends BaseMapper{
 	@Select("select r.* from s_role r inner join s_user_role ur on ur.roleId = r.id where r.status=0 and ur.userId=#{userId}")
 	List<RoleInfoVo> selectByUserId(Long userId);
 
+	/**
+	 * Select ids by user id.
+	 *
+	 * @param userId the user id
+	 * @return the list
+	 */
+	@Select("select r.id from s_role r inner join s_user_role ur on ur.roleId = r.id where r.status=0 and ur.userId=#{userId}")
+	List<Long> selectIdsByUserId(Long userId);
+	
 	/**
 	 * Select by name.
 	 *
@@ -93,11 +102,11 @@ public interface RoleMapper extends BaseMapper{
 	 */
 	@Select("<script>" +
 			"select * from s_role where status=0 " +
-			"<if test='query!=null '> " +
-				" and roleName like CONCAT('%',#{query},'%') " +
+			"<if test='roleName!=null and roleName.length>0'> " +
+				" and roleName like CONCAT('%',#{roleName},'%') " +
 			"</if>" +
 			"</script>")
-	Page<RoleInfoVo> selectAll(@Param("query") String query);
+	List<RoleInfoVo> selectAll(RoleConditionDto condition);
 
 	/**
 	 * Find user list by role tag.

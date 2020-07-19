@@ -31,10 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 import io.github.junxworks.ep.core.Result;
+import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.sys.annotations.OpLog;
 import io.github.junxworks.ep.sys.constants.EPConstants;
 import io.github.junxworks.ep.sys.dto.UserInfoDto;
-import io.github.junxworks.ep.sys.dto.UserPageable;
+import io.github.junxworks.ep.sys.dto.UserListConditionDto;
 import io.github.junxworks.ep.sys.service.RoleService;
 import io.github.junxworks.ep.sys.service.UserService;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
@@ -69,7 +70,7 @@ public class UserController {
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		UserInfoVo vo = userService.findUserInfoById(user.getId());
 		if (EPConstants.DEFAULT_PASSWORD.equals(vo.getPassword())) {
-			Result res=new Result(EPConstants.CODE_NEED_RESET_PASSWORD, "请重置密码");
+			Result res = new Result(EPConstants.CODE_NEED_RESET_PASSWORD, "请重置密码");
 			res.setData(user);
 			return res;
 		}
@@ -83,11 +84,9 @@ public class UserController {
 	 * @return user list 属性
 	 */
 	@GetMapping()
-	public Result getUserList(UserPageable pageable) {
-		Result result = Result.ok();
-		PageInfo<UserInfoVo> userPage = userService.findUserListByPage(pageable);
-		result.setData(userPage);
-		return result;
+	public Result getUserList(UserListConditionDto condition) {
+		PageUtils.setPage(condition);
+		return Result.ok(new PageInfo<UserInfoVo>(userService.findUserListByCondition(condition)));
 	}
 
 	/**
@@ -114,19 +113,8 @@ public class UserController {
 	public Result getAllRoleList(@PathVariable Long userId) {
 		Result result = Result.ok();
 		List<RoleInfoVo> roleList = roleService.findAllRoleList();
-		if (userId != null) {
-			List<RoleInfoVo> userRoles = roleService.findRoleListByUserId(userId);
-			for (RoleInfoVo vo : roleList) {
-				//默认不勾选
-				vo.setChecked(false);
-				for (RoleInfoVo userRole : userRoles) {
-					if (vo.getId().equals(userRole.getId())) {
-						vo.setChecked(true);
-					}
-				}
-			}
-		}
 		result.setData(roleList);
+		result.addAttribute("checked", roleService.findRoleIdsByUserId(userId));
 		return result;
 	}
 
@@ -139,9 +127,6 @@ public class UserController {
 	@PostMapping()
 	@OpLog("保存用户信息")
 	public Result saveUserInfo(@RequestBody UserInfoDto dto) {
-		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		dto.setCreatorId(user.getId());
-		dto.setCreateDate(new Date());
 		userService.saveUserInfo(dto);
 		return Result.ok();
 	}

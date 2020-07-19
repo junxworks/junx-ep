@@ -926,7 +926,7 @@ function dictionary(parentCode){
 		var map= new Map();
 		for(var i = 0; i < array.length; i++){
 			var item = array[i];
-			map.set(String(item["dataCode"]),String(item["dataValue"]));
+			map.set(String(item["dataCode"]),String(item["dataLabel"]));
 		}
 		return map;
 	}else{

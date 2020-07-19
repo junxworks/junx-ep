@@ -18,10 +18,8 @@ package io.github.junxworks.ep.sys.service;
 
 import java.util.List;
 
-import com.github.pagehelper.PageInfo;
-
+import io.github.junxworks.ep.sys.dto.RoleConditionDto;
 import io.github.junxworks.ep.sys.dto.RoleInfoDto;
-import io.github.junxworks.ep.sys.dto.RolePageable;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
 
@@ -41,7 +39,7 @@ public interface RoleService {
 	 * @param pageable the pageable
 	 * @return the page info
 	 */
-	PageInfo<RoleInfoVo> findRoleListByPage(RolePageable pageable);
+	List<RoleInfoVo> findRoleListByCondition(RoleConditionDto condition);
 
 	/**
 	 * Find all role list.
@@ -63,7 +61,7 @@ public interface RoleService {
 	 * @param userId the user id
 	 * @return the list
 	 */
-	List<RoleInfoVo> findRoleListByUserId(Long userId);
+	List<Long> findRoleIdsByUserId(Long userId);
 
 	/**
 	 * Find user list by role tag.

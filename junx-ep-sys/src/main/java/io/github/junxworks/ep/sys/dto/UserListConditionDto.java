@@ -28,7 +28,7 @@ import io.github.junxworks.ep.core.Pageable;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-public class UserPageable extends Pageable {
+public class UserListConditionDto extends Pageable {
 
 	/** query. */
 	private String query;
