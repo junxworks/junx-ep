@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.higinet.com.cn
- * @Title:  ShiroProperties.java   
- * @Package cn.com.higinet.platform.modules.shiro   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  EPShiroConfig.java   
+ * @Package io.github.junxworks.ep.auth   
  * @Description: (用一句话描述该文件做什么)   
- * @author: 王兴
- * @date:   2018-3-22 14:01:35   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:41   
  * @version V1.0 
- * @Copyright: 2018 北京宏基恒信科技有限责任公司. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -23,41 +23,44 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import com.google.common.collect.Maps;
 
 /**
- * shiro的配置
+ * {类的详细说明}.
  *
- * @ClassName:  ShiroProperties
- * @author: 王兴
- * @date:   2018-3-22 14:01:35
- * @since:  v4.4
+ * @ClassName:  EPShiroConfig
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
+ * @since:  v1.0
  */
 @ConfigurationProperties(prefix = "ep.auth.shiro")
 public class EPShiroConfig {
 
-	/** 全局session过期时间配置，默认半小时. */
+	/** global session timeout. */
 	private long globalSessionTimeout = 30 * 60 * 1000;
 
+	/** login url. */
 	private String loginUrl = "/ep/sys/login";
 
-	/** 权限过滤. */
+	/** filters. */
 	private Map<String, String> filters = Maps.newLinkedHashMap();
 
-	/** 启用ram控制，启用后会优先判断ram参数进行认证和鉴权. */
+	/** ram enabled. */
 	private boolean ramEnabled = false;
 
+	/** ram header key name. */
 	private String ramHeaderKeyName = RamConstants.RAM_HEADER_ACCESSKEY;
 
+	/** ram header secret name. */
 	private String ramHeaderSecretName = RamConstants.RAM_HEADER_ACCESSSECRET;
 
-	/** RAM认证中心地址，后期采用集群注册的方式，前期先写死一个ip地址,如：localhost:8890. */
+	/** ram auth center addr. */
 	private String ramAuthCenterAddr;
 
-	/** RAM认证URL请求路径. */
+	/** ram auth path. */
 	private String ramAuthPath;
 
-	/** ram认证的 key. */
+	/** ram key. */
 	private String ramKey;
 
-	/** ram认证的 secret. */
+	/** ram secret. */
 	private String ramSecret;
 
 	public String getLoginUrl() {

@@ -1,3 +1,19 @@
+/*
+ ***************************************************************************************
+ * EP for web developers.Supported By Junxworks
+ * @Title:  SqlGenerator.java   
+ * @Package io.github.junxworks.ep.core.orm   
+ * @Description: (用一句话描述该文件做什么)   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:37   
+ * @version V1.0 
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
+ *  ---------------------------------------------------------------------------------- 
+ * 文件修改记录
+ *     文件版本：         修改人：             修改原因：
+ ***************************************************************************************
+ */
 package io.github.junxworks.ep.core.orm;
 
 import java.text.MessageFormat;
@@ -13,7 +29,24 @@ import io.github.junxworks.junx.core.util.StringUtils;
 import net.vidageek.mirror.get.dsl.GetterHandler;
 import net.vidageek.mirror.reflect.dsl.ReflectionHandler;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  SqlGenerator
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
+ * @since:  v1.0
+ */
 public class SqlGenerator {
+	
+	/**
+	 * Insert SQL.
+	 *
+	 * @param entity the entity
+	 * @param withNull the with null
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public static final String insertSQL(Object entity, boolean withNull) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
 		SQL sql = new SQL();
@@ -43,6 +76,13 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	/**
+	 * Insert batch SQL.
+	 *
+	 * @param entities the entities
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public static final String insertBatchSQL(List<?> entities) throws Exception {
 		Object entity = entities.get(0);
 		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
@@ -66,6 +106,14 @@ public class SqlGenerator {
 		return sb.toString();
 	}
 
+	/**
+	 * Update SQL.
+	 *
+	 * @param entity the entity
+	 * @param withNull the with null
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public static final String updateSQL(Object entity, boolean withNull) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
 		SQL sql = new SQL();
@@ -100,6 +148,13 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	/**
+	 * Delete SQL.
+	 *
+	 * @param entity the entity
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public static final String deleteSQL(Object entity) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
 		SQL sql = new SQL();
@@ -114,6 +169,13 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	/**
+	 * 返回 one SQL 属性.
+	 *
+	 * @param entity the entity
+	 * @return one SQL 属性
+	 * @throws Exception the exception
+	 */
 	public static final String getOneSQL(Object entity) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
 		SQL sql = new SQL();
@@ -128,6 +190,13 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	/**
+	 * Query SQL.
+	 *
+	 * @param entityDto the entity dto
+	 * @return the string
+	 * @throws Exception the exception
+	 */
 	public static final String querySQL(Object entityDto) throws Exception {
 		final ConditionDescription cd = ConditionResolver.resolveClass(entityDto.getClass());
 		SQL sql = new SQL();
@@ -174,6 +243,12 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	/**
+	 * Concat CDATA.
+	 *
+	 * @param str the str
+	 * @return the string
+	 */
 	private static String concatCDATA(String str) {
 		return "<![CDATA[" + str + "]]>";
 	}

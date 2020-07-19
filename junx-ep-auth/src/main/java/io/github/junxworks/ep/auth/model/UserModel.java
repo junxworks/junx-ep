@@ -1,53 +1,80 @@
+/*
+ ***************************************************************************************
+ * EP for web developers.Supported By Junxworks
+ * @Title:  UserModel.java   
+ * @Package io.github.junxworks.ep.auth.model   
+ * @Description: (用一句话描述该文件做什么)   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:41   
+ * @version V1.0 
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
+ *  ---------------------------------------------------------------------------------- 
+ * 文件修改记录
+ *     文件版本：         修改人：             修改原因：
+ ***************************************************************************************
+ */
 package io.github.junxworks.ep.auth.model;
 
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  UserModel
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
+ * @since:  v1.0
+ */
 public class UserModel implements Serializable {
 
-	/** 超级管理员的ID */
+	/** 常量 SUPER_ADMIN. */
 	public static final long SUPER_ADMIN = -1;
 
+	/** 常量 serialVersionUID. */
 	private static final long serialVersionUID = 7941789731039560137L;
 
 	/** id. */
 	private Long id;
 
-	/** 昵称. */
+	/** nick. */
 	private String nick;
 
-	/** 姓名. */
+	/** name. */
 	private String name;
 
-	/** 用户名. */
+	/** username. */
 	private String username;
 
-	/** 身份证. */
+	/** id card. */
 	private String idCard;
 
-	/** 邮箱. */
+	/** email. */
 	private String email;
 
-	/** 手机号. */
+	/** mobile. */
 	private String mobile;
 
-	/** 用户类型. */
+	/** user type. */
 	private int userType;
 
-	/**组织编码 */
+	/** org no. */
 	private String orgNo;
 
-	/**组织名称. */
+	/** org name. */
 	private String orgName;
 
-	/**组织类型. */
+	/** org type. */
 	private String orgType;
 
+	/** status. */
 	private int status;
 
-	/** 权限. */
+	/** authorizations. */
 	private List<String> authorizations;
 
+	/** roles. */
 	private List<String> roles;
 
 	public String getOrgName() {
@@ -150,6 +177,11 @@ public class UserModel implements Serializable {
 		return SUPER_ADMIN == id;
 	}
 
+	/**
+	 * To string.
+	 *
+	 * @return the string
+	 */
 	/* shiro删除认证cache的时候会用到
 	 * @see java.lang.Object#toString()
 	 */
@@ -167,7 +199,7 @@ public class UserModel implements Serializable {
 	}
 
 	/**
-	 * 是否有权限.
+	 * Auth.
 	 *
 	 * @param authorize the authorize
 	 * @return true, if successful
@@ -185,9 +217,9 @@ public class UserModel implements Serializable {
 	}
 
 	/**
-	 * 是否有角色标签
+	 * Checks for role.
 	 *
-	 * @param role the role
+	 * @param roleTag the role tag
 	 * @return true, if successful
 	 */
 	public boolean hasRole(String roleTag) {

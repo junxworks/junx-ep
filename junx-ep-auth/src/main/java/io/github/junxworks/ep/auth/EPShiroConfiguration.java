@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.higinet.com.cn
- * @Title:  ShiroConfig.java   
- * @Package cn.com.higinet.platform.config   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  EPShiroConfiguration.java   
+ * @Package io.github.junxworks.ep.auth   
  * @Description: (用一句话描述该文件做什么)   
- * @author: 王兴
- * @date:   2018-2-7 20:32:17   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:41   
  * @version V1.0 
- * @Copyright: 2018 北京宏基恒信科技有限责任公司. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -42,52 +42,48 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import com.google.common.collect.Maps;
-import com.yrxd.commons.web.RedisOper;
+
+import io.github.junxworks.ep.auth.cache.EPShiroRedisCacheManager;
 
 /**
- * shiro的注入配置类
+ * {类的详细说明}.
  *
- * @ClassName:  ShiroConfiguration
- * @author: 王兴
- * @date:   2019-1-16 16:57:51
+ * @ClassName:  EPShiroConfiguration
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
 @Configuration
 @ConditionalOnWebApplication
 @EnableConfigurationProperties({ EPShiroConfig.class })
+@Order
 public class EPShiroConfiguration {
+	
+	/** 常量 AUTHENTICATION_CACHE. */
 	private static final String AUTHENTICATION_CACHE = "ep-authen";
 
+	/** 常量 AUTHORIZATION_CACHE. */
 	private static final String AUTHORIZATION_CACHE = "ep-author";
 
+	/**
+	 * Shiro service.
+	 *
+	 * @return the EP shiro service
+	 */
 	@Bean
 	public EPShiroService shiroService() {
 		return new EPShiroService();
 	}
 
 	/**
-	 * 必须注入
-	 *
-	 * @param redisTemplate the redis template
-	 * @return the redis oper
-	 */
-	@Bean
-	@ConditionalOnMissingBean(RedisOper.class)
-	public RedisOper redisOper(RedisTemplate<Object, Object> redisTemplate) {
-		RedisOper redisOper = new RedisOper();
-		redisOper.setRedisTemplate(redisTemplate);
-		redisOper.setValueOperations(redisTemplate.opsForValue());
-		return redisOper;
-	}
-
-	/**
 	 * Shiro filter.
 	 *
 	 * @param securityManager the security manager
-	 * @param shiroProerties the shiro proerties
+	 * @param shiroConfig the shiro config
 	 * @return the shiro filter factory bean
 	 */
 	@Bean
@@ -122,15 +118,28 @@ public class EPShiroConfiguration {
 		return shiroFilter;
 	}
 
+	/**
+	 * Shiro realm.
+	 *
+	 * @return the EP shiro realm
+	 */
 	@Bean
 	public EPShiroRealm shiroRealm() {
 		return new EPShiroRealm();
 	}
 
+	/**
+	 * Cache manager.
+	 *
+	 * @param redisTemplate the redis template
+	 * @param config the config
+	 * @return the cache manager
+	 */
 	@Bean
-	public CacheManager cacheManager(RedisOper redis, EPShiroConfig config) {
+	@ConditionalOnMissingBean(CacheManager.class)
+	public CacheManager cacheManager(RedisTemplate<String, Object> redisTemplate, EPShiroConfig config) {
 		EPShiroRedisCacheManager cacheManager = new EPShiroRedisCacheManager();
-		cacheManager.setRedis(redis);
+		cacheManager.setRedis(redisTemplate);
 		cacheManager.setConfig(config);
 		return cacheManager;
 	}
@@ -138,7 +147,8 @@ public class EPShiroConfiguration {
 	/**
 	 * Session manager.
 	 *
-	 * @param shiroCacheProvider the shiro cache provider
+	 * @param cacheManager the cache manager
+	 * @param config the config
 	 * @return the session manager
 	 */
 	@Bean
@@ -149,25 +159,40 @@ public class EPShiroConfiguration {
 		sessionManager.setDeleteInvalidSessions(true); //删除过期session
 		sessionManager.setCacheManager(cacheManager); //设置缓存管理器
 		sessionManager.setSessionDAO(new EnterpriseCacheSessionDAO()); //设置sessiondao
-		sessionManager.setGlobalSessionTimeout(config.getGlobalSessionTimeout()); //半小时
+		sessionManager.setGlobalSessionTimeout(config.getGlobalSessionTimeout());
 		return sessionManager;
 	}
 
+	/**
+	 * Authentication cache.
+	 *
+	 * @param cacheManager the cache manager
+	 * @return the cache
+	 */
 	@Bean
-	public Cache<Object, AuthenticationInfo> authenticationCache(EPShiroRedisCacheManager cacheManager) {
+	public Cache<Object, AuthenticationInfo> authenticationCache(CacheManager cacheManager) {
 		return cacheManager.getCache(AUTHENTICATION_CACHE);
 	}
 
+	/**
+	 * Authorization cache.
+	 *
+	 * @param cacheManager the cache manager
+	 * @return the cache
+	 */
 	@Bean
-	public Cache<Object, AuthorizationInfo> authorizationCache(EPShiroRedisCacheManager cacheManager) {
+	public Cache<Object, AuthorizationInfo> authorizationCache(CacheManager cacheManager) {
 		return cacheManager.getCache(AUTHORIZATION_CACHE);
 	}
 
 	/**
 	 * Security manager.
 	 *
-	 * @param oAuth2Realm the o auth 2 realm
+	 * @param shiroRealm the shiro realm
 	 * @param sessionManager the session manager
+	 * @param cacheManager the cache manager
+	 * @param authenticationCache the authentication cache
+	 * @param authorizationCache the authorization cache
 	 * @return the security manager
 	 */
 	@Bean
@@ -176,9 +201,9 @@ public class EPShiroConfiguration {
 		securityManager.setRealm(shiroRealm);
 		securityManager.setSessionManager(sessionManager);
 		securityManager.setCacheManager(cacheManager);
-		shiroRealm.setAuthenticationCachingEnabled(true);//认证
+		shiroRealm.setAuthenticationCachingEnabled(false);//认证
 		shiroRealm.setAuthenticationCache(authenticationCache);
-		shiroRealm.setAuthorizationCachingEnabled(true);//权限
+		shiroRealm.setAuthorizationCachingEnabled(false);//权限
 		shiroRealm.setAuthorizationCache(authorizationCache);
 		SecurityUtils.setSecurityManager(securityManager);
 		return securityManager;

@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  XssHttpServletRequestWrapper.java   
  * @Package io.github.junxworks.ep.core.security.xss   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-9 15:57:00   
+ * @date:   2020-7-19 12:18:36   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -30,13 +30,29 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  XssHttpServletRequestWrapper
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
+ */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
+	
+	/** ori request. */
 	//没被包装过的HttpServletRequest（特殊场景，需要自己过滤）
 	HttpServletRequest oriRequest;
 
+	/** 常量 htmlFilter. */
 	//html过滤
 	private final static HTMLFilter htmlFilter = new HTMLFilter();
 
+	/**
+	 * 构造一个新的 xss http servlet request wrapper 对象.
+	 *
+	 * @param request the request
+	 */
 	public XssHttpServletRequestWrapper(HttpServletRequest request) {
 		super(request);
 		oriRequest = request;
@@ -81,6 +97,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 		};
 	}
 
+	/**
+	 * 返回 parameter 属性.
+	 *
+	 * @param name the name
+	 * @return parameter 属性
+	 */
 	@Override
 	public String getParameter(String name) {
 		String value = super.getParameter(xssEncode(name));
@@ -90,6 +112,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 		return value;
 	}
 
+	/**
+	 * 返回 parameter values 属性.
+	 *
+	 * @param name the name
+	 * @return parameter values 属性
+	 */
 	@Override
 	public String[] getParameterValues(String name) {
 		String[] parameters = super.getParameterValues(name);
@@ -117,6 +145,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 		return map;
 	}
 
+	/**
+	 * 返回 header 属性.
+	 *
+	 * @param name the name
+	 * @return header 属性
+	 */
 	@Override
 	public String getHeader(String name) {
 		String value = super.getHeader(xssEncode(name));
@@ -126,6 +160,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 		return value;
 	}
 
+	/**
+	 * Xss encode.
+	 *
+	 * @param input the input
+	 * @return the string
+	 */
 	private String xssEncode(String input) {
 		return htmlFilter.filter(input);
 	}
@@ -138,7 +178,10 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 	}
 
 	/**
-	 * 获取最原始的request
+	 * 返回 original request 属性.
+	 *
+	 * @param request the request
+	 * @return original request 属性
 	 */
 	public static HttpServletRequest getOriginalRequest(HttpServletRequest request) {
 		if (request instanceof XssHttpServletRequestWrapper) {

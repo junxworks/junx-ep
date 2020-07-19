@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  Condition.java   
- * @Package io.github.junxworks.ep.core.annotations   
+ * @Package io.github.junxworks.ep.core.orm.annotations   
  * @Description: (用一句话描述该文件做什么)   
- * @author: AOC
- * @date:   2019-9-2 10:48:13   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -27,8 +27,8 @@ import io.github.junxworks.ep.core.orm.CompareOperators;
  * {类的详细说明}.
  *
  * @ClassName:  Condition
- * @author: 王兴
- * @date:   2019-9-2 10:48:13
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
  * @since:  v1.0
  */
 @Target(ElementType.FIELD)
@@ -36,24 +36,22 @@ import io.github.junxworks.ep.core.orm.CompareOperators;
 public @interface Condition {
 
 	/**
-	 * 数据库字段名字.
-	 * 默认java field本身名字
+	 * Field.
 	 *
 	 * @return the string
 	 */
 	String field();
 
 	/**
-	 * 比较方式
-	 * {@link io.github.junxworks.ep.core.orm.CompareOperators}.
-	 * 默认 =
+	 * Compare.
+	 *
 	 * @return the string
 	 */
 	String compare() default CompareOperators.EQUAL;
 
 	/**
-	 * 直接写表达式.如果有表达式，那么以表达式为主
-	 * 默认无
+	 * Expression.
+	 *
 	 * @return the string
 	 */
 	String expression() default "";

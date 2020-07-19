@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  SQLFilter.java   
- * @Package io.github.junxworks.ep.core.security.sql   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  CSRFFilter.java   
+ * @Package io.github.junxworks.ep.core.security.csrf   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-2 11:14:05   
+ * @date:   2020-7-19 12:18:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -33,22 +33,30 @@ import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * sql注入过滤
+ * {类的详细说明}.
  *
- * @ClassName:  SQLFilter
- * @author: 王兴
- * @date:   2019-1-2 11:14:05
+ * @ClassName:  CSRFFilter
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
  * @since:  v1.0
  */
 public class CSRFFilter implements Filter {
 
-	/** CSRF token的字段名. */
+	/** 常量 DEFAULT_CSRF_TOKEN. */
 	public static final String DEFAULT_CSRF_TOKEN = "_c_";
 
+	/** 常量 CSRF_TOKEN_NAME. */
 	private static final String CSRF_TOKEN_NAME = "csrf_token";
 
+	/** c token. */
 	private String cToken;
 
+	/**
+	 * Inits the.
+	 *
+	 * @param config the config
+	 * @throws ServletException the servlet exception
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
@@ -60,6 +68,15 @@ public class CSRFFilter implements Filter {
 		}
 	}
 
+	/**
+	 * Do filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
@@ -79,9 +96,9 @@ public class CSRFFilter implements Filter {
 	}
 
 	/**
-	 * 校验csrf token是否合法
+	 * Vailidate.
 	 *
-	 * @param params the params
+	 * @param token the token
 	 * @return true, if successful
 	 */
 	private boolean vailidate(String token) {
@@ -89,6 +106,9 @@ public class CSRFFilter implements Filter {
 		return true;
 	}
 
+	/**
+	 * Destroy.
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
 	 */

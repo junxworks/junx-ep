@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  HTMLFilter.java   
  * @Package io.github.junxworks.ep.core.security.xss   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-9 15:57:00   
+ * @date:   2020-7-19 12:18:36   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -24,102 +24,135 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * {类的详细说明}.
  *
- * HTML filtering utility for protecting against XSS (Cross Site Scripting).
- *
- * This code is licensed LGPLv3
- *
- * This code is a Java port of the original work in PHP by Cal Hendersen.
- * http://code.iamcal.com/php/lib_filter/
- *
- * The trickiest part of the translation was handling the differences in regex handling
- * between PHP and Java.  These resources were helpful in the process:
- *
- * http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html
- * http://us2.php.net/manual/en/reference.pcre.pattern.modifiers.php
- * http://www.regular-expressions.info/modifiers.html
- *
- * A note on naming conventions: instance variables are prefixed with a "v"; global
- * constants are in all caps.
- *
- * Sample use:
- * String input = ...
- * String clean = new HTMLFilter().filter( input );
- *
- * The class is not thread safe. Create a new instance if in doubt.
- *
- * If you find bugs or have suggestions on improvement (especially regarding
- * performance), please contact us.  The latest version of this
- * source, and our contact details, can be found at http://xss-html-filter.sf.net
- *
- * @author Joseph O'Connell
- * @author Cal Hendersen
- * @author Michael Semb Wever
+ * @ClassName:  HTMLFilter
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
  */
 public final class HTMLFilter {
 
-    /** regex flag union representing /si modifiers in php **/
+    /** 常量 REGEX_FLAGS_SI. */
     private static final int REGEX_FLAGS_SI = Pattern.CASE_INSENSITIVE | Pattern.DOTALL;
+    
+    /** 常量 P_COMMENTS. */
     private static final Pattern P_COMMENTS = Pattern.compile("<!--(.*?)-->", Pattern.DOTALL);
+    
+    /** 常量 P_COMMENT. */
     private static final Pattern P_COMMENT = Pattern.compile("^!--(.*)--$", REGEX_FLAGS_SI);
+    
+    /** 常量 P_TAGS. */
     private static final Pattern P_TAGS = Pattern.compile("<(.*?)>", Pattern.DOTALL);
+    
+    /** 常量 P_END_TAG. */
     private static final Pattern P_END_TAG = Pattern.compile("^/([a-z0-9]+)", REGEX_FLAGS_SI);
+    
+    /** 常量 P_START_TAG. */
     private static final Pattern P_START_TAG = Pattern.compile("^([a-z0-9]+)(.*?)(/?)$", REGEX_FLAGS_SI);
+    
+    /** 常量 P_QUOTED_ATTRIBUTES. */
     private static final Pattern P_QUOTED_ATTRIBUTES = Pattern.compile("([a-z0-9]+)=([\"'])(.*?)\\2", REGEX_FLAGS_SI);
+    
+    /** 常量 P_UNQUOTED_ATTRIBUTES. */
     private static final Pattern P_UNQUOTED_ATTRIBUTES = Pattern.compile("([a-z0-9]+)(=)([^\"\\s']+)", REGEX_FLAGS_SI);
+    
+    /** 常量 P_PROTOCOL. */
     private static final Pattern P_PROTOCOL = Pattern.compile("^([^:]+):", REGEX_FLAGS_SI);
+    
+    /** 常量 P_ENTITY. */
     private static final Pattern P_ENTITY = Pattern.compile("&#(\\d+);?");
+    
+    /** 常量 P_ENTITY_UNICODE. */
     private static final Pattern P_ENTITY_UNICODE = Pattern.compile("&#x([0-9a-f]+);?");
+    
+    /** 常量 P_ENCODE. */
     private static final Pattern P_ENCODE = Pattern.compile("%([0-9a-f]{2});?");
+    
+    /** 常量 P_VALID_ENTITIES. */
     private static final Pattern P_VALID_ENTITIES = Pattern.compile("&([^&;]*)(?=(;|&|$))");
+    
+    /** 常量 P_VALID_QUOTES. */
     private static final Pattern P_VALID_QUOTES = Pattern.compile("(>|^)([^<]+?)(<|$)", Pattern.DOTALL);
+    
+    /** 常量 P_END_ARROW. */
     private static final Pattern P_END_ARROW = Pattern.compile("^>");
+    
+    /** 常量 P_BODY_TO_END. */
     private static final Pattern P_BODY_TO_END = Pattern.compile("<([^>]*?)(?=<|$)");
+    
+    /** 常量 P_XML_CONTENT. */
     private static final Pattern P_XML_CONTENT = Pattern.compile("(^|>)([^<]*?)(?=>)");
+    
+    /** 常量 P_STRAY_LEFT_ARROW. */
     private static final Pattern P_STRAY_LEFT_ARROW = Pattern.compile("<([^>]*?)(?=<|$)");
+    
+    /** 常量 P_STRAY_RIGHT_ARROW. */
     private static final Pattern P_STRAY_RIGHT_ARROW = Pattern.compile("(^|>)([^<]*?)(?=>)");
+    
+    /** 常量 P_AMP. */
     private static final Pattern P_AMP = Pattern.compile("&");
+    
+    /** 常量 P_QUOTE. */
     private static final Pattern P_QUOTE = Pattern.compile("<");
+    
+    /** 常量 P_LEFT_ARROW. */
     private static final Pattern P_LEFT_ARROW = Pattern.compile("<");
+    
+    /** 常量 P_RIGHT_ARROW. */
     private static final Pattern P_RIGHT_ARROW = Pattern.compile(">");
+    
+    /** 常量 P_BOTH_ARROWS. */
     private static final Pattern P_BOTH_ARROWS = Pattern.compile("<>");
 
+    /** 常量 P_REMOVE_PAIR_BLANKS. */
     // @xxx could grow large... maybe use sesat's ReferenceMap
     private static final ConcurrentMap<String,Pattern> P_REMOVE_PAIR_BLANKS = new ConcurrentHashMap<String, Pattern>();
+    
+    /** 常量 P_REMOVE_SELF_BLANKS. */
     private static final ConcurrentMap<String,Pattern> P_REMOVE_SELF_BLANKS = new ConcurrentHashMap<String, Pattern>();
 
-    /** set of allowed html elements, along with allowed attributes for each element **/
+    /** v allowed. */
     private final Map<String, List<String>> vAllowed;
-    /** counts of open tags for each (allowable) html element **/
+    
+    /** v tag counts. */
     private final Map<String, Integer> vTagCounts = new HashMap<String, Integer>();
 
-    /** html elements which must always be self-closing (e.g. "<img />") **/
+    /** v self closing tags. */
     private final String[] vSelfClosingTags;
-    /** html elements which must always have separate opening and closing tags (e.g. "<b></b>") **/
+    
+    /** v need closing tags. */
     private final String[] vNeedClosingTags;
-    /** set of disallowed html elements **/
+    
+    /** v disallowed. */
     private final String[] vDisallowed;
-    /** attributes which should be checked for valid protocols **/
+    
+    /** v protocol atts. */
     private final String[] vProtocolAtts;
-    /** allowed protocols **/
+    
+    /** v allowed protocols. */
     private final String[] vAllowedProtocols;
-    /** tags which should be removed if they contain no content (e.g. "<b></b>" or "<b />") **/
+    
+    /** v remove blanks. */
     private final String[] vRemoveBlanks;
-    /** entities allowed within html markup **/
+    
+    /** v allowed entities. */
     private final String[] vAllowedEntities;
-    /** flag determining whether comments are allowed in input String. */
+    
+    /** strip comment. */
     private final boolean stripComment;
+    
+    /** encode quotes. */
     private final boolean encodeQuotes;
+    
+    /** v debug. */
     private boolean vDebug = false;
-    /**
-     * flag determining whether to try to make tags when presented with "unbalanced"
-     * angle brackets (e.g. "<b text </b>" becomes "<b> text </b>").  If set to false,
-     * unbalanced angle brackets will be html escaped.
-     */
+    
+    /** always make tags. */
     private final boolean alwaysMakeTags;
 
-    /** Default constructor.
-     *
+    /**
+     * 构造一个新的 HTML filter 对象.
      */
     public HTMLFilter() {
         vAllowed = new HashMap<>();
@@ -154,9 +187,10 @@ public final class HTMLFilter {
         alwaysMakeTags = true;
     }
 
-    /** Set debug flag to true. Otherwise use default settings. See the default constructor.
+    /**
+     * 构造一个新的 HTML filter 对象.
      *
-     * @param debug turn debug on with a true argument
+     * @param debug the debug
      */
     public HTMLFilter(final boolean debug) {
         this();
@@ -164,9 +198,10 @@ public final class HTMLFilter {
 
     }
 
-    /** Map-parameter configurable constructor.
+    /**
+     * 构造一个新的 HTML filter 对象.
      *
-     * @param conf map containing configuration. keys match field names.
+     * @param conf the conf
      */
     public HTMLFilter(final Map<String,Object> conf) {
 
@@ -192,10 +227,18 @@ public final class HTMLFilter {
         alwaysMakeTags = conf.containsKey("alwaysMakeTags") ? (Boolean) conf.get("alwaysMakeTags") : true;
     }
 
+    /**
+     * Reset.
+     */
     private void reset() {
         vTagCounts.clear();
     }
 
+    /**
+     * Debug.
+     *
+     * @param msg the msg
+     */
     private void debug(final String msg) {
         if (vDebug) {
             Logger.getAnonymousLogger().info(msg);
@@ -203,11 +246,23 @@ public final class HTMLFilter {
     }
 
     //---------------------------------------------------------------
+    /**
+     * Chr.
+     *
+     * @param decimal the decimal
+     * @return the string
+     */
     // my versions of some PHP library functions
     public static String chr(final int decimal) {
         return String.valueOf((char) decimal);
     }
 
+    /**
+     * Html special chars.
+     *
+     * @param s the s
+     * @return the string
+     */
     public static String htmlSpecialChars(final String s) {
         String result = s;
         result = regexReplace(P_AMP, "&amp;", result);
@@ -219,11 +274,10 @@ public final class HTMLFilter {
 
     //---------------------------------------------------------------
     /**
-     * given a user submitted input String, filter out any invalid or restricted
-     * html.
+     * Filter.
      *
-     * @param input text (i.e. submitted by a user) than may contain html
-     * @return "clean" version of input, with only valid, whitelisted html elements allowed
+     * @param input the input
+     * @return the string
      */
     public String filter(final String input) {
         reset();
@@ -259,6 +313,12 @@ public final class HTMLFilter {
         return stripComment;
     }
 
+    /**
+     * Escape comments.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String escapeComments(final String s) {
         final Matcher m = P_COMMENTS.matcher(s);
         final StringBuffer buf = new StringBuffer();
@@ -271,6 +331,12 @@ public final class HTMLFilter {
         return buf.toString();
     }
 
+    /**
+     * Balance HTML.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String balanceHTML(String s) {
         if (alwaysMakeTags) {
             //
@@ -298,6 +364,12 @@ public final class HTMLFilter {
         return s;
     }
 
+    /**
+     * Check tags.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String checkTags(String s) {
         Matcher m = P_TAGS.matcher(s);
 
@@ -322,6 +394,12 @@ public final class HTMLFilter {
         return s;
     }
 
+    /**
+     * Process remove blanks.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String processRemoveBlanks(final String s) {
         String result = s;
         for (String tag : vRemoveBlanks) {
@@ -338,11 +416,25 @@ public final class HTMLFilter {
         return result;
     }
 
+    /**
+     * Regex replace.
+     *
+     * @param regex_pattern the regex pattern
+     * @param replacement the replacement
+     * @param s the s
+     * @return the string
+     */
     private static String regexReplace(final Pattern regex_pattern, final String replacement, final String s) {
         Matcher m = regex_pattern.matcher(s);
         return m.replaceAll(replacement);
     }
 
+    /**
+     * Process tag.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String processTag(final String s) {
         // ending tags
         Matcher m = P_END_TAG.matcher(s);
@@ -431,6 +523,12 @@ public final class HTMLFilter {
         return "";
     }
 
+    /**
+     * Process param protocol.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String processParamProtocol(String s) {
         s = decodeEntities(s);
         final Matcher m = P_PROTOCOL.matcher(s);
@@ -448,6 +546,12 @@ public final class HTMLFilter {
         return s;
     }
 
+    /**
+     * Decode entities.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String decodeEntities(String s) {
         StringBuffer buf = new StringBuffer();
 
@@ -484,6 +588,12 @@ public final class HTMLFilter {
         return s;
     }
 
+    /**
+     * Validate entities.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String validateEntities(final String s) {
         StringBuffer buf = new StringBuffer();
 
@@ -499,6 +609,12 @@ public final class HTMLFilter {
         return encodeQuotes(buf.toString());
     }
 
+    /**
+     * Encode quotes.
+     *
+     * @param s the s
+     * @return the string
+     */
     private String encodeQuotes(final String s){
         if(encodeQuotes){
             StringBuffer buf = new StringBuffer();
@@ -516,6 +632,13 @@ public final class HTMLFilter {
         }
     }
 
+    /**
+     * Check entity.
+     *
+     * @param preamble the preamble
+     * @param term the term
+     * @return the string
+     */
     private String checkEntity(final String preamble, final String term) {
 
         return ";".equals(term) && isValidEntity(preamble)
@@ -523,10 +646,23 @@ public final class HTMLFilter {
                 : "&amp;" + preamble;
     }
 
+    /**
+     * 返回布尔值 valid entity.
+     *
+     * @param entity the entity
+     * @return 返回布尔值 valid entity
+     */
     private boolean isValidEntity(final String entity) {
         return inArray(entity, vAllowedEntities);
     }
 
+    /**
+     * In array.
+     *
+     * @param s the s
+     * @param array the array
+     * @return true, if successful
+     */
     private static boolean inArray(final String s, final String[] array) {
         for (String item : array) {
             if (item != null && item.equals(s)) {
@@ -536,10 +672,23 @@ public final class HTMLFilter {
         return false;
     }
 
+    /**
+     * Allowed.
+     *
+     * @param name the name
+     * @return true, if successful
+     */
     private boolean allowed(final String name) {
         return (vAllowed.isEmpty() || vAllowed.containsKey(name)) && !inArray(name, vDisallowed);
     }
 
+    /**
+     * Allowed attribute.
+     *
+     * @param name the name
+     * @param paramName the param name
+     * @return true, if successful
+     */
     private boolean allowedAttribute(final String name, final String paramName) {
         return allowed(name) && (vAllowed.isEmpty() || vAllowed.get(name).contains(paramName));
     }

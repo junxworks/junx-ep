@@ -1,3 +1,19 @@
+/*
+ ***************************************************************************************
+ * EP for web developers.Supported By Junxworks
+ * @Title:  HttpClientUtil.java   
+ * @Package io.github.junxworks.ep.core.utils   
+ * @Description: (用一句话描述该文件做什么)   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:37   
+ * @version V1.0 
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
+ *  ---------------------------------------------------------------------------------- 
+ * 文件修改记录
+ *     文件版本：         修改人：             修改原因：
+ ***************************************************************************************
+ */
 package io.github.junxworks.ep.core.utils;
 
 import io.github.junxworks.ep.core.exception.BusinessException;
@@ -37,24 +53,38 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  HttpClientUtil
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
+ * @since:  v1.0
+ */
 public class HttpClientUtil {
 
+    /** 常量 CHARSET_UTF_8. */
     // utf-8字符编码
     public static final String CHARSET_UTF_8 = "utf-8";
 
+    /** 常量 CONTENT_TYPE_TEXT_HTML. */
     // HTTP内容类型。
     public static final String CONTENT_TYPE_TEXT_HTML = "text/xml";
 
+    /** 常量 CONTENT_TYPE_FORM_URL. */
     // HTTP内容类型。相当于form表单的形式，提交数据
     public static final String CONTENT_TYPE_FORM_URL = "application/x-www-form-urlencoded";
 
+    /** 常量 CONTENT_TYPE_JSON_URL. */
     // HTTP内容类型。相当于form表单的形式，提交数据
     public static final String CONTENT_TYPE_JSON_URL = "application/json;charset=utf-8";
 
 
+    /** pool. */
     // 连接管理器
     private static PoolingHttpClientConnectionManager pool;
 
+    /** request config. */
     // 请求配置
     private static RequestConfig requestConfig;
 
@@ -113,10 +143,10 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送Post请求
+     * Send http post.
      *
-     * @param httpPost
-     * @return
+     * @param httpPost the http post
+     * @return the string
      */
     private static String sendHttpPost(HttpPost httpPost) {
 
@@ -161,10 +191,10 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送Get请求
+     * Send http get.
      *
-     * @param httpGet
-     * @return
+     * @param httpGet the http get
+     * @return the string
      */
     private static String sendHttpGet(HttpGet httpGet) {
 
@@ -211,10 +241,10 @@ public class HttpClientUtil {
 
 
     /**
-     * 发送 post请求
+     * Send http post.
      *
-     * @param httpUrl
-     *            地址
+     * @param httpUrl the http url
+     * @return the string
      */
     public static String sendHttpPost(String httpUrl) {
         // 创建httpPost
@@ -223,9 +253,10 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送 get请求
+     * Send http get.
      *
-     * @param httpUrl
+     * @param httpUrl the http url
+     * @return the string
      */
     public static String sendHttpGet(String httpUrl) {
         // 创建get请求
@@ -234,19 +265,25 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送 get请求
+     * Send http get.
      *
-     * @param httpUrl
-     *            地址
-     * @param map
-     *            参数
-     *
+     * @param httpUrl the http url
+     * @param map the map
+     * @return the string
      */
     public static String sendHttpGet(String httpUrl, Map<String,String> map) {
         httpUrl = buildGetParam(httpUrl,map);
         return sendHttpGet(httpUrl);
     }
 
+    /**
+     * Send http get.
+     *
+     * @param httpUrl the http url
+     * @param map the map
+     * @param headers the headers
+     * @return the string
+     */
     public static String sendHttpGet(String httpUrl, Map<String,String> map,Map<String,String> headers) {
         httpUrl = buildGetParam(httpUrl,map);
         // 创建get请求
@@ -259,18 +296,21 @@ public class HttpClientUtil {
     }
 
     /**
-     * 建立GET参数，使用HashMap。
-     * @param map
-     * @return
+     * Builds the get param.
+     *
+     * @param url the url
+     * @param map the map
+     * @return the string
      */
     public static String buildGetParam(String url,Map<String,String> map){
         return url + "?" + buildGetParam(map);
     }
 
     /**
-     * 建立Get参数，使用HashMap。
-     * @param map
-     * @return
+     * Builds the get param.
+     *
+     * @param map the map
+     * @return the string
      */
     public static String buildGetParam(Map<String,String> map){
 
@@ -287,14 +327,12 @@ public class HttpClientUtil {
 
 
     /**
-     * 发送 post请求（带文件）
+     * Send http post.
      *
-     * @param httpUrl
-     *            地址
-     * @param maps
-     *            参数
-     * @param fileLists
-     *            附件
+     * @param httpUrl the http url
+     * @param maps the maps
+     * @param fileLists the file lists
+     * @return the string
      */
     public static String sendHttpPost(String httpUrl, Map<String, String> maps, List<File> fileLists) {
         HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
@@ -316,13 +354,11 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送 post请求
+     * Send http post.
      *
-     * @param httpUrl
-     *            地址
-     * @param params
-     *            参数(格式:key1=value1&key2=value2)
-     *
+     * @param httpUrl the http url
+     * @param params the params
+     * @return the string
      */
     public static String sendHttpPost(String httpUrl, String params) {
         HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
@@ -340,16 +376,25 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送 post请求
+     * Send http post.
      *
-     * @param maps
-     *            参数
+     * @param httpUrl the http url
+     * @param maps the maps
+     * @return the string
      */
     public static String sendHttpPost(String httpUrl, Map<String, String> maps) {
         String parem = convertStringParamter(maps);
         return sendHttpPost(httpUrl, parem);
     }
 
+    /**
+     * Send http post.
+     *
+     * @param httpUrl the http url
+     * @param maps the maps
+     * @param headers the headers
+     * @return the string
+     */
     public static String sendHttpPost(String httpUrl, Map<String, String> maps,Map<String,String> headers) {
         HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
         //设置请求头
@@ -376,13 +421,11 @@ public class HttpClientUtil {
 
 
     /**
-     * 发送 post请求 发送json数据
+     * Send http post json.
      *
-     * @param httpUrl
-     *            地址
-     * @param paramsJson
-     *            参数(格式 json)
-     *
+     * @param httpUrl the http url
+     * @param paramsJson the params json
+     * @return the string
      */
     public static String sendHttpPostJson(String httpUrl, String paramsJson) {
         HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
@@ -399,6 +442,14 @@ public class HttpClientUtil {
         return sendHttpPost(httpPost);
     }
 
+    /**
+     * Send http post json.
+     *
+     * @param httpUrl the http url
+     * @param paramsJson the params json
+     * @param headers the headers
+     * @return the string
+     */
     public static String sendHttpPostJson(String httpUrl, String paramsJson,Map<String,String> headers) {
         HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
         //设置请求头
@@ -421,11 +472,11 @@ public class HttpClientUtil {
     }
 
     /**
-     * 发送 post请求 发送xml数据
+     * Send http post xml.
      *
-     * @param httpUrl   地址
-     * @param paramsXml  参数(格式 Xml)
-     *
+     * @param httpUrl the http url
+     * @param paramsXml the params xml
+     * @return the string
      */
     public static String sendHttpPostXml(String httpUrl, String paramsXml) {
         HttpPost httpPost = new HttpPost(httpUrl);// 创建httpPost
@@ -444,11 +495,10 @@ public class HttpClientUtil {
 
 
     /**
-     * 将map集合的键值对转化成：key1=value1&key2=value2 的形式
+     * Convert string paramter.
      *
-     * @param parameterMap
-     *            需要转化的键值对集合
-     * @return 字符串
+     * @param parameterMap the parameter map
+     * @return the string
      */
     public static String convertStringParamter(Map parameterMap) {
         StringBuffer parameterBuffer = new StringBuffer();

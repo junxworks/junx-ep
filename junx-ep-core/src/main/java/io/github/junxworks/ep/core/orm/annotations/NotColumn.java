@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  NotColumn.java   
- * @Package io.github.junxworks.ep.core.annotations   
+ * @Package io.github.junxworks.ep.core.orm.annotations   
  * @Description: (用一句话描述该文件做什么)   
- * @author: AOC
- * @date:   2019-9-29 13:24:07   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -22,11 +22,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 不是字段，例如序列化id
+ * {类的详细说明}.
  *
  * @ClassName:  NotColumn
- * @author: 王兴
- * @date:   2019-9-29 13:24:07
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
  * @since:  v1.0
  */
 @Target(ElementType.FIELD)

@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  DuplicatedDataSourceException.java   
- * @Package io.github.junxworks.ep.core.ds   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  UnknownTokenException.java   
+ * @Package io.github.junxworks.ep.core.exception   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-9 15:57:00   
+ * @date:   2020-7-19 12:18:36   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -19,56 +19,69 @@ package io.github.junxworks.ep.core.exception;
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 
 /**
- * 未知token
+ * {类的详细说明}.
  *
- * @author: 王兴
- * @date:   2017-5-7 17:32:52
- * @since:  v4.3
+ * @ClassName:  UnknownTokenException
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
  */
 public class UnknownTokenException extends BaseRuntimeException {
 
-	/**
-	 * 
-	 */
+	/** 常量 serialVersionUID. */
 	private static final long serialVersionUID = 5362519994576363996L;
 
 	/**
-	 * @see BaseRuntimeException#BaseRuntimeException()
+	 * 构造一个新的 unknown token exception 对象.
 	 */
 	public UnknownTokenException() {
 		super("");
 	}
 
 	/**
-	 * @see BaseRuntimeException#BaseRuntimeException(String)
+	 * 构造一个新的 unknown token exception 对象.
+	 *
+	 * @param msg the msg
 	 */
 	public UnknownTokenException(String msg) {
 		super(msg);
 	}
 
 	/**
-	 * @see BaseRuntimeException#BaseRuntimeException(Throwable)
+	 * 构造一个新的 unknown token exception 对象.
+	 *
+	 * @param ex the ex
 	 */
 	public UnknownTokenException(Throwable ex) {
 		super(ex);
 	}
 
 	/**
-	 * @see BaseRuntimeException#BaseRuntimeException(String,Throwable)
+	 * 构造一个新的 unknown token exception 对象.
+	 *
+	 * @param msg the msg
+	 * @param ex the ex
 	 */
 	public UnknownTokenException(String msg, Throwable ex) {
 		super(msg, ex);
 	}
 
 	/**
-	 * @see BaseRuntimeException#BaseRuntimeException(String,Object...)
+	 * 构造一个新的 unknown token exception 对象.
+	 *
+	 * @param msg the msg
+	 * @param args the args
 	 */
 	public UnknownTokenException(String msg, Object... args) {
 		super(msg, args);
 	}
 
 	/**
-	 *  @see BaseRuntimeException#BaseRuntimeException(String,Exception,Object...)
+	 * 构造一个新的 unknown token exception 对象.
+	 *
+	 * @param msg the msg
+	 * @param e the e
+	 * @param args the args
 	 */
 	public UnknownTokenException(String msg, Exception e, Object... args) {
 		super(msg, e, args);

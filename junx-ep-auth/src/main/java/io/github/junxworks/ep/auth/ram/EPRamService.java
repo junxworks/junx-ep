@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  EPRamService.java   
- * @Package com.yrxd.security.ep   
+ * @Package io.github.junxworks.ep.auth.ram   
  * @Description: (用一句话描述该文件做什么)   
- * @author: AOC
- * @date:   2019-11-13 17:11:06   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:41   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -26,24 +26,24 @@ import io.github.junxworks.ep.core.utils.HttpClientUtil;
 import io.github.junxworks.ep.core.utils.JsonUtils;
 
 /**
- * RAM服务类
+ * {类的详细说明}.
  *
  * @ClassName:  EPRamService
- * @author: 王兴
- * @date:   2019-11-13 17:11:08
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
 public class EPRamService {
 
 	/**
-	 * 请求RAM中心，进行RAM校验
+	 * Contact auth center.
 	 *
-	 * @param authCenterUrl RAM认证中心URL地址
-	 * @param key ram key
-	 * @param secret ram secret
-	 * @param ctx 当前请求上下文
-	 * @param uri 当前请求URI
-	 * @param method 当前http请求method
+	 * @param authCenterUrl the auth center url
+	 * @param key the key
+	 * @param secret the secret
+	 * @param ctx the ctx
+	 * @param uri the uri
+	 * @param method the method
 	 * @return the result
 	 */
 	public Result contactAuthCenter(String authCenterUrl, String key, String secret, String ctx, String uri, String method) {

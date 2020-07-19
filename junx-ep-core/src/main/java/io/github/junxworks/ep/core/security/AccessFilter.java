@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  CookieFilter.java   
- * @Package com.yrxd.security.app.shiro   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  AccessFilter.java   
+ * @Package io.github.junxworks.ep.core.security   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-18 17:51:35   
+ * @date:   2020-7-19 12:18:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -33,9 +33,25 @@ import io.github.junxworks.ep.core.utils.IPUtils;
 import io.github.junxworks.junx.core.util.ByteUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  AccessFilter
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
+ * @since:  v1.0
+ */
 public class AccessFilter implements Filter {
+	
+	/** 常量 log. */
 	private static final Logger log = LoggerFactory.getLogger(AccessFilter.class);
 
+	/**
+	 * Inits the.
+	 *
+	 * @param filterConfig the filter config
+	 * @throws ServletException the servlet exception
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
@@ -43,6 +59,15 @@ public class AccessFilter implements Filter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
 
+	/**
+	 * Do filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
@@ -64,6 +89,9 @@ public class AccessFilter implements Filter {
 		chain.doFilter(wrapperRequest, response);
 	}
 
+	/**
+	 * Destroy.
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
 	 */

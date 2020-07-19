@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  DynamicDataSource.java   
  * @Package io.github.junxworks.ep.core.ds   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-2 9:55:54   
+ * @date:   2020-7-19 12:18:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -23,11 +23,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 动态数据源
+ * {类的详细说明}.
  *
  * @ClassName:  DynamicDataSource
- * @author: 王兴
- * @date:   2019-1-2 9:57:52
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
  * @since:  v1.0
  */
 public class DynamicDataSource extends AbstractRoutingDataSource {
@@ -41,6 +41,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	/** primary data source. */
 	private DataSource primaryDataSource;
 
+	/**
+	 * 构造一个新的 dynamic data source 对象.
+	 */
 	public DynamicDataSource() {
 	}
 
@@ -65,6 +68,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		return primaryDataSource;
 	}
 
+	/**
+	 * Determine current lookup key.
+	 *
+	 * @return the object
+	 */
 	/* (non-Javadoc)
 	 * @see org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource#determineCurrentLookupKey()
 	 */

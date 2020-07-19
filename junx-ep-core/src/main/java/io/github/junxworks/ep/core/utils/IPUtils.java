@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  IPUtils.java   
  * @Package io.github.junxworks.ep.core.utils   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-9 15:56:59   
+ * @date:   2020-7-19 12:18:36   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -29,14 +29,24 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  IPUtils
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
+ */
 public class IPUtils {
+	
+	/** logger. */
 	private static Logger logger = LoggerFactory.getLogger(IPUtils.class);
 
 	/**
-	 * 获取IP地址
-	 * 
-	 * 使用Nginx等反向代理软件， 则不能通过request.getRemoteAddr()获取IP地址
-	 * 如果使用了多级反向代理的话，X-Forwarded-For的值并不止一个，而是一串IP地址，X-Forwarded-For中第一个非unknown的有效IP字符串，则为真实IP地址
+	 * 返回 ip addr 属性.
+	 *
+	 * @param request the request
+	 * @return ip addr 属性
 	 */
 	public static String getIpAddr(HttpServletRequest request) {
 		String ip = null;
@@ -76,6 +86,7 @@ public class IPUtils {
 		return ip.getHostName();
 	}
 
+	/** 常量 IP4Regex. */
 	private static final String IP4Regex = "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}";
 
 	public static String getLocalIPAddress() throws UnknownHostException, SocketException {
@@ -109,6 +120,12 @@ public class IPUtils {
 		return null;
 	}
 
+	/**
+	 * Initialize server IP.
+	 *
+	 * @throws UnknownHostException the unknown host exception
+	 * @throws SocketException the socket exception
+	 */
 	public static final void initializeServerIP() throws UnknownHostException, SocketException {
 		String addr = IPUtils.getLocalIPAddress();//注册zookeeper，先初始化本地ip
 		if (!StringUtils.isBlank(addr)) {//默认非空

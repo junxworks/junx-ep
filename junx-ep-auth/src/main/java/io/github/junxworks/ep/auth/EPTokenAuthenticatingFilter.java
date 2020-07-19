@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  OAuth2Filter.java   
- * @Package com.yrxd.security.app.shiro   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  EPTokenAuthenticatingFilter.java   
+ * @Package io.github.junxworks.ep.auth   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-16 17:47:41   
+ * @date:   2020-7-19 12:18:41   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -34,19 +34,22 @@ import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 
 /**
- * shiro过滤器
+ * {类的详细说明}.
  *
- * @ClassName:  ShiroFilter
- * @author: 王兴
- * @date:   2019-1-16 17:47:41
+ * @ClassName:  EPTokenAuthenticatingFilter
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
 public class EPTokenAuthenticatingFilter extends EPRamAuthenticationFilter {
 
+	/** 常量 USERNAME. */
 	private static final String USERNAME = "username";
 
+	/** 常量 PASSWORD. */
 	private static final String PASSWORD = "password";
 
+	/** config. */
 	private EPShiroConfig config;
 
 	public EPShiroConfig getConfig() {
@@ -56,6 +59,15 @@ public class EPTokenAuthenticatingFilter extends EPRamAuthenticationFilter {
 	public void setConfig(EPShiroConfig config) {
 		this.config = config;
 	}
+	
+	/**
+	 * Creates the token.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return the authentication token
+	 * @throws Exception the exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.apache.shiro.web.filter.authc.AuthenticatingFilter#createToken(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
 	 */
@@ -68,6 +80,14 @@ public class EPTokenAuthenticatingFilter extends EPRamAuthenticationFilter {
 		return dt;
 	}
 
+	/**
+	 * On access denied.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.apache.shiro.web.filter.AccessControlFilter#onAccessDenied(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
 	 */
@@ -79,10 +99,26 @@ public class EPTokenAuthenticatingFilter extends EPRamAuthenticationFilter {
 		return super.onAccessDenied(request, response);
 	}
 
+	/**
+	 * 返回布尔值 login submission.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return 返回布尔值 login submission
+	 */
 	protected boolean isLoginSubmission(ServletRequest request, ServletResponse response) {
 		return (request instanceof HttpServletRequest) && WebUtils.toHttp(request).getMethod().equalsIgnoreCase(POST_METHOD);
 	}
 
+	/**
+	 * On login failure.
+	 *
+	 * @param token the token
+	 * @param e the e
+	 * @param request the request
+	 * @param response the response
+	 * @return true, if successful
+	 */
 	/* (non-Javadoc)
 	 * @see org.apache.shiro.web.filter.authc.AuthenticatingFilter#onLoginFailure(org.apache.shiro.authc.AuthenticationToken, org.apache.shiro.authc.AuthenticationException, javax.servlet.ServletRequest, javax.servlet.ServletResponse)
 	 */

@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  RamAuthenticationFilter.java   
- * @Package com.yrxd.security.ep   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  EPRamAuthenticationFilter.java   
+ * @Package io.github.junxworks.ep.auth.ram   
  * @Description: (用一句话描述该文件做什么)   
- * @author: AOC
- * @date:   2019-11-13 17:07:01   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:42   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -33,26 +33,34 @@ import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * 支持RAM的认证filter
+ * {类的详细说明}.
  *
- * @ClassName:  RamAuthenticationFilter
- * @author: 王兴
- * @date:   2019-11-13 17:07:01
+ * @ClassName:  EPRamAuthenticationFilter
+ * @author: Michael
+ * @date:   2020-7-19 12:18:42
  * @since:  v1.0
  */
 public abstract class EPRamAuthenticationFilter extends AuthenticatingFilter {
+	
+	/** 常量 log. */
 	private static final Logger log = LoggerFactory.getLogger(EPRamAuthenticationFilter.class);
 
+	/** ram service. */
 	private EPRamService ramService = new EPRamService();
 
+	/** ram enabled. */
 	private boolean ramEnabled = false;
 
+	/** ram auth center addr. */
 	private String ramAuthCenterAddr;
 
+	/** ram auth path. */
 	private String ramAuthPath;
 
+	/** ram header key name. */
 	private String ramHeaderKeyName;
 
+	/** ram header secret name. */
 	private String ramHeaderSecretName;
 
 	public EPRamService getRamService() {
@@ -103,6 +111,14 @@ public abstract class EPRamAuthenticationFilter extends AuthenticatingFilter {
 		this.ramHeaderSecretName = ramHeaderSecretName;
 	}
 
+	/**
+	 * On access denied.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	/* (non-Javadoc)
 	 * @see org.apache.shiro.web.filter.AccessControlFilter#onAccessDenied(javax.servlet.ServletRequest, javax.servlet.ServletResponse)
 	 */
@@ -139,7 +155,7 @@ public abstract class EPRamAuthenticationFilter extends AuthenticatingFilter {
 	}
 
 	/**
-	 * 是否是ram帐号控制的请求
+	 * 返回布尔值 ram request.
 	 *
 	 * @param req the req
 	 * @return 返回布尔值 ram request

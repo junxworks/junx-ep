@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link href="../../../plugins/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href="../../../css/components.min.css" rel="stylesheet" media="all" />
+    <link href="../../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all" />
+    <link rel="stylesheet" href="../../../css/font_tnyc012u2rlwstt9.css" media="all" />
+</head>
+<body>
+<script src="../../../plugins/jquery.min.js"></script>
+<script src="../../../plugins/layui/layui.js"></script>
+<script src="../../../js/base.js"></script>
+<script type="text/javascript" src="editJob.js"></script>
+
+  <form id="jobForm" class="layui-form layui-form-pane" lay-filter="jobForm" style="padding-top: 40px;padding-left: 40px">
+        <input type="hidden"  name="jobId" value="">
+        <input type="hidden"  name="status" value="">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class=" layui-form-label" style="width:140px;text-align:right" >任务名称：</label>
+                    <div class="layui-input-inline" >
+                        <input id="remark" type="text" lay-verify="required" name="remark"  autocomplete="off"  class="layui-input" style="width:550px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class=" layui-form-label" style="width:140px;text-align:right" >关联Bean名称：</label>
+                    <div class="layui-input-inline">
+                        <input id="beanName" type="text" lay-verify="required" name="beanName"  autocomplete="off"  class="layui-input" style="width:550px">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class=" layui-form-label" style="width:140px;text-align:right">方法名称：</label>
+                <div class="layui-input-inline">
+                    <input id="methodName" type="text" lay-verify="required" name="methodName"  autocomplete="off"  class="layui-input" style="width:550px">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class=" layui-form-label" style="width:140px;text-align:right">cron表达式：</label>
+                <div class="layui-input-inline">
+                    <input id="cronExpression" type="text" lay-verify="required" name="cronExpression"  autocomplete="off"  class="layui-input" style="width:550px">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width:140px;text-align:right">请求参数：</label>
+                <div class="layui-input-block">
+                    <textarea id="params" type="text" name="params"  autocomplete="off"  class="layui-input" style="width:550px; height: 150px"></textarea>
+                </div>
+            </div>
+               <div class="layui-form-item" style="padding-top: 20px;text-align: center">
+			        <div>
+			            <button type="button" class="layui-btn layui-btn-primary" onclick="closePage()">取消</button>
+			            <button class="layui-btn" lay-submit lay-filter="jobForm">保存</button>
+			        </div>
+			    </div>
+        </form>
+	</body>
+</html>

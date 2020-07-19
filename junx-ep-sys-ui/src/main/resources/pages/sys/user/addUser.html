@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新增用户</title>
+    <link href="../../../plugins/layui/css/layui.css" rel="stylesheet" media="all"/>
+    <link href="../../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all"/>
+    <style>
+        .roleDiv span {
+            width: 76px;
+        }
+    </style>
+</head>
+
+<body>
+<script src="../../../plugins/layui/layui.all.js"></script>
+<script src="../../../plugins/jquery.min.js"></script>
+<script src="../../../js/base.js"></script>
+<script src="addUser.js"></script>
+
+<form id="userForm" class="layui-form layui-form-pane" lay-filter="userForm" style="padding-top: 40px;padding-left: 40px">
+    <input name="id" hidden="hidden"/>
+    <div class="layui-form-item">
+         <div class="layui-inline">
+            <label class="layui-form-label">姓名：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" lay-verify="required" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">所属组织：</label>
+            <div class="layui-input-inline" style="width:210px">
+                <div id="orgNo"></div>
+            </div>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <div class="layui-inline">
+           <label class="layui-form-label">账号：</label>
+           <div class="layui-input-inline">
+               <input type="text" name="userName" lay-verify="required" autocomplete="off" class="layui-input">
+           </div>
+       </div>
+       <div class="layui-inline" id="password" >
+           <label class="layui-form-label">密码：</label>
+           <div class="layui-input-inline" style="width:210px">
+               <input type="text" name="password" placeholder="初始密码123456" class="layui-input" autocomplete="off" readonly="readonly">
+           </div>
+       </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">手机号：</label>
+            <div class="layui-input-inline">
+                <input type="tel" name="mobile" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">身份证：</label>
+            <div class="layui-input-inline" style="width:210px">
+                <input type="text" name="idCard" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">邮箱：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="email" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">状态：</label>
+            <div class="layui-input-block" >
+                <select name="status" lay-verify="required">
+                    <option value="0">正常</option>
+                    <option value="1">冻结</option>
+                    <option value="2">锁定</option>
+                    <option value="3">作废</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色：</label>
+        <div id="roleDiv" class="layui-input-block role-div">
+        </div>
+    </div>
+    <div class="layui-form-item" style="padding-top: 20px;text-align: center">
+        <div>
+            <button type="button" class="layui-btn layui-btn-primary" onclick="closePage()">取消</button>
+            <button class="layui-btn" lay-submit lay-filter="save">保存</button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

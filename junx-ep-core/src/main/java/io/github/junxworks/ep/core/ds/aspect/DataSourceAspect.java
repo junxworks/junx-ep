@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.higinet.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  DataSourceAspect.java   
- * @Package cn.com.higinet.common.web.datasource.aspect   
+ * @Package io.github.junxworks.ep.core.ds.aspect   
  * @Description: (用一句话描述该文件做什么)   
- * @author: 王兴
- * @date:   2018-1-26 14:03:10   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:36   
  * @version V1.0 
- * @Copyright: 2018 北京宏基恒信科技有限责任公司. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -32,6 +32,14 @@ import io.github.junxworks.ep.core.ds.annotation.DS;
 
 import io.github.junxworks.junx.core.util.StringUtils;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  DataSourceAspect
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
+ */
 @Aspect
 public class DataSourceAspect implements Ordered {
 
@@ -47,7 +55,7 @@ public class DataSourceAspect implements Ordered {
 	}
 
 	/**
-	 * 设置线程绑定数据源.
+	 * Around.
 	 *
 	 * @param point the point
 	 * @return the object

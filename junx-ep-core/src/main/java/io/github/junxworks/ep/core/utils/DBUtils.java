@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.higinet.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  DBUtils.java   
- * @Package cn.com.higinet.common.web.utils   
+ * @Package io.github.junxworks.ep.core.utils   
  * @Description: (用一句话描述该文件做什么)   
- * @author: 王兴
- * @date:   2018-1-31 10:58:38   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:36   
  * @version V1.0 
- * @Copyright: 2018 北京宏基恒信科技有限责任公司. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -27,19 +27,22 @@ import org.slf4j.LoggerFactory;
 import io.github.junxworks.ep.core.ds.DynamicDataSource;
 
 /**
- * BD工具类
+ * {类的详细说明}.
  *
  * @ClassName:  DBUtils
- * @author: 王兴
- * @date:   2018-1-31 10:58:40
- * @since:  v4.4
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
  */
 public class DBUtils {
 
+	/** 常量 TEST_SQL_ORACLE. */
 	private static final String TEST_SQL_ORACLE = "select 1 from dual";
 
+	/** 常量 TEST_SQL_MYSQL. */
 	private static final String TEST_SQL_MYSQL = "select 1";
 
+	/** 常量 logger. */
 	private static final Logger logger = LoggerFactory.getLogger(DBUtils.class);
 
 	/** 常量 DB_ORACLE. */
@@ -48,9 +51,10 @@ public class DBUtils {
 	/** 常量 DB_MYSQL. */
 	public static final String DB_MYSQL = "MySQL";
 
+	/** 常量 DB_SQLite. */
 	public static final String DB_SQLite = "SQLite";
 
-	/** 数据库名 */
+	/** db product name. */
 	private static String DB_PRODUCT_NAME;
 
 	/**

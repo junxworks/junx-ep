@@ -1,3 +1,19 @@
+/*
+ ***************************************************************************************
+ * EP for web developers.Supported By Junxworks
+ * @Title:  BodyReaderHttpServletRequestWrapper.java   
+ * @Package io.github.junxworks.ep.core.security   
+ * @Description: (用一句话描述该文件做什么)   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:36   
+ * @version V1.0 
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
+ *  ---------------------------------------------------------------------------------- 
+ * 文件修改记录
+ *     文件版本：         修改人：             修改原因：
+ ***************************************************************************************
+ */
 package io.github.junxworks.ep.core.security;
 
 import java.io.BufferedReader;
@@ -11,10 +27,25 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  BodyReaderHttpServletRequestWrapper
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
+ */
 public class BodyReaderHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
+	/** body. */
 	private final String body;
 
+	/**
+	 * 构造一个新的 body reader http servlet request wrapper 对象.
+	 *
+	 * @param request the request
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	public BodyReaderHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
 		super(request);
 		StringBuilder stringBuilder = new StringBuilder();

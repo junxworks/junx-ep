@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  TokenGenerator.java   
- * @Package com.yrxd.security.app.shiro   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  EPTokenGenerator.java   
+ * @Package io.github.junxworks.ep.auth   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-16 17:46:33   
+ * @date:   2020-7-19 12:18:41   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -22,11 +22,11 @@ import java.util.UUID;
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 
 /**
- * token生成器
+ * {类的详细说明}.
  *
- * @ClassName:  TokenGenerator
- * @author: 王兴
- * @date:   2019-1-16 17:46:33
+ * @ClassName:  EPTokenGenerator
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
 public class EPTokenGenerator {

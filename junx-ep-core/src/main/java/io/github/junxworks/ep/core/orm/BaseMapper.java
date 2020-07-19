@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  BaseMapper.java   
- * @Package io.github.junxworks.ep.core.mybatis   
+ * @Package io.github.junxworks.ep.core.orm   
  * @Description: (用一句话描述该文件做什么)   
- * @author: AOC
- * @date:   2019-9-2 9:50:49   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -24,16 +24,11 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.UpdateProvider;
 
 /**
- * 基础mapper类
- * 单表查询接口可以按下面样例：
- *  {@code  
-	    @SelectProvider(type = MybatisObjectSqlProvider.class, method = "queryByCondition")
-	    public VoObject queryByCondition(Object entityDto);
- *  }
- *  
+ * {类的详细说明}.
+ *
  * @ClassName:  BaseMapper
- * @author: 王兴
- * @date:   2019-9-2 9:50:49
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
  * @since:  v1.0
  */
 public interface BaseMapper {
@@ -49,9 +44,9 @@ public interface BaseMapper {
 	public int insertWithoutNull(Object entity);
 
 	/**
-	 * Insert entities without null.
+	 * Insert batch.
 	 *
-	 * @param entity the entity
+	 * @param entities the entities
 	 * @return the int
 	 */
 	@InsertProvider(type = MybatisObjectSqlProvider.class, method = "insertBatch")

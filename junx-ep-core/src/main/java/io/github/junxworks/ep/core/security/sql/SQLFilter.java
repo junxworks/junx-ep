@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
+ * EP for web developers.Supported By Junxworks
  * @Title:  SQLFilter.java   
  * @Package io.github.junxworks.ep.core.security.sql   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-2 11:14:05   
+ * @date:   2020-7-19 12:18:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -34,23 +34,33 @@ import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * sql注入过滤
+ * {类的详细说明}.
  *
  * @ClassName:  SQLFilter
- * @author: 王兴
- * @date:   2019-1-2 11:14:05
+ * @author: Michael
+ * @date:   2020-7-19 12:18:37
  * @since:  v1.0
  */
 public class SQLFilter implements Filter {
 
+	/** 常量 SQL_INJECT_KEYS. */
 	private static final String SQL_INJECT_KEYS = "sqlInjectKeys";
 
+	/** 常量 SEPARATOR. */
 	private static final String SEPARATOR = "|";
 
+	/** 常量 DEFAULT_SQL_INJECT_KEYS. */
 	private static final String DEFAULT_SQL_INJECT_KEYS = "truncate|insert|select|delete|update|declare|alert|drop|xp_cmdshell|/add|net user|exec|execute";
 
+	/** keys. */
 	private static String[] keys;
 
+	/**
+	 * Inits the.
+	 *
+	 * @param config the config
+	 * @throws ServletException the servlet exception
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
 	 */
@@ -63,6 +73,15 @@ public class SQLFilter implements Filter {
 		keys = StringUtils.split(keyStr, SEPARATOR);
 	}
 
+	/**
+	 * Do filter.
+	 *
+	 * @param request the request
+	 * @param response the response
+	 * @param chain the chain
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws ServletException the servlet exception
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
 	 */
@@ -94,7 +113,7 @@ public class SQLFilter implements Filter {
 	}
 
 	/**
-	 * 校验参数是否含有非法关键字.
+	 * Vailidate.
 	 *
 	 * @param params the params
 	 * @return true, if successful
@@ -108,6 +127,9 @@ public class SQLFilter implements Filter {
 		return false;
 	}
 
+	/**
+	 * Destroy.
+	 */
 	/* (non-Javadoc)
 	 * @see javax.servlet.Filter#destroy()
 	 */

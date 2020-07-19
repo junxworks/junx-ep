@@ -296,9 +296,14 @@
 		</dependency>
         <!-- end others -->
         <!-- junxworks -->
+        <dependency>
+		    <groupId>io.github.junxworks</groupId>
+		    <artifactId>junx-ep-sys</artifactId>
+		    <version>${project.version}</version>
+		</dependency>
 		<dependency>
 		    <groupId>io.github.junxworks</groupId>
-		    <artifactId>junx-ep-modules-ui</artifactId>
+		    <artifactId>junx-ep-sys-ui</artifactId>
 		    <version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -417,10 +422,12 @@
 	<modules>
 		<module>junx-ep-core</module>
 		<module>junx-ep-auth</module>
-		<module>junx-ep-modules</module>
-		<module>junx-ep-modules-ui</module>
+		<module>junx-ep-sys</module>
+		<module>junx-ep-sys-ui</module>
+		<module>junx-ep-scheduler</module>
 		<module>junx-ep-activiti</module>
 		<module>junx-ep-activiti-ui</module>
 		<module>junx-ep-fs</module>
+		<module>junx-ep-scheduler-ui</module>
 	</modules>
 </project>

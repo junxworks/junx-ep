@@ -1,3 +1,19 @@
+/*
+ ***************************************************************************************
+ * EP for web developers.Supported By Junxworks
+ * @Title:  ExportUtils.java   
+ * @Package io.github.junxworks.ep.core.utils   
+ * @Description: (用一句话描述该文件做什么)   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:36   
+ * @version V1.0 
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
+ *  ---------------------------------------------------------------------------------- 
+ * 文件修改记录
+ *     文件版本：         修改人：             修改原因：
+ ***************************************************************************************
+ */
 package io.github.junxworks.ep.core.utils;
 
 import java.io.BufferedInputStream;
@@ -28,21 +44,29 @@ import org.apache.poi.ss.usermodel.Workbook;
 import io.github.junxworks.junx.core.util.DateUtils;
 
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  ExportUtils
+ * @author: Michael
+ * @date:   2020-7-19 12:18:36
+ * @since:  v1.0
+ */
 public class ExportUtils {
 
+    /** 常量 EXCEL_SHEET_MAXSIZE. */
     //设置一个sheet最大行数
     private static final int EXCEL_SHEET_MAXSIZE = 50001;
 
     /**
-     * downloadExcel
-     * (传入数据导出Excel)
+     * Download excel.
      *
-     * @param response    HttpServletResponse
-     * @param objList     数据集合
-     * @param fileName    导出Excel文件名
-     * @param columnNames 列名数组
-     * @param keys        列名对应的字段属性名数组
-     * @throws Exception
+     * @param response the response
+     * @param objList the obj list
+     * @param fileName the file name
+     * @param columnNames the column names
+     * @param keys the keys
+     * @throws Exception the exception
      */
     public static void downloadExcel(HttpServletResponse response, List<?> objList, String fileName, String[] columnNames, String[] keys) throws Exception {
         List<Map<String, Object>> list = createExcelRecord(objList, keys);
@@ -77,13 +101,12 @@ public class ExportUtils {
     }
 
     /**
-     * createExcelRecord
-     * (数据集合装载)
+     * Creates the excel record.
      *
-     * @param projects 数据集合
-     * @param keys     显示字段数组
-     * @return list    返回类型
-     * @throws Exception
+     * @param projects the projects
+     * @param keys the keys
+     * @return the list
+     * @throws Exception the exception
      */
     private static List<Map<String, Object>> createExcelRecord(List<?> projects, String[] keys) throws Exception {
         List<Map<String, Object>> listmap = new ArrayList<>();
@@ -98,11 +121,13 @@ public class ExportUtils {
     }
 
     /**
-     * 创建excel文档，
+     * Creates the work book.
      *
-     * @param list        数据
-     * @param keys        list中map的key数组集合
-     * @param columnNames excel的列名
+     * @param sheetName the sheet name
+     * @param list the list
+     * @param keys the keys
+     * @param columnNames the column names
+     * @return the workbook
      */
     public static Workbook createWorkBook(String sheetName, List<Map<String, Object>> list, String[] keys, String columnNames[]) {
         // 创建excel工作簿
@@ -158,11 +183,10 @@ public class ExportUtils {
     }
 
     /**
-     * createCellStyleTocolumn
-     * (设置第一种单元格的样式（用于列名）)
+     * Creates the cell style tocolumn.
      *
-     * @param wb 工作簿对象
-     * @return CellStyle 返回类型
+     * @param wb the wb
+     * @return the cell style
      */
     private static CellStyle createCellStyleTocolumn(Workbook wb) {
         CellStyle cs = wb.createCellStyle();
@@ -182,11 +206,10 @@ public class ExportUtils {
     }
 
     /**
-     * createCellStyleToValue
-     * (设置第二种单元格的样式（用于值）)
+     * Creates the cell style to value.
      *
-     * @param wb 工作簿对象
-     * @return CellStyle 返回类型
+     * @param wb the wb
+     * @return the cell style
      */
     private static CellStyle createCellStyleToValue(Workbook wb) {
         CellStyle cs = wb.createCellStyle();
@@ -205,15 +228,14 @@ public class ExportUtils {
     }
 
     /**
-     * createSheet
-     * (这里用一句话描述这个方法的作用)
+     * Creates the sheet.
      *
-     * @param wb          工作簿对象
-     * @param cs          单元格的样式对象
-     * @param sheetName   sheet（页）名称
-     * @param keys        列数
-     * @param columnNames 列名
-     * @return Sheet 返回类型
+     * @param wb the wb
+     * @param cs the cs
+     * @param sheetName the sheet name
+     * @param keys the keys
+     * @param columnNames the column names
+     * @return the sheet
      */
     private static Sheet createSheet(Workbook wb, CellStyle cs, String sheetName, String[] keys, String columnNames[]) {
         // 创建第一个sheet（页），并命名

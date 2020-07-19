@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  SimpleToken.java   
- * @Package com.yrxd.security.app.shiro   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  DefaultToken.java   
+ * @Package io.github.junxworks.ep.auth   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-16 17:49:10   
+ * @date:   2020-7-19 12:18:41   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -19,29 +19,28 @@ package io.github.junxworks.ep.auth;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * 简单token对象
+ * {类的详细说明}.
  *
- * @ClassName:  SimpleToken
- * @author: 王兴
- * @date:   2019-1-16 17:49:10
+ * @ClassName:  DefaultToken
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
 public class DefaultToken implements AuthenticationToken {
-	/** 系统默认的用户名密码登录 */
+	
+	/** 常量 LOGIN_TYPE_DEFAULT. */
 	public static final int LOGIN_TYPE_DEFAULT = 1;
 
-	/**
-	 * 
-	 */
+	/** 常量 serialVersionUID. */
 	private static final long serialVersionUID = -7135846826802525791L;
 
-	/** 本地用户名密码登录或者其他第三方登录. */
+	/** login type. */
 	private int loginType=LOGIN_TYPE_DEFAULT;
 
-	/** 户名. */
+	/** principal. */
 	private String principal;
 
-	/** 密码. */
+	/** credential. */
 	private String credential;
 
 	public int getLoginType() {

@@ -1,3 +1,19 @@
+/*
+ ***************************************************************************************
+ * EP for web developers.Supported By Junxworks
+ * @Title:  EPShiroService.java   
+ * @Package io.github.junxworks.ep.auth   
+ * @Description: (用一句话描述该文件做什么)   
+ * @author: Administrator
+ * @date:   2020-7-19 12:18:41   
+ * @version V1.0 
+ * @Copyright: 2020 Junxworks. All rights reserved. 
+ * 注意：
+ *  ---------------------------------------------------------------------------------- 
+ * 文件修改记录
+ *     文件版本：         修改人：             修改原因：
+ ***************************************************************************************
+ */
 package io.github.junxworks.ep.auth;
 
 import java.sql.Connection;
@@ -15,21 +31,43 @@ import com.google.common.collect.Lists;
 import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.ds.DynamicDataSource;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  EPShiroService
+ * @author: Michael
+ * @date:   2020-7-19 12:18:41
+ * @since:  v1.0
+ */
 public class EPShiroService {
 
+	/** 常量 QUERY_USER. */
 	private static final String QUERY_USER = "select s.*,o.orgName,o.orgType from s_user s left join s_org o on s.orgNo=o.orgNo and o.status=0 where s.username=? and s.password=? and s.status=0";
 
+	/** 常量 QUERY_USER_AUTHORIZATIONS. */
 	private static final String QUERY_USER_AUTHORIZATIONS = "select distinct m.mark from s_user u,s_user_role r,s_role_menu rm,s_menu m where u.id=? and u.status=0 and u.id=r.userId and r.roleId=rm.roleId and rm.menuId=m.id and m.status=0 and m.mark != '' and m.mark is not null";
 
+	/** 常量 QUERY_ALL_AUTHORIZATIONS. */
 	private static final String QUERY_ALL_AUTHORIZATIONS = "select distinct m.mark from s_menu m where m.status=0 and m.mark != '' and m.mark is not null";
 
+	/** 常量 QUERY_USER_ROLES. */
 	private static final String QUERY_USER_ROLES = "select distinct r.roleTag from s_role r,s_user u,s_user_role ur where u.id=? and u.status=0 and u.id=ur.userId and ur.roleId=r.id and r.status=0 and r.roleTag != '' and r.roleTag is not null";
 
+	/** 常量 QUERY_ALL_ROLES. */
 	private static final String QUERY_ALL_ROLES = "select distinct r.roleTag from s_role r where r.status=0 and r.roleTag != '' and r.roleTag is not null";
 
+	/** dynamic data source. */
 	@Autowired
 	private DynamicDataSource dynamicDataSource;
 
+	/**
+	 * 返回 user 属性.
+	 *
+	 * @param username the username
+	 * @param password the password
+	 * @return user 属性
+	 * @throws SQLException the SQL exception
+	 */
 	public UserModel getUser(String username, String password) throws SQLException {
 		//所有验证均从主库中取数据
 		DataSource primary = dynamicDataSource.getPrimaryDataSource();
@@ -45,6 +83,13 @@ public class EPShiroService {
 		}
 	}
 
+	/**
+	 * Creates the user model from res.
+	 *
+	 * @param rs the rs
+	 * @return the user model
+	 * @throws SQLException the SQL exception
+	 */
 	private UserModel createUserModelFromRes(ResultSet rs) throws SQLException {
 		if (rs != null) {
 			UserModel model = new UserModel();
@@ -64,6 +109,13 @@ public class EPShiroService {
 		return null;
 	}
 
+	/**
+	 * 返回 user authorizations 属性.
+	 *
+	 * @param userId the user id
+	 * @return user authorizations 属性
+	 * @throws SQLException the SQL exception
+	 */
 	public List<String> getUserAuthorizations(Long userId) throws SQLException {
 		boolean isAdmin = userId != null && userId == -1;
 		//所有验证均从主库中取数据
@@ -86,6 +138,13 @@ public class EPShiroService {
 		return authorizations;
 	}
 
+	/**
+	 * 返回 user roles 属性.
+	 *
+	 * @param userId the user id
+	 * @return user roles 属性
+	 * @throws SQLException the SQL exception
+	 */
 	public List<String> getUserRoles(Long userId) throws SQLException {
 		boolean isAdmin = userId != null && userId == -1;
 		//所有验证均从主库中取数据
