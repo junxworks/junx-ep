@@ -16,18 +16,16 @@
  */
 package io.github.junxworks.ep.sys.service.impl;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageInfo;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import io.github.junxworks.ep.sys.dto.SystemLogConditionDto;
 import io.github.junxworks.ep.sys.entity.SOpLog;
 import io.github.junxworks.ep.sys.mapper.OpLogMapper;
 import io.github.junxworks.ep.sys.service.SystemLogService;
 import io.github.junxworks.ep.sys.vo.SystemLogInfoVo;
-import io.github.junxworks.ep.core.utils.PageUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * {类的详细说明}.
@@ -50,11 +48,8 @@ public class SystemLogServiceImpl implements SystemLogService {
      * @param condition the condition
      * @return system log list by page 属性
      */
-    public PageInfo<SystemLogInfoVo> getSystemLogListByPage(SystemLogConditionDto condition) {
-        PageUtils.setPage(condition);
-        Page<SystemLogInfoVo> logList = opLogMapper.selectAll(condition);
-        PageInfo<SystemLogInfoVo> voPageInfo = new PageInfo<SystemLogInfoVo>(logList);
-        return voPageInfo;
+    public List<SystemLogInfoVo> getSystemLogListByCondition(SystemLogConditionDto condition) {
+        return opLogMapper.selectAll(condition);
     }
     
     /**
@@ -67,4 +62,9 @@ public class SystemLogServiceImpl implements SystemLogService {
         SystemLogInfoVo log = opLogMapper.selectById(id);
         return log;
     }
+
+	@Override
+	public int saveSystemLog(SOpLog log) {
+		return opLogMapper.insertWithoutNull(log);
+	}
 }

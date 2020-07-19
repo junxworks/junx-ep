@@ -53,6 +53,10 @@ import io.github.junxworks.junx.core.util.ObjectUtils;
 @Aspect
 public class OpLogAspect {
 
+	private static final int MAX_URL_LEN = 500;
+
+	private static final int MAX_DATA_LEN = 2000;
+
 	/** 常量 THREAD_PREFIX. */
 	private static final String THREAD_PREFIX = "op-log-";
 
@@ -135,6 +139,9 @@ public class OpLogAspect {
 		Object[] args = joinPoint.getArgs();
 		try {
 			String params = JSON.toJSONString(args[0]);
+			if (params.length() > MAX_DATA_LEN) {
+				params = params.substring(0, MAX_DATA_LEN);
+			}
 			log.setData(params);
 		} catch (Exception e) {
 			log.setData(ExceptionUtils.getCauseMessage(e));
@@ -156,7 +163,11 @@ public class OpLogAspect {
 			HttpServletRequest request = ra.getRequest();
 			if (request != null) {
 				log.setIp(IPUtils.getIpAddr(request));
-				log.setUrl(request.getRequestURI());
+				String url = request.getRequestURI();
+				if (url.length() > MAX_URL_LEN) {
+					url = url.substring(0, MAX_URL_LEN);
+				}
+				log.setUrl(url);
 			}
 		}
 		executor.submit(new Runnable() {
@@ -166,5 +177,4 @@ public class OpLogAspect {
 			}
 		});
 	}
-
 }

@@ -16,9 +16,10 @@
  */
 package io.github.junxworks.ep.sys.service;
 
-import com.github.pagehelper.PageInfo;
+import java.util.List;
 
 import io.github.junxworks.ep.sys.dto.SystemLogConditionDto;
+import io.github.junxworks.ep.sys.entity.SOpLog;
 import io.github.junxworks.ep.sys.vo.SystemLogInfoVo;
 
 /**
@@ -38,7 +39,7 @@ public interface SystemLogService {
      * @param condition the condition
      * @return system log list by page 属性
      */
-    PageInfo<SystemLogInfoVo> getSystemLogListByPage(SystemLogConditionDto condition);
+    List<SystemLogInfoVo> getSystemLogListByCondition(SystemLogConditionDto condition);
     
     /**
      * 返回 system log info by id 属性.
@@ -47,4 +48,6 @@ public interface SystemLogService {
      * @return system log info by id 属性
      */
     SystemLogInfoVo getSystemLogInfoById(Long menuId);
+    
+    int saveSystemLog(SOpLog log);
 }
