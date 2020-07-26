@@ -97,10 +97,7 @@ public class UserController {
 	 */
 	@GetMapping(value = "/{userId}")
 	public Result getUserInfo(@PathVariable Long userId) {
-		Result result = Result.ok();
-		UserInfoVo vo = userService.findUserInfoById(userId);
-		result.setData(vo);
-		return result;
+		return Result.ok(userService.findUserInfoById(userId));
 	}
 
 	/**
@@ -183,11 +180,7 @@ public class UserController {
 	@PutMapping(value = "/{userId}/change-pass")
 	@OpLog("修改用户密码")
 	public Result changeUserPass(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
-		try {
-			userService.changeUserPass(userId, userInfoDto);
-			return Result.ok();
-		} catch (Exception e) {
-			return Result.error(e.getMessage());
-		}
+		userService.changeUserPass(userId, userInfoDto);
+		return Result.ok();
 	}
 }
