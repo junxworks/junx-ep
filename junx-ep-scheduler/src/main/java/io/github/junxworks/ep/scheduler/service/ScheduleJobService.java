@@ -16,11 +16,13 @@
  */
 package io.github.junxworks.ep.scheduler.service;
 
-
 import java.util.List;
 import java.util.Map;
 
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobEntity;
+import io.github.junxworks.ep.scheduler.dto.SJobListConditionDto;
+import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.vo.ScheduleJobVo;
 
 /**
  * {类的详细说明}.
@@ -38,16 +40,16 @@ public interface ScheduleJobService {
 	 * @param jobId the job id
 	 * @return the schedule job entity
 	 */
-	ScheduleJobEntity queryObject(Long jobId);
-	
+	SJob queryObject(Long jobId);
+
 	/**
 	 * Query list.
 	 *
 	 * @param map the map
 	 * @return the list
 	 */
-	List<ScheduleJobEntity> queryList(Map<String, Object> map);
-	
+	List<ScheduleJobVo> queryList(SJobListConditionDto condition);
+
 	/**
 	 * Query total.
 	 *
@@ -55,28 +57,21 @@ public interface ScheduleJobService {
 	 * @return the int
 	 */
 	int queryTotal(Map<String, Object> map);
-	
+
 	/**
 	 * Save.
 	 *
 	 * @param scheduleJob the schedule job
 	 */
-	void save(ScheduleJobEntity scheduleJob);
-	
-	/**
-	 * Update.
-	 *
-	 * @param scheduleJob the schedule job
-	 */
-	void update(ScheduleJobEntity scheduleJob);
-	
+	void save(SJob scheduleJob);
+
 	/**
 	 * Delete batch.
 	 *
 	 * @param jobIds the job ids
 	 */
 	void deleteBatch(Long[] jobIds);
-	
+
 	/**
 	 * Update batch.
 	 *
@@ -85,21 +80,21 @@ public interface ScheduleJobService {
 	 * @return the int
 	 */
 	int updateBatch(Long[] jobIds, int status);
-	
+
 	/**
 	 * Run.
 	 *
 	 * @param jobIds the job ids
 	 */
 	void run(Long[] jobIds);
-	
+
 	/**
 	 * Pause.
 	 *
 	 * @param jobIds the job ids
 	 */
 	void pause(Long[] jobIds);
-	
+
 	/**
 	 * Resume.
 	 *

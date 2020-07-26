@@ -28,10 +28,10 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import com.alibaba.fastjson.JSON;
 
 import io.github.junxworks.ep.core.utils.SpringContextUtils;
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobEntity;
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobLogEntity;
-import io.github.junxworks.ep.scheduler.entity.ScheduleObj;
+import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.entity.SJobLog;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobLogService;
+import io.github.junxworks.ep.sys.constants.SuccessFail;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
 
@@ -44,8 +44,8 @@ import io.github.junxworks.junx.core.util.StringUtils;
  * @since:  v1.0
  */
 @DisallowConcurrentExecution
-public class ScheduleJob extends QuartzJobBean {
-	
+public class ScheduledJob extends QuartzJobBean {
+
 	/** logger. */
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -57,45 +57,35 @@ public class ScheduleJob extends QuartzJobBean {
 	 */
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-		String jsonJob = context.getMergedJobDataMap().getString(ScheduleJobEntity.JOB_PARAM_KEY);
-		ScheduleObj scheduleJob = JSON.parseObject(jsonJob, ScheduleObj.class);
-
+		String jsonJob = context.getMergedJobDataMap().getString(ScheduleUtils.JOB_PARAM_KEY);
+		SJob scheduleJob = JSON.parseObject(jsonJob, SJob.class);
 		//获取scheduleJobLogService
 		ScheduleJobLogService scheduleJobLogService = (ScheduleJobLogService) SpringContextUtils.getBean("scheduleJobLogService");
-
 		//数据库保存执行记录
-		ScheduleJobLogEntity log = new ScheduleJobLogEntity();
-		log.setJobId(scheduleJob.getJobId());
+		SJobLog log = new SJobLog();
+		log.setJobId(scheduleJob.getId());
 		log.setBeanName(scheduleJob.getBeanName());
 		log.setMethodName(scheduleJob.getMethodName());
 		log.setParams(scheduleJob.getParams());
 		log.setCreateTime(new Date());
-
 		//任务开始时间
 		long startTime = System.currentTimeMillis();
-
 		try {
 			//执行任务
-			logger.info("任务准备执行，任务ID：" + scheduleJob.getJobId() + " remark:" + scheduleJob.getRemark());
+			logger.info("任务准备执行，任务ID：" + scheduleJob.getId() + " name:" + scheduleJob.getJobName());
 			ScheduleRunnable task = new ScheduleRunnable(scheduleJob.getBeanName(), scheduleJob.getMethodName(), scheduleJob.getParams());
 			task.run();
-
 			//任务执行总时长
-			long times = System.currentTimeMillis() - startTime;
-			log.setTimes((int) times);
-			//任务状态    0：成功    1：失败
-			log.setStatus(0);
-
-			logger.info("任务执行完毕，任务ID：" + scheduleJob.getJobId() + " remark:" + scheduleJob.getRemark() + "  总共耗时：" + times + "毫秒");
+			long costs = System.currentTimeMillis() - startTime;
+			log.setCosts((int) costs);
+			log.setStatus(SuccessFail.SUCCESS.getValue());
+			logger.info("任务执行完毕，任务ID：" + scheduleJob.getId() + " name:" + scheduleJob.getJobName() + "  总共耗时：" + costs + "毫秒");
 		} catch (Exception e) {
-			logger.error("任务执行失败，任务ID：" + scheduleJob.getJobId() + " remark:" + scheduleJob.getRemark(), e);
-
+			logger.error("任务执行失败，任务ID：" + scheduleJob.getId() + " name:" + scheduleJob.getJobName(), e);
 			//任务执行总时长
-			long times = System.currentTimeMillis() - startTime;
-			log.setTimes((int) times);
-
-			//任务状态    0：成功    1：失败
-			log.setStatus(1);
+			long costs = System.currentTimeMillis() - startTime;
+			log.setCosts((int) costs);
+			log.setStatus(SuccessFail.FAIL.getValue());
 			log.setError(StringUtils.substring(ExceptionUtils.getCause(e).toString(), 0, 2000));
 		} finally {
 			scheduleJobLogService.save(log);

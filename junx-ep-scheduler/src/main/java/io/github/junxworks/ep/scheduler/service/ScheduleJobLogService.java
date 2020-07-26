@@ -19,7 +19,8 @@ package io.github.junxworks.ep.scheduler.service;
 import java.util.List;
 import java.util.Map;
 
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobLogEntity;
+import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
+import io.github.junxworks.ep.scheduler.entity.SJobLog;
 import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
 
 /**
@@ -38,7 +39,7 @@ public interface ScheduleJobLogService {
 	 * @param jobId the job id
 	 * @return the schedule job log entity
 	 */
-	ScheduleJobLogEntity queryObject(Long jobId);
+	SJobLog queryObject(Long jobId);
 	
 	/**
 	 * Query list.
@@ -46,7 +47,7 @@ public interface ScheduleJobLogService {
 	 * @param map the map
 	 * @return the list
 	 */
-	List<ScheduleJobLogVo> queryList(Map<String, Object> map);
+	List<ScheduleJobLogVo> queryList(SJobLogListConditionDto condition);
 	
 	/**
 	 * Query total.
@@ -61,6 +62,6 @@ public interface ScheduleJobLogService {
 	 *
 	 * @param log the log
 	 */
-	void save(ScheduleJobLogEntity log);
+	void save(SJobLog log);
 	
 }

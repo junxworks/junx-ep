@@ -25,26 +25,26 @@ package io.github.junxworks.ep.scheduler;
  * @since:  v1.0
  */
 public enum ScheduleStatus {
-	
+
 	/** normal. */
-	NORMAL(0),
-	
+	NORMAL((byte) 0),
+
 	/** pause. */
-	PAUSE(1);
+	PAUSE((byte) 1);
 
 	/** value. */
-	private int value;
+	private byte value;
 
 	/**
 	 * 构造一个新的 schedule status 对象.
 	 *
 	 * @param value the value
 	 */
-	ScheduleStatus(int value) {
+	ScheduleStatus(Byte value) {
 		this.value = value;
 	}
 
-	public int getValue() {
+	public byte getValue() {
 		return value;
 	}
 }

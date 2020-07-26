@@ -19,6 +19,8 @@ package io.github.junxworks.ep.scheduler.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * {类的详细说明}.
  *
@@ -28,12 +30,12 @@ import java.util.Date;
  * @since:  v1.0
  */
 public class ScheduleJobLogVo implements Serializable {
-	
+
 	/** 常量 serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
 	/** log id. */
-	private Long logId;
+	private Long id;
 
 	/** job id. */
 	private Long jobId;
@@ -60,14 +62,15 @@ public class ScheduleJobLogVo implements Serializable {
 	private String remark;
 
 	/** create time. */
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
 	private Date createTime;
 
-	public Long getLogId() {
-		return logId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setLogId(Long logId) {
-		this.logId = logId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getJobId() {

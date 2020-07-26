@@ -21,18 +21,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
+import org.apache.shiro.SecurityUtils;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.scheduler.ScheduleStatus;
 import io.github.junxworks.ep.scheduler.ScheduleUtils;
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobEntity;
-import io.github.junxworks.ep.scheduler.mapper.ScheduleJobMapper;
+import io.github.junxworks.ep.scheduler.dto.SJobListConditionDto;
+import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.mapper.SJobMapper;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobService;
+import io.github.junxworks.ep.scheduler.vo.ScheduleJobVo;
 
 /**
  * {类的详细说明}.
@@ -44,32 +46,15 @@ import io.github.junxworks.ep.scheduler.service.ScheduleJobService;
  */
 @Service("scheduleJobService")
 public class ScheduleJobServiceImpl implements ScheduleJobService {
-	
+
 	/** scheduler. */
 	@Autowired
-    private Scheduler scheduler;
-	
+	private Scheduler scheduler;
+
 	/** scheduler job dao. */
 	@Autowired
-	private ScheduleJobMapper schedulerJobDao;
-	
-	/**
-	 * Inits the.
-	 */
-	@PostConstruct
-	public void init(){
-		/*List<ScheduleJobEntity> scheduleJobList = schedulerJobDao.queryList(new HashMap<>());
-		for(ScheduleJobEntity scheduleJob : scheduleJobList){
-			CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler, scheduleJob.getJobId());
-            //如果不存在，则创建
-            if(cronTrigger == null) {
-                ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
-            }else {
-                ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
-            }
-		}*/
-	}
-	
+	private SJobMapper schedulerJobMapper;
+
 	/**
 	 * Query object.
 	 *
@@ -77,8 +62,8 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 * @return the schedule job entity
 	 */
 	@Override
-	public ScheduleJobEntity queryObject(Long jobId) {
-		return schedulerJobDao.queryObject(jobId);
+	public SJob queryObject(Long jobId) {
+		return schedulerJobMapper.queryObject(jobId);
 	}
 
 	/**
@@ -88,8 +73,8 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 * @return the list
 	 */
 	@Override
-	public List<ScheduleJobEntity> queryList(Map<String, Object> map) {
-		return schedulerJobDao.queryList(map);
+	public List<ScheduleJobVo> queryList(SJobListConditionDto condition) {
+		return schedulerJobMapper.queryList(condition);
 	}
 
 	/**
@@ -100,7 +85,7 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 */
 	@Override
 	public int queryTotal(Map<String, Object> map) {
-		return schedulerJobDao.queryTotal(map);
+		return schedulerJobMapper.queryTotal(map);
 	}
 
 	/**
@@ -110,24 +95,21 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 */
 	@Override
 	@Transactional
-	public void save(ScheduleJobEntity scheduleJob) {
-		scheduleJob.setCreateTime(new Date());
-		scheduleJob.setStatus(ScheduleStatus.NORMAL.getValue());
-        schedulerJobDao.save(scheduleJob);
-        ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
-    }
-	
-	/**
-	 * Update.
-	 *
-	 * @param scheduleJob the schedule job
-	 */
-	@Override
-	@Transactional
-	public void update(ScheduleJobEntity scheduleJob) {
-        schedulerJobDao.update(scheduleJob);
-        ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
-    }
+	public void save(SJob scheduleJob) {
+		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
+		if (scheduleJob.getId() == null) {
+			scheduleJob.setCreatorId(user.getId());
+			scheduleJob.setCreateDate(new Date());
+			scheduleJob.setStatus(ScheduleStatus.NORMAL.getValue());
+			schedulerJobMapper.insertWithoutNull(scheduleJob);
+			ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
+		} else {
+			scheduleJob.setModifierId(user.getId());
+			scheduleJob.setModifyDate(new Date());
+			schedulerJobMapper.updateWithoutNull(scheduleJob);
+			ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
+		}
+	}
 
 	/**
 	 * Delete batch.
@@ -136,13 +118,13 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 */
 	@Override
 	@Transactional
-    public void deleteBatch(Long[] jobIds) {
-    	for(Long jobId : jobIds){
-    		ScheduleUtils.deleteScheduleJob(scheduler, jobId);
-    	}
-    	
-    	//删除数据
-    	schedulerJobDao.deleteBatch(jobIds);
+	public void deleteBatch(Long[] jobIds) {
+		for (Long jobId : jobIds) {
+			ScheduleUtils.deleteScheduleJob(scheduler, jobId);
+		}
+
+		//删除数据
+		schedulerJobMapper.deleteBatch(jobIds);
 	}
 
 	/**
@@ -153,13 +135,13 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 * @return the int
 	 */
 	@Override
-    public int updateBatch(Long[] jobIds, int status){
-    	Map<String, Object> map = new HashMap<>();
-    	map.put("list", jobIds);
-    	map.put("status", status);
-    	return schedulerJobDao.updateBatch(map);
-    }
-    
+	public int updateBatch(Long[] jobIds, int status) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", jobIds);
+		map.put("status", status);
+		return schedulerJobMapper.updateStatusBatch(map);
+	}
+
 	/**
 	 * Run.
 	 *
@@ -167,11 +149,11 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 */
 	@Override
 	@Transactional
-    public void run(Long[] jobIds) {
-    	for(Long jobId : jobIds){
-    		ScheduleUtils.run(scheduler, queryObject(jobId));
-    	}
-    }
+	public void run(Long[] jobIds) {
+		for (Long jobId : jobIds) {
+			ScheduleUtils.run(scheduler, queryObject(jobId));
+		}
+	}
 
 	/**
 	 * Pause.
@@ -180,13 +162,13 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 */
 	@Override
 	@Transactional
-    public void pause(Long[] jobIds) {
-        for(Long jobId : jobIds){
-    		ScheduleUtils.pauseJob(scheduler, jobId);
-    	}
-        
-    	updateBatch(jobIds, ScheduleStatus.PAUSE.getValue());
-    }
+	public void pause(Long[] jobIds) {
+		for (Long jobId : jobIds) {
+			ScheduleUtils.pauseJob(scheduler, jobId);
+		}
+
+		updateBatch(jobIds, ScheduleStatus.PAUSE.getValue());
+	}
 
 	/**
 	 * Resume.
@@ -195,12 +177,12 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 */
 	@Override
 	@Transactional
-    public void resume(Long[] jobIds) {
-    	for(Long jobId : jobIds){
-    		ScheduleUtils.resumeJob(scheduler, jobId);
-    	}
+	public void resume(Long[] jobIds) {
+		for (Long jobId : jobIds) {
+			ScheduleUtils.resumeJob(scheduler, jobId);
+		}
 
-    	updateBatch(jobIds, ScheduleStatus.NORMAL.getValue());
-    }
-    
+		updateBatch(jobIds, ScheduleStatus.NORMAL.getValue());
+	}
+
 }

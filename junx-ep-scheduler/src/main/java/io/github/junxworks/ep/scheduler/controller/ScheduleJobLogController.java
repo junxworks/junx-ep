@@ -16,23 +16,18 @@
  */
 package io.github.junxworks.ep.scheduler.controller;
 
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
 
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.PageUtils;
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobLogEntity;
+import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobLogService;
-import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
 
 /**
  * {类的详细说明}.
@@ -45,7 +40,7 @@ import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
 @RestController
 @RequestMapping("/ep/sys/schedule")
 public class ScheduleJobLogController {
-	
+
 	/** schedule job log service. */
 	@Autowired
 	private ScheduleJobLogService scheduleJobLogService;
@@ -57,13 +52,9 @@ public class ScheduleJobLogController {
 	 * @return the result
 	 */
 	@GetMapping("/logs")
-//	@RequiresPermissions("sys:schedule:log")
-	public Result list(@RequestParam Map<String, Object> params) {
-		//查询列表数据
-		PageUtils.setPage(params);
-		List<ScheduleJobLogVo> jobList = scheduleJobLogService.queryList(params);
-		PageInfo<ScheduleJobLogVo> page = new PageInfo<>(jobList);
-		return Result.ok(page);
+	public Result list(SJobLogListConditionDto condition) {
+		PageUtils.setPage(condition);
+		return Result.ok(new PageInfo<>(scheduleJobLogService.queryList(condition)));
 	}
 
 	/**
@@ -74,7 +65,6 @@ public class ScheduleJobLogController {
 	 */
 	@GetMapping("/logs/{logId}")
 	public Result info(@PathVariable("logId") Long logId) {
-		ScheduleJobLogEntity log = scheduleJobLogService.queryObject(logId);
-		return Result.ok(log);
+		return Result.ok(scheduleJobLogService.queryObject(logId));
 	}
 }

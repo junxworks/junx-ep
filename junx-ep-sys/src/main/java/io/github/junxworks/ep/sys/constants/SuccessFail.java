@@ -1,7 +1,7 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  MenuType.java   
+ * @Title:  SuccessFail.java   
  * @Package io.github.junxworks.ep.sys.constants   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
@@ -19,19 +19,17 @@ package io.github.junxworks.ep.sys.constants;
 /**
  * {类的详细说明}.
  *
- * @ClassName:  MenuType
+ * @ClassName:  SuccessFail
  * @author: Michael
  * @date:   2020-7-26 14:02:23
  * @since:  v1.0
  */
-public enum MenuType {
+public enum SuccessFail {
 
-	/** menu. */
-	MENU((byte) 0, "菜单"), 
- /** auth. */
- AUTH((byte) 1, "权限"), 
- /** directory. */
- DIRECTORY((byte) 2, "目录");
+	/** success. */
+	SUCCESS((byte) 1, "成功"),
+	/** fail. */
+	FAIL((byte) 0, "失败");
 
 	/** value. */
 	private byte value;
@@ -40,14 +38,29 @@ public enum MenuType {
 	private String desc;
 
 	/**
-	 * 构造一个新的 menu type 对象.
+	 * 构造一个新的 success fail 对象.
 	 *
-	 * @param type the type
+	 * @param value the value
 	 * @param desc the desc
 	 */
-	private MenuType(byte type, String desc) {
-		this.value = type;
+	SuccessFail(byte value, String desc) {
+		this.value = value;
 		this.desc = desc;
+	}
+
+	/**
+	 * 返回 enum 属性.
+	 *
+	 * @param value the value
+	 * @return enum 属性
+	 */
+	public static SuccessFail getEnum(byte value) {
+		for (SuccessFail SUCCESS : SuccessFail.values()) {
+			if (SUCCESS.value == value) {
+				return SUCCESS;
+			}
+		}
+		return SuccessFail.FAIL;
 	}
 
 	public byte getValue() {

@@ -35,6 +35,7 @@ import io.github.junxworks.ep.auth.EnableEPShiroProxy;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@EnableEPSysInitializer //系统初始化检查
 @EnableBaseEPModules //EP基础系统模块
 @EnableEPShiroProxy //开启EP认证
 public @interface EnableEPSys {

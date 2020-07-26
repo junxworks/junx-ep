@@ -1,7 +1,7 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  MenuType.java   
+ * @Title:  YesNo.java   
  * @Package io.github.junxworks.ep.sys.constants   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
@@ -19,19 +19,17 @@ package io.github.junxworks.ep.sys.constants;
 /**
  * {类的详细说明}.
  *
- * @ClassName:  MenuType
+ * @ClassName:  YesNo
  * @author: Michael
  * @date:   2020-7-26 14:02:23
  * @since:  v1.0
  */
-public enum MenuType {
+public enum YesNo {
 
-	/** menu. */
-	MENU((byte) 0, "菜单"), 
- /** auth. */
- AUTH((byte) 1, "权限"), 
- /** directory. */
- DIRECTORY((byte) 2, "目录");
+	/** yes. */
+	YES((byte) 1, "是"),
+	/** no. */
+	NO((byte) 0, "否");
 
 	/** value. */
 	private byte value;
@@ -40,14 +38,29 @@ public enum MenuType {
 	private String desc;
 
 	/**
-	 * 构造一个新的 menu type 对象.
+	 * 构造一个新的 yes no 对象.
 	 *
-	 * @param type the type
+	 * @param value the value
 	 * @param desc the desc
 	 */
-	private MenuType(byte type, String desc) {
-		this.value = type;
+	YesNo(byte value, String desc) {
+		this.value = value;
 		this.desc = desc;
+	}
+
+	/**
+	 * 返回 enum 属性.
+	 *
+	 * @param value the value
+	 * @return enum 属性
+	 */
+	public static YesNo getEnum(byte value) {
+		for (YesNo yseNo : YesNo.values()) {
+			if (yseNo.value == value) {
+				return yseNo;
+			}
+		}
+		return YesNo.NO;
 	}
 
 	public byte getValue() {

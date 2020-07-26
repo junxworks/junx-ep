@@ -60,7 +60,7 @@ public class ScheduleConfiguration extends TableInitComponent {
 	private static final String INIT_PATH = "/io/github/junxworks/ep/scheduler/init";
 
 	/** 常量 tables. */
-	public static final List<String> tables = Lists.newArrayList("schedule_job", "schedule_job_log", "QRTZ_JOB_DETAILS", "QRTZ_TRIGGERS", "QRTZ_SIMPLE_TRIGGERS", "QRTZ_CRON_TRIGGERS", "QRTZ_SIMPROP_TRIGGERS", "QRTZ_BLOB_TRIGGERS", "QRTZ_CALENDARS", "QRTZ_PAUSED_TRIGGER_GRPS", "QRTZ_FIRED_TRIGGERS", "QRTZ_SCHEDULER_STATE", "QRTZ_LOCKS");
+	public static final List<String> tables = Lists.newArrayList("s_job", "s_job_log", "QRTZ_JOB_DETAILS", "QRTZ_TRIGGERS", "QRTZ_SIMPLE_TRIGGERS", "QRTZ_CRON_TRIGGERS", "QRTZ_SIMPROP_TRIGGERS", "QRTZ_BLOB_TRIGGERS", "QRTZ_CALENDARS", "QRTZ_PAUSED_TRIGGER_GRPS", "QRTZ_FIRED_TRIGGERS", "QRTZ_SCHEDULER_STATE", "QRTZ_LOCKS");
 
 	/**
 	 * Schedule DB init.

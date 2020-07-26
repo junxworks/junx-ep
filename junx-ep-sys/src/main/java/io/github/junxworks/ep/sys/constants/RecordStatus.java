@@ -5,7 +5,7 @@
  * @Package io.github.junxworks.ep.sys.constants   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:17:47   
+ * @date:   2020-7-26 14:02:23   
  * @version V1.0 
  * @Copyright: 2020 Junxworks. All rights reserved. 
  * 注意：
@@ -21,14 +21,16 @@ package io.github.junxworks.ep.sys.constants;
  *
  * @ClassName:  RecordStatus
  * @author: Michael
- * @date:   2020-7-19 12:17:47
+ * @date:   2020-7-26 14:02:23
  * @since:  v1.0
  */
 public enum RecordStatus {
 
 	/** normal. */
-	NORMAL((byte) 0, "正常"), /** deleted. */
- DELETED((byte) -1, "已删除");
+	NORMAL((byte) 0, "正常"),
+	
+	/** deleted. */
+	DELETED((byte) -1, "已删除");
 
 	/** value. */
 	private byte value;

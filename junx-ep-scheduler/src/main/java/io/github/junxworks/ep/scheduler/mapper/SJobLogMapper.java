@@ -20,11 +20,12 @@ package io.github.junxworks.ep.scheduler.mapper;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobLogEntity;
+import io.github.junxworks.ep.core.orm.BaseMapper;
+import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
+import io.github.junxworks.ep.scheduler.entity.SJobLog;
 import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
 
 /**
@@ -36,7 +37,7 @@ import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
  * @since:  v1.0
  */
 @Mapper
-public interface ScheduleJobLogMapper {
+public interface SJobLogMapper extends BaseMapper{
 
 	/**
 	 * Query object.
@@ -44,8 +45,8 @@ public interface ScheduleJobLogMapper {
 	 * @param id the id
 	 * @return the schedule job log entity
 	 */
-	@Select("select * from schedule_job_log where log_id = #{id}")
-	ScheduleJobLogEntity queryObject(Object id);
+	@Select("select * from s_job_log where id = #{id}")
+	SJobLog queryObject(Object id);
 	
 	/**
 	 * Query list.
@@ -55,16 +56,29 @@ public interface ScheduleJobLogMapper {
 	 */
 	@Select({
 		"<script>",
-		" select l.*,j.remark from schedule_job_log l,schedule_job j where l.job_id = j.job_id ",
-		"<where>",
-			"<if test='jobId != null and jobId.trim().length()>0'>",
-				"and l.job_id = #{jobId}",
-			"</if>",
-		"</where>",
-		" order by l.log_id desc ",
+			" select l.*,j.jobName from s_job_log l,s_job j where l.jobId = j.id ",
+				"<if test='jobName != null and jobName.trim().length()>0'>",
+					" and j.jobName like concat('%', #{jobName}, '%') ",
+				"</if>",
+				"<if test='beanName != null and beanName.trim().length()>0'>",
+					" and j.beanName = #{beanName} ",
+				"</if>",
+				"<if test='methodName != null and methodName.trim().length()>0'>",
+					" and j.methodName = #{methodName} ",
+				"</if>",
+				"<if test='status != null '>",
+					" and l.status = #{status} ",
+				"</if>",
+				"<if test='startTime != null and startTime.trim().length()>0'>",
+					" and l.createTime &gt;= #{startTime} ",
+				"</if>",
+				"<if test='endTime != null and endTime.trim().length()>0'>",
+					" and l.createTime &lt;= #{endTime} ",
+				"</if>",
+			" order by l.id desc ",
 		"</script>"
 	})
-	List<ScheduleJobLogVo> queryList(Map<String, Object> map);
+	List<ScheduleJobLogVo> queryList(SJobLogListConditionDto condition);
 	
 	/**
 	 * Query total.
@@ -74,24 +88,13 @@ public interface ScheduleJobLogMapper {
 	 */
 	@Select({
 		"<script>",
-		"select count(1) from schedule_job_log ",
+		"select count(1) from s_job_log ",
 		"<where>",
 			"<if test='jobId != null and jobId.trim().length()>0'>",
-				"and job_id = #{jobId}",
+				" and jobId = #{jobId} ",
 			"</if>",
 		"</where>",
 		"</script>"
 	})
 	int queryTotal(Map<String, Object> map);
-	
-	/**
-	 * Save.
-	 *
-	 * @param t the t
-	 */
-	@Insert({
-		"insert into schedule_job_log(`job_id`, `bean_name`, `method_name`, `params`, `status`, `error`, `times`, `create_time`)",
-		"values(#{jobId}, #{beanName}, #{methodName}, #{params}, #{status}, #{error}, #{times}, #{createTime})"
-	})
-	void save(ScheduleJobLogEntity t);
 }

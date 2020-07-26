@@ -20,13 +20,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobEntity;
+import io.github.junxworks.ep.core.orm.BaseMapper;
+import io.github.junxworks.ep.scheduler.dto.SJobListConditionDto;
+import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.vo.ScheduleJobVo;
 
 /**
  * {类的详细说明}.
@@ -37,7 +38,7 @@ import io.github.junxworks.ep.scheduler.entity.ScheduleJobEntity;
  * @since:  v1.0
  */
 @Mapper
-public interface ScheduleJobMapper {
+public interface SJobMapper extends BaseMapper{
 	
 	/**
 	 * Delete batch.
@@ -46,41 +47,12 @@ public interface ScheduleJobMapper {
 	 * @return the int
 	 */
 	@Delete({"<script>",
-				"delete from schedule_job where job_id in ",
+				"delete from s_job where id in ",
 				"<foreach item='jobId' collection='array' open='(' separator=',' close=')'>",
 					"#{jobId}",
 				"</foreach>",
 			"</script>"})
 	public int deleteBatch(Object[] id);
-
-	/**
-	 * Save.
-	 *
-	 * @param t the t
-	 */
-	@Insert("insert into schedule_job(`bean_name`,`method_name`,`params`,`cron_expression`,`status`,`remark`,`create_time`)	values(#{beanName},	#{methodName},#{params},#{cronExpression},#{status},#{remark},#{createTime})")
-	@Options(useGeneratedKeys = true, keyProperty = "jobId")
-	public void save(ScheduleJobEntity t);
-	
-	/**
-	 * Update.
-	 *
-	 * @param t the t
-	 * @return the int
-	 */
-	@Update({"<script>",
-		"update schedule_job ",
-		"<set> ",
-			"<if test='beanName != null'>`bean_name` = #{beanName}, </if>",
-			"<if test='methodName != null'>`method_name` = #{methodName}, </if>",
-			"<if test='params != null'>`params` = #{params}, </if>",
-			"<if test='cronExpression != null'>`cron_expression` = #{cronExpression}, </if>",
-			"<if test='status != null'>`status` = #{status}, </if>",
-			"<if test='remark != null'>`remark` = #{remark}, </if>",
-		"</set>",
-		"where job_id = #{jobId}",
-		"</script>"})
-	public int update(ScheduleJobEntity t);
 
 	/**
 	 * Update batch.
@@ -89,12 +61,12 @@ public interface ScheduleJobMapper {
 	 * @return the int
 	 */
 	@Update({"<script>",
-		"update schedule_job set status = #{status} where job_id in ",
+		"update s_job set status = #{status} where id in ",
 		"<foreach item='jobId' collection='list' open='(' separator=',' close=')'>",
 			"#{jobId}",
 		"</foreach>",
 	"</script>"})
-	public int updateBatch(Map<String, Object> map);
+	public int updateStatusBatch(Map<String, Object> map);
 
 	/**
 	 * Query total.
@@ -103,10 +75,10 @@ public interface ScheduleJobMapper {
 	 * @return the int
 	 */
 	@Select({"<script>",
-		"select count(1) from schedule_job ",
+		"select count(1) from s_job ",
 		"<where>",
 			"<if test='beanName != null and beanName.trim().length()>0'>",
-				"bean_name like concat('%', #{beanName}, '%') ",
+				" beanName like concat('%', #{beanName}, '%') ",
 			"</if>",
 		"</where>",
 	"</script>"})
@@ -119,17 +91,16 @@ public interface ScheduleJobMapper {
 	 * @return the list
 	 */
 	@Select({"<script>",
-		"select * from schedule_job ",
-		"<where>",
+		"select j.*,u.name `creatorName`,u2.name `modifierName` from s_job j left join s_user u2 on j.modifierId=u2.id,s_user u ",
+		"where j.creatorId=u.id",
 			"<if test='beanName != null and beanName.trim().length()>0'>",
-				"bean_name like concat('%', #{beanName}, '%') ",
+				" and j.beanName like concat('%', #{beanName}, '%') ",
 			"</if>",
-			"<if test='remark != null and remark.trim().length()>0'>",
-				"and remark like concat('%', #{remark}, '%') ",
+			"<if test='jobName != null and jobName.trim().length()>0'>",
+				" and j.jobName like concat('%', #{jobName}, '%') ",
 			"</if>",
-		"</where>",
 	"</script>"})
-	public List<ScheduleJobEntity> queryList(Map<String, Object> map);
+	public List<ScheduleJobVo> queryList(SJobListConditionDto condition);
 
 	/**
 	 * Query object.
@@ -137,7 +108,7 @@ public interface ScheduleJobMapper {
 	 * @param id the id
 	 * @return the schedule job entity
 	 */
-	@Select("select * from schedule_job where job_id = #{value}")
-	public ScheduleJobEntity queryObject(Object id);
+	@Select("select * from s_job where id = #{value}")
+	public SJob queryObject(Object id);
 
 }

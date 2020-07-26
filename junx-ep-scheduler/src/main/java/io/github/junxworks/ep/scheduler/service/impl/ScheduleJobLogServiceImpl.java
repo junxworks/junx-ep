@@ -22,8 +22,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.github.junxworks.ep.scheduler.entity.ScheduleJobLogEntity;
-import io.github.junxworks.ep.scheduler.mapper.ScheduleJobLogMapper;
+import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
+import io.github.junxworks.ep.scheduler.entity.SJobLog;
+import io.github.junxworks.ep.scheduler.mapper.SJobLogMapper;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobLogService;
 import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
 
@@ -40,7 +41,7 @@ public class ScheduleJobLogServiceImpl implements ScheduleJobLogService {
 	
 	/** schedule job log dao. */
 	@Autowired
-	private ScheduleJobLogMapper scheduleJobLogDao;
+	private SJobLogMapper scheduleJobLogDao;
 	
 	/**
 	 * Query object.
@@ -49,7 +50,7 @@ public class ScheduleJobLogServiceImpl implements ScheduleJobLogService {
 	 * @return the schedule job log entity
 	 */
 	@Override
-	public ScheduleJobLogEntity queryObject(Long jobId) {
+	public SJobLog queryObject(Long jobId) {
 		return scheduleJobLogDao.queryObject(jobId);
 	}
 
@@ -60,8 +61,8 @@ public class ScheduleJobLogServiceImpl implements ScheduleJobLogService {
 	 * @return the list
 	 */
 	@Override
-	public List<ScheduleJobLogVo> queryList(Map<String, Object> map) {
-		return scheduleJobLogDao.queryList(map);
+	public List<ScheduleJobLogVo> queryList(SJobLogListConditionDto condition) {
+		return scheduleJobLogDao.queryList(condition);
 	}
 
 	/**
@@ -81,8 +82,8 @@ public class ScheduleJobLogServiceImpl implements ScheduleJobLogService {
 	 * @param log the log
 	 */
 	@Override
-	public void save(ScheduleJobLogEntity log) {
-		scheduleJobLogDao.save(log);
+	public void save(SJobLog log) {
+		scheduleJobLogDao.insertWithoutNull(log);
 	}
 
 }

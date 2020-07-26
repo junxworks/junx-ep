@@ -16,8 +16,11 @@
  */
 package io.github.junxworks.ep.scheduler.entity;
 
-import java.io.Serializable;
 import java.util.Date;
+
+import io.github.junxworks.ep.core.orm.annotations.Column;
+import io.github.junxworks.ep.core.orm.annotations.PrimaryKey;
+import io.github.junxworks.ep.core.orm.annotations.Table;
 
 /**
  * {类的详细说明}.
@@ -27,44 +30,43 @@ import java.util.Date;
  * @date:   2020-7-19 12:18:05
  * @since:  v1.0
  */
-public class ScheduleJobLogEntity implements Serializable {
-	
-	/** 常量 serialVersionUID. */
-	private static final long serialVersionUID = 1L;
+@Table(tableName = "s_job_log")
+public class SJobLog {
 
-	/** log id. */
-	private Long logId;
-	
-	/** job id. */
+	@PrimaryKey
+	@Column(name = "id", type = "BIGINT", length = "19", nullable = "false", comment = "任务日志id")
+	private Long id;
+
+	@Column(name = "jobId", type = "BIGINT", length = "19", nullable = "false", comment = "任务id")
 	private Long jobId;
-	
-	/** bean name. */
+
+	@Column(name = "beanName", type = "VARCHAR", length = "200", nullable = "true", comment = "spring bean名称")
 	private String beanName;
-	
-	/** method name. */
+
+	@Column(name = "methodName", type = "VARCHAR", length = "100", nullable = "true", comment = "方法名")
 	private String methodName;
-	
-	/** params. */
+
+	@Column(name = "params", type = "VARCHAR", length = "2,000", nullable = "true", comment = "参数")
 	private String params;
-	
-	/** status. */
-	private Integer status;
-	
-	/** error. */
+
+	@Column(name = "status", type = "TINYINT", length = "3", nullable = "false", comment = "任务状态    0：成功    1：失败")
+	private Byte status;
+
+	@Column(name = "error", type = "VARCHAR", length = "2,000", nullable = "true", comment = "失败信息")
 	private String error;
-	
-	/** times. */
-	private Integer times;
-	
-	/** create time. */
+
+	@Column(name = "costs", type = "INTEGER", length = "10", nullable = "false", comment = "耗时(单位：毫秒)")
+	private Integer costs;
+
+	@Column(name = "createTime", type = "TIMESTAMP", length = "19", nullable = "true", comment = "创建时间")
 	private Date createTime;
 
-	public Long getLogId() {
-		return logId;
+	public Long getId() {
+		return id;
 	}
 
-	public void setLogId(Long logId) {
-		this.logId = logId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Long getJobId() {
@@ -99,11 +101,11 @@ public class ScheduleJobLogEntity implements Serializable {
 		this.params = params;
 	}
 
-	public Integer getStatus() {
+	public Byte getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer status) {
+	public void setStatus(Byte status) {
 		this.status = status;
 	}
 
@@ -115,12 +117,12 @@ public class ScheduleJobLogEntity implements Serializable {
 		this.error = error;
 	}
 
-	public Integer getTimes() {
-		return times;
+	public Integer getCosts() {
+		return costs;
 	}
 
-	public void setTimes(Integer times) {
-		this.times = times;
+	public void setCosts(Integer costs) {
+		this.costs = costs;
 	}
 
 	public Date getCreateTime() {
@@ -130,5 +132,5 @@ public class ScheduleJobLogEntity implements Serializable {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
+
 }
