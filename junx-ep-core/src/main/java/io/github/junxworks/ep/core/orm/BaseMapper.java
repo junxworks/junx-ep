@@ -17,10 +17,13 @@
 package io.github.junxworks.ep.core.orm;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 
 /**
@@ -89,6 +92,37 @@ public interface BaseMapper {
 	@DeleteProvider(type = MybatisObjectSqlProvider.class, method = "deleteByPK")
 	public int deleteByPK(Object entity);
 
-	/*	@SelectProvider(type = MybatisObjectSqlProvider.class, method = "getOneByPK")
-		public Map<String, Object> getOneByPK(Object entity);*/
+	/**
+	 * Delete by PK.
+	 *
+	 * @param <T> the generic type
+	 * @param entity the entity
+	 * @param id the id
+	 * @return the int
+	 */
+	@DeleteProvider(type = MybatisObjectSqlProvider.class, method = "deleteByID")
+	public int deleteOneById(@Param("class")Class entity, @Param("id") Long id);
+
+	/**
+	 * 返回 one by PK 属性.
+	 *
+	 * @param <T> the generic type
+	 * @param entity the entity
+	 * @param id the id
+	 * @return one by PK 属性
+	 */
+	@SelectProvider(type = MybatisObjectSqlProvider.class, method = "getOneByPK")
+	public Map<String,Object> selectMapByPK(@Param("class")Class entity, @Param("id") Long id);
+
+	/**
+	 * 指定pkName获取实体
+	 *
+	 * @param <T> the generic type
+	 * @param entity the entity
+	 * @param pkName the pk name
+	 * @param id the id
+	 * @return one by PK 属性
+	 */
+	@SelectProvider(type = MybatisObjectSqlProvider.class, method = "getOneByPKNameAndValue")
+	public Map<String,Object> selectMapByPKNameAndValue(@Param("class")Class entity,  @Param("pkName")String pkName, @Param("id") Long id);
 }

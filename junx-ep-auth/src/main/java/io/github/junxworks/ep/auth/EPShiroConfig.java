@@ -30,7 +30,7 @@ import com.google.common.collect.Maps;
  * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
-@ConfigurationProperties(prefix = "ep.auth.shiro")
+@ConfigurationProperties(prefix = "junx.ep.auth.shiro")
 public class EPShiroConfig {
 
 	/** global session timeout. */

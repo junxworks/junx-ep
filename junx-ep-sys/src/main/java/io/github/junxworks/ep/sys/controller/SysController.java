@@ -5,9 +5,9 @@
  * @Package io.github.junxworks.ep.sys.controller   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:17:48   
+ * @date:   2021-1-24 15:35:41   
  * @version V1.0 
- * @Copyright: 2020 Junxworks. All rights reserved. 
+ * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,6 +58,7 @@ public class SysController {
 	private EPConfig config;
 
 	@Autowired
+	@Qualifier("SystemLogService")
 	private SystemLogService sysLog;
 
 	/**

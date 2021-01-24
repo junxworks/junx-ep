@@ -1,13 +1,13 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  DictionaryPageable.java   
+ * @Title:  DictConditionDto.java   
  * @Package io.github.junxworks.ep.sys.dto   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:17:48   
+ * @date:   2021-1-24 15:35:41   
  * @version V1.0 
- * @Copyright: 2020 Junxworks. All rights reserved. 
+ * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录

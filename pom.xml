@@ -42,8 +42,9 @@
 		<junit.version>4.12</junit.version>
 		<slf4j-api.versin>1.7.25</slf4j-api.versin>
 		<log4j-web.version>2.11.2</log4j-web.version>
-		<springboot.version>2.1.10.RELEASE</springboot.version>
-		<spring.version>5.1.11.RELEASE</spring.version>
+		<springboot.version>2.4.1</springboot.version>
+		<openfeign.version>3.0.0</openfeign.version>
+		<spring.version>5.3.2</spring.version>
 		<aspectj.version>1.8.13</aspectj.version>
 		<concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
 		<shiro.version>1.4.1</shiro.version>
@@ -63,6 +64,8 @@
 		<kaptcha.version>0.0.9</kaptcha.version>
 		<fastjson.version>1.2.70</fastjson.version>
 		<ST.version>4.1</ST.version>
+		<thumbnailator.version>0.4.11</thumbnailator.version>
+		<imageio.version>3.5</imageio.version>
 	</properties>
   <dependencies>
 	<dependency>
@@ -121,7 +124,7 @@
 		    <version>${springboot.version}</version>
 		</dependency>
   		<!-- end springboot -->
-  		<!-- spring -->
+  		<!-- spring mvc-->
   		<dependency>
 		 	<groupId>org.springframework</groupId>
  				<artifactId>spring-context</artifactId>
@@ -133,6 +136,15 @@
 		    <version>${spring.version}</version>
 		</dependency>
 		<!-- end spring -->
+		<!-- spring cloud -->
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<version>${openfeign.version}</version>
+		</dependency>
+		<!-- spring cloud end-->
+		
 		<!-- security -->
   		<dependency>
 			<groupId>com.github.axet</groupId>
@@ -145,75 +157,8 @@
 			<version>${shiro.version}</version>
 		</dependency>
 		<!-- end security -->
-		<!-- activity -->
-		 <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter-basic</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter-actuator</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-rest</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-explorer</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-diagram-rest</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-simple-workflow</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-modeler</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-         <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-codec</artifactId>
-            <version>${batik.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-css</artifactId>
-            <version>${batik.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-svg-dom</artifactId>
-            <version>${batik.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>batik-svggen</artifactId>
-            <version>${batik.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.activiti</groupId>
-            <artifactId>activiti-spring-boot-starter-rest-api</artifactId>
-            <version>${activiti.version}</version>
-        </dependency>
-        <!-- end activity -->
         <!-- others -->
-        		<dependency>
+        <dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 			<version>${mybatis.version}</version>
@@ -294,6 +239,16 @@
 		    <artifactId>ST4</artifactId>
 		    <version>${ST.version}</version>
 		</dependency>
+		<dependency>
+		    <groupId>net.coobird</groupId>
+		    <artifactId>thumbnailator</artifactId>
+		    <version>${thumbnailator.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.twelvemonkeys.imageio</groupId>
+		    <artifactId>imageio-jpeg</artifactId>
+		    <version>${imageio.version}</version>
+		</dependency>
         <!-- end others -->
         <!-- junxworks -->
         <dependency>
@@ -342,14 +297,14 @@
 	
 	<scm>
 		<tag>master</tag>
-		<url>https://github.com/junxworks/junx</url>
-		<connection>scm:git:git://github.com/junxworks/junx.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/junxworks/junx.git</developerConnection>
+		<url>https://github.com/junxworks/junx-ep</url>
+		<connection>scm:git:git://github.com/junxworks/junx-ep.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/junxworks/junx-ep.git</developerConnection>
 	</scm>
 
 	<issueManagement>
 		<system>Github issues</system>
-		<url>https://github.com/junxworks/junx/issues</url>
+		<url>https://github.com/junxworks/junx-ep/issues</url>
 	</issueManagement>
 	
 	<build>
@@ -430,8 +385,6 @@
 		<module>junx-ep-sys</module>
 		<module>junx-ep-sys-ui</module>
 		<module>junx-ep-scheduler</module>
-		<module>junx-ep-activiti</module>
-		<module>junx-ep-activiti-ui</module>
 		<module>junx-ep-fs</module>
 		<module>junx-ep-scheduler-ui</module>
 	</modules>

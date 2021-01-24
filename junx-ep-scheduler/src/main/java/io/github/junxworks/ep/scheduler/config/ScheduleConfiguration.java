@@ -69,9 +69,9 @@ public class ScheduleConfiguration extends TableInitComponent {
 	 * @return the initializable
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@Bean(name = "ScheduleDBInit", initMethod = "initialize", destroyMethod = "destroy")
+	@Bean(name = "EPScheduleDBInit", initMethod = "initialize", destroyMethod = "destroy")
 	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public Initializable ScheduleDBInit(final JdbcTemplate jdbcTemplate) throws IOException {
+	public Initializable epScheduleDBInit(final JdbcTemplate jdbcTemplate) throws IOException {
 		return new Initializable() {
 			@Override
 			public void initialize() throws Exception {
@@ -97,7 +97,7 @@ public class ScheduleConfiguration extends TableInitComponent {
 	 * @return the scheduler factory bean
 	 */
 	@Bean
-	@DependsOn("ScheduleDBInit")
+	@DependsOn("EPScheduleDBInit")
 	public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource, PlatformTransactionManager transactionManager) {
 		SchedulerFactoryBean factory = new SchedulerFactoryBean();
 		factory.setDataSource(dataSource);

@@ -5,9 +5,9 @@
  * @Package io.github.junxworks.ep.sys.config   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:17:48   
+ * @date:   2021-1-24 15:35:41   
  * @version V1.0 
- * @Copyright: 2020 Junxworks. All rights reserved. 
+ * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
@@ -46,7 +46,7 @@ import io.github.junxworks.junx.core.lang.Initializable;
 public class EPTableCreateConfiguration extends TableInitComponent {
 
 	/** 常量 tables. */
-	public static final List<String> tables = Lists.newArrayList("s_role", "s_user", "s_org", "s_user_role", "s_menu", "s_op_log", "s_role_menu", "s_dict", "s_sqls", "s_profile");
+	public static final List<String> tables = Lists.newArrayList("s_role", "s_user", "s_org", "s_user_role", "s_menu", "s_op_log", "s_role_menu", "s_dict", "s_sqls", "s_profile","s_params");
 
 	/** 常量 INIT_PATH. */
 	private static final String INIT_PATH = "/io/github/junxworks/ep/sys/init";

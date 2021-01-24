@@ -103,15 +103,17 @@ public class MybatisObjectSqlProvider {
 		return SqlGenerator.deleteSQL(entity);
 	}
 
-	/**
-	 * 返回 one by PK 属性.
-	 *
-	 * @param entity the entity
-	 * @return one by PK 属性
-	 * @throws Exception the exception
-	 */
-	public String getOneByPK(Object entity) throws Exception {
-		return SqlGenerator.getOneSQL(entity);
+	public String deleteByID(Map params) throws Exception {
+		return SqlGenerator.deleteSQL((Class) params.get("class"), Long.valueOf(params.get("id").toString()));
+	}
+
+	public <T> String getOneByPK(Map params) throws Exception {
+		return SqlGenerator.getOneSQL((Class) params.get("class"), Long.valueOf(params.get("id").toString()));
+	}
+
+	@SuppressWarnings("rawtypes")
+	public <T> String getOneByPKNameAndValue(Map params) throws Exception {
+		return SqlGenerator.getOneSQL((Class) params.get("class"), String.valueOf(params.get("pkName")), Long.valueOf(params.get("id").toString()));
 	}
 
 	/**

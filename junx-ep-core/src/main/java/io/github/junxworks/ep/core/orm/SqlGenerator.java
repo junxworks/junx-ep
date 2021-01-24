@@ -148,13 +148,6 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
-	/**
-	 * Delete SQL.
-	 *
-	 * @param entity the entity
-	 * @return the string
-	 * @throws Exception the exception
-	 */
 	public static final String deleteSQL(Object entity) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
 		SQL sql = new SQL();
@@ -169,24 +162,38 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
-	/**
-	 * 返回 one SQL 属性.
-	 *
-	 * @param entity the entity
-	 * @return one SQL 属性
-	 * @throws Exception the exception
-	 */
-	public static final String getOneSQL(Object entity) throws Exception {
-		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
+	public static final String deleteSQL(Class clazz, Long id) throws Exception {
+		EntityDescription ed = EntityResolver.resolveClass(clazz);
+		SQL sql = new SQL();
+		sql.DELETE_FROM(ed.getTableName());
+		String pkName = ed.getPkName();
+		if (id == null) {
+			throw new BaseRuntimeException("Null primary key value when delete entity.");
+		}
+		sql.WHERE(pkName + "= #{id}");
+		return sql.toString();
+	}
+
+	public static final String getOneSQL(Class clazz, Long id) throws Exception {
+		EntityDescription ed = EntityResolver.resolveClass(clazz);
 		SQL sql = new SQL();
 		sql.SELECT("*").FROM(ed.getTableName());
 		String pkName = ed.getPkName();
-		GetterHandler getter = ObjectUtils.mirror().on(entity).get();
-		Object pkValue = getter.field(pkName);
-		if (pkValue == null) {
+		if (id == null) {
 			throw new BaseRuntimeException("Null primary key value when get one entity.");
 		}
-		sql.WHERE(pkName + "= #{" + ed.dbFieldNameToJavaFieldName(pkName) + "}");
+		sql.WHERE(pkName + "= #{id}");
+		return sql.toString();
+	}
+
+	public static final String getOneSQL(Class clazz,String pkName, Long id) throws Exception {
+		EntityDescription ed = EntityResolver.resolveClass(clazz);
+		SQL sql = new SQL();
+		sql.SELECT("*").FROM(ed.getTableName());
+		if (id == null) {
+			throw new BaseRuntimeException("Null primary key value when get one entity.");
+		}
+		sql.WHERE(pkName + "= #{id}");
 		return sql.toString();
 	}
 
