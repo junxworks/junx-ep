@@ -16,8 +16,6 @@
  */
 package io.github.junxworks.ep.sys.vo;
 
-import java.util.Date;
-
 /**
  * {类的详细说明}.
  *
@@ -48,18 +46,6 @@ public class UserInfoVo {
 
 	/** email. */
 	private String email;
-
-	/** creator id. */
-	private Long creatorId;
-
-	/** create date. */
-	private Date createDate;
-
-	/** modifier id. */
-	private Long modifierId;
-
-	/** modify date. */
-	private Date modifyDate;
 
 	/** status. */
 	private Byte status;
@@ -143,38 +129,6 @@ public class UserInfoVo {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Long getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Long getModifierId() {
-		return modifierId;
-	}
-
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-
-	public Date getModifyDate() {
-		return modifyDate;
-	}
-
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
 	}
 
 	public Byte getStatus() {

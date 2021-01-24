@@ -16,7 +16,6 @@
  */
 package io.github.junxworks.ep.sys.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.shiro.SecurityUtils;
@@ -30,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
+
+import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.sys.annotations.OpLog;
@@ -40,7 +41,6 @@ import io.github.junxworks.ep.sys.service.RoleService;
 import io.github.junxworks.ep.sys.service.UserService;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
-import io.github.junxworks.ep.auth.model.UserModel;
 
 /**
  * {类的详细说明}.
@@ -138,11 +138,7 @@ public class UserController {
 	@PutMapping(value = "/{userId}/status")
 	@OpLog("更新用户状态")
 	public Result updateUserStatus(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
-		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		userInfoDto.setModifierId(user.getId());
-		userInfoDto.setModifyDate(new Date());
-		userService.updateUserStatus(userId, userInfoDto.getStatus());
-		return Result.ok();
+		return Result.ok(userService.updateUserStatus(userInfoDto));
 	}
 
 	/**
@@ -155,8 +151,7 @@ public class UserController {
 	@PutMapping(value = "/{userId}/pass")
 	@OpLog("重置用户密码")
 	public Result updateUserPass(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
-		userService.updateUserPass(userId, userInfoDto.getPass());
-		return Result.ok();
+		return Result.ok(userService.updateUserPass(userId, userInfoDto.getPass()));
 	}
 
 	/**

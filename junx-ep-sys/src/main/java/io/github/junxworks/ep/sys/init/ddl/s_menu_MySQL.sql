@@ -9,9 +9,9 @@ create table  `s_menu`
        `icon`            text(50) comment '菜单图标',
        `sort`            tinyint comment '排序',
        `status`          tinyint(2) comment '状态 -1已删除 0正常',
-       `creatorId`       bigint(20) comment '创建人编号',
-       `createDate`      DATETIME comment '创建日期',
-       `modifierId`      bigint(20) comment '修改人编号',
-       `modifyDate`      DATETIME comment '修改日期'
+	  `createUser`  bigint(20) DEFAULT NULL comment '创建人编号',
+	  `createTime`  DATETIME DEFAULT NULL comment '创建日期',
+	  `updateUser`  bigint(20) DEFAULT NULL comment '修改人编号',
+	  `updateTime`  DATETIME DEFAULT NULL comment '修改日期'
 );
 alter table `s_menu` comment= '菜单管理';

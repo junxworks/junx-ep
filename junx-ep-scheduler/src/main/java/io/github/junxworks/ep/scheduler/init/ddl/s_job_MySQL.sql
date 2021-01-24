@@ -7,9 +7,9 @@ CREATE TABLE `s_job` (
   `cronExpression` varchar(100) DEFAULT NULL COMMENT 'cron表达式',
   `status` tinyint(4) DEFAULT NULL COMMENT '任务状态  0：正常  1：暂停',
   `remark` varchar(255) DEFAULT NULL COMMENT '任务备注',
-  `creatorId`       bigint(20) comment '创建人编号',
-  `createDate`      DATETIME comment '创建日期',
-  `modifierId`      bigint(20) comment '修改人编号',
-  `modifyDate`      DATETIME comment '修改日期',
+  `createUser`  bigint(20) DEFAULT NULL comment '创建人编号',
+  `createTime`  DATETIME DEFAULT NULL comment '创建日期',
+  `updateUser`  bigint(20) DEFAULT NULL comment '修改人编号',
+  `updateTime`  DATETIME DEFAULT NULL comment '修改日期',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='定时任务';

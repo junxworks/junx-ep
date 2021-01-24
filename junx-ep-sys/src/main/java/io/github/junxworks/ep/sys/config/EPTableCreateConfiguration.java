@@ -46,7 +46,7 @@ import io.github.junxworks.junx.core.lang.Initializable;
 public class EPTableCreateConfiguration extends TableInitComponent {
 
 	/** 常量 tables. */
-	public static final List<String> tables = Lists.newArrayList("s_role", "s_user", "s_org", "s_user_role", "s_menu", "s_op_log", "s_role_menu", "s_dict", "s_sqls", "s_profile","s_params");
+	public static final List<String> tables = Lists.newArrayList("s_role", "s_user", "s_org", "s_user_role", "s_menu", "s_op_log", "s_role_menu", "s_dict", "s_sql", "s_profile","s_param");
 
 	/** 常量 INIT_PATH. */
 	private static final String INIT_PATH = "/io/github/junxworks/ep/sys/init";

@@ -107,13 +107,13 @@ public class UserServiceImpl implements UserService {
 			if (existsUser != null) {
 				throw new BusinessException("用户名已被用户：" + existsUser.getName() + "注册");
 			}
-			user.setCreatorId(operatorId);
-			user.setCreateDate(new Date());
+			user.setCreateUser(operatorId);
+			user.setCreateTime(new Date());
 			user.setPassword(EPConstants.DEFAULT_PASSWORD);//设置默认密码
 			userMapper.insertWithoutNull(user);
 		} else {//修改
-			user.setModifierId(operatorId);
-			user.setModifyDate(new Date());
+			user.setUpdateUser(operator.getId());
+			user.setUpdateTime(new Date());
 			userMapper.updateWithoutNull(user);
 		}
 		Long userId = user.getId();
@@ -139,8 +139,14 @@ public class UserServiceImpl implements UserService {
 	 * @param status the status
 	 */
 	@Override
-	public void updateUserStatus(Long userId, Byte status) {
-		userMapper.updateUserStatus(userId, status);
+	public int updateUserStatus(UserInfoDto userInfoDto) {
+		SUser user = new SUser();
+		user.setId(userInfoDto.getId());
+		user.setStatus(userInfoDto.getStatus());
+		UserModel _user = (UserModel) SecurityUtils.getSubject().getPrincipal();
+		user.setUpdateUser(_user.getId());
+		user.setUpdateTime(new Date());
+		return userMapper.updateWithoutNull(user);
 	}
 
 	/**
@@ -150,8 +156,14 @@ public class UserServiceImpl implements UserService {
 	 * @param pass the pass
 	 */
 	@Override
-	public void updateUserPass(Long userId, String pass) {
-		userMapper.updateUserPass(userId, pass);
+	public int updateUserPass(Long userId, String pass) {
+		SUser user = new SUser();
+		user.setId(userId);
+		user.setPassword(pass);
+		UserModel _user = (UserModel) SecurityUtils.getSubject().getPrincipal();
+		user.setUpdateUser(_user.getId());
+		user.setUpdateTime(new Date());
+		return userMapper.updateWithoutNull(user);
 	}
 
 	/**
@@ -175,7 +187,7 @@ public class UserServiceImpl implements UserService {
 	public void changeUserPass(Long userId, UserInfoDto userInfoDto) {
 		SUser userName = userMapper.selectByUserName(userInfoDto.getUserName());
 		if (userName != null && userInfoDto.getPass().equals(userName.getPassword())) {
-			userMapper.updateUserPass(userId, userInfoDto.getPassword());
+			updateUserPass(userId, userInfoDto.getPassword());
 		} else {
 			throw new BusinessException("旧密码输入错误");
 		}

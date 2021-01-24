@@ -16,8 +16,6 @@
  */
 package io.github.junxworks.ep.sys.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -99,25 +97,5 @@ public class DictionaryController {
 	public Result putDictionaryInfo(@PathVariable("id") Long id) {
 		dictionaryService.deleteDictById(id);
 		return Result.ok();
-	}
-
-	/**
-	 * 返回 dictionary group parent code 属性.
-	 *
-	 * @param pageable the pageable
-	 * @return dictionary group parent code 属性
-	 */
-	@GetMapping(value = "/{parentCode}/children")
-	public Result getDictionaryGroupParentCode(@PathVariable("parentCode") String parent) {
-		Result result = Result.ok();
-		List<DictVo> dictionary = dictionaryService.getDictListByParentCode(parent);
-		DictConditionDto condition = new DictConditionDto();
-		for (DictVo dicVo : dictionary) {
-			condition.setParentCode(dicVo.getDataCode());
-			List<DictVo> childList = dictionaryService.getDictionaryListByCondition(condition);
-			dicVo.setList(childList);
-		}
-		result.setData(dictionary);
-		return result;
 	}
 }

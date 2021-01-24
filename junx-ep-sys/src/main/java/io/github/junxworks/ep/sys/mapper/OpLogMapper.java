@@ -64,7 +64,7 @@ public interface OpLogMapper extends BaseMapper{
 	@Select("<script>" +
 			"select t.*,u.name from s_op_log t LEFT JOIN s_user u on t.userId=u.id  where 1=1" +
 			"<if test='createDate!=null and createDate.length>0 '> " +
-			"and TO_DAYS(t.createDate) = TO_DAYS(#{createDate}) " +
+			"and TO_DAYS(t.createTime) = TO_DAYS(#{createDate}) " +
 			"</if>" +
 			"<if test='name!=null and name.length>0 '> " +
 			"and u.name like CONCAT('%',#{name},'%') " +

@@ -50,20 +50,12 @@ public class UserInfoDto {
 	/** email. */
 	private String email;
 
-	/** creator id. */
-	private Long creatorId;
-
-	/** create date. */
-	private Date createDate;
-
-	/** modifier id. */
-	private Long modifierId;
-
-	/** modify date. */
-	private Date modifyDate;
-
 	/** status. */
 	private Byte status;
+
+	private Long updateUser;
+
+	private Date updateTime;
 
 	/** role. */
 	private List<TransferDto> roles;
@@ -73,6 +65,22 @@ public class UserInfoDto {
 
 	/** org no. */
 	private String orgNo;
+
+	public Long getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(Long updateUser) {
+		this.updateUser = updateUser;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
 
 	public String getOrgNo() {
 		return orgNo;
@@ -136,38 +144,6 @@ public class UserInfoDto {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Long getCreatorId() {
-		return creatorId;
-	}
-
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public Date getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Long getModifierId() {
-		return modifierId;
-	}
-
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-
-	public Date getModifyDate() {
-		return modifyDate;
-	}
-
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
 	}
 
 	public Byte getStatus() {

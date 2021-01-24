@@ -110,8 +110,8 @@ public class RoleServiceImpl implements RoleService {
 			if (tagRole != null) {
 				throw new BusinessException("角色标签已经被角色\"" + tagRole.getRoleName() + "\"使用");
 			}
-			role.setCreatorId(user.getId());
-			role.setCreateDate(new Date());
+			role.setCreateUser(user.getId());
+			role.setCreateTime(new Date());
 			role.setStatus(RecordStatus.NORMAL.getValue());
 			roleMapper.insertWithoutNull(role);
 			for (Long menuId : menuIdList) {
@@ -128,8 +128,8 @@ public class RoleServiceImpl implements RoleService {
 				throw new BusinessException("角色标签已经被角色\"" + tagRole.getRoleName() + "\"使用");
 			}
 			Long roleId = role.getId();
-			role.setModifierId(user.getId());
-			role.setModifyDate(new Date());
+			role.setUpdateUser(user.getId());
+			role.setUpdateTime(new Date());
 			roleMapper.updateWithoutNull(role);
 			roleMenuMapper.deleteByMenuIds(roleId, menuIdList);//删除多余菜单
 			List<Long> existsMenuIds = roleMenuMapper.queryMenusByRoleId(roleId);
@@ -186,8 +186,8 @@ public class RoleServiceImpl implements RoleService {
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		role.setId(id);
 		role.setStatus(RecordStatus.DELETED.getValue());
-		role.setModifierId(user.getId());
-		role.setModifyDate(new Date());
+		role.setUpdateUser(user.getId());
+		role.setUpdateTime(new Date());
 		return roleMapper.updateWithoutNull(role);
 	}
 

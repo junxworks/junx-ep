@@ -34,10 +34,10 @@ layui.use(['table','laydate','form','element'], function(){
                         }
                 }
             },
-            {field: 'createDate', title: '创建时间', align: 'center',width: 170},
-            {field: 'creatorName', title: '创建者', align: 'center',width: 100},
-            {field: 'modifyDate', title: '修改时间', align: 'center',width: 170},
-            {field: 'modifierName', title: '修改者', align: 'center',width: 100},
+            {field: 'createTime', title: '创建时间', align: 'center',width: 170},
+            {field: 'creatUserName', title: '创建者', align: 'center',width: 100},
+            {field: 'updateTime', title: '修改时间', align: 'center',width: 170},
+            {field: 'updateUserName', title: '修改者', align: 'center',width: 100},
             {title: '操作', width: 350, align: 'center', toolbar: '#operBar', fixed: 'right'}
         ]],
         page: true,
@@ -83,8 +83,7 @@ layui.use(['table','laydate','form','element'], function(){
                 }
             },
             {field: 'times', title: '执行耗时（毫秒）', align: 'center',width: 150},
-            {field: 'createTime', title: '执行时间', align: 'center',width: 180,templet:function(d){
-                return dateFormat(d.createTime,"yyyy-MM-dd hh:mm:ss");}},
+            {field: 'createTime', title: '执行时间', align: 'center',width: 180},
             {field: 'error', title: '异常信息', align: 'center',minWdith:300}
         ]],
         page: true,
@@ -117,7 +116,16 @@ layui.use(['table','laydate','form','element'], function(){
         });
         return false;
       });
-    
+    form.on('submit(addJob)', function(formData){
+    	layer.open({
+            type: 2,
+            title: typeof(id) != "undefined" ? '修改任务' : '新增任务',
+            shadeClose: true,
+            area: ['800px', '650px'],
+            content: 'editJob.html',
+        });	
+        return false;
+      });
     form.on('submit(searchLogs)', function(formData){
     	logTable.reload({
             where:formData.field,
@@ -178,16 +186,6 @@ function editJob(id){
         shadeClose: true,
         area: ['800px', '650px'],
         content: 'editJob.html?id=' + id,
-    });	
-}
-
-function add(){
-	layer.open({
-        type: 2,
-        title: typeof(id) != "undefined" ? '修改任务' : '新增任务',
-        shadeClose: true,
-        area: ['800px', '650px'],
-        content: 'editJob.html',
     });	
 }
 

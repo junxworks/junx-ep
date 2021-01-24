@@ -74,7 +74,7 @@ var io={
 			}else{
 				_settings.error=function(error){
 					layer.closeAll('loading');
-					layer.alert("\""+settings.url+"\" request error:"+error.responseText, {icon: 2});
+					layer.alert(error.responseText, {icon: 2});
 				};
 			}
 			if(settings.needConfirm==true){
@@ -910,9 +910,9 @@ function dictionary(parentCode){
 	var data=sessionStorage.getItem(key);
 	if(isNull(data)){
 		$.ajax({
-			url: appendCtx("/ep/sys/dictionaries?parentCode="+parentCode+"&pageSize=-1&pageNo=0")
+			url: appendCtx("/ep/sys/dictionaries?parentCode="+parentCode+"&pageSize=-1&pageNo=1")
 			,type: "get"
-			,sync: false
+			,async: false
 			,success: function(res){
 				if(res.ok){
 					data = JSON.stringify(res.data.list);
@@ -984,6 +984,7 @@ function translateMulti(parentCode,dataCodes){
  */
 function dict2Select(parentCode,selectorId,exclude){
 	var dict = dictionary(String(parentCode));
+	console.log(dict)
 	map2Select(dict,selectorId,exclude);
 }
 /**
@@ -994,7 +995,7 @@ function dict2Select(parentCode,selectorId,exclude){
  * @returns
  */
 function map2Select(dataMap,selectorId,exclude){
-	if(dataMap!=null){
+	if(dataMap!=null&&dataMap.size!=0){
 		$("#"+selectorId).empty();
 		$("#"+selectorId).append("<option value=''></option>");
 		dataMap.forEach(function(v,k,map){
@@ -1034,6 +1035,9 @@ function dict2MSelect(parentCode,mxSelect,selectedKeys,exclude){
  * @returns
  */
 function map2MSelect(dataMap,mxSelect,selectedKeys,exclude){
+	if(dataMap.size==0){
+		return;
+	}
 	var options= new Array();
 	if(dataMap!=null){
 		dataMap.forEach(function(v,k,map){
@@ -1311,6 +1315,9 @@ function refreshMenuTab(menuName){
  */
 function initXMTreeSelect(treeData,selectId){
 	if(isNull(selectId)){
+		return;
+	}
+	if(isNull(treeData)||treeData.length==0){
 		return;
 	}
 	for(var i in treeData){

@@ -90,7 +90,7 @@ public class RoleController {
 		Result result = Result.ok();
 		MenuPageable pageable = new MenuPageable();
 		pageable.setStatus(Byte.valueOf("0"));
-		pageable.setPageNo(0);
+		pageable.setPageNo(1);
 		pageable.setPageSize(Integer.MAX_VALUE);
 		//全局总菜单
 		List<MenuInfoVo> allMenus = menuService.getMenuListByPage(pageable).getList();

@@ -7,6 +7,6 @@ CREATE TABLE `s_op_log` (
   `data` varchar(2000) DEFAULT NULL COMMENT '请求数据',
   `method` varchar(100) DEFAULT NULL COMMENT '请求方法',
   `cost` bigint(20) DEFAULT NULL COMMENT '执行耗时',
-  `createDate` datetime DEFAULT NULL COMMENT '创建日期',
+  `createTime` datetime DEFAULT NULL COMMENT '创建日期',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8 COMMENT='系统日志表';

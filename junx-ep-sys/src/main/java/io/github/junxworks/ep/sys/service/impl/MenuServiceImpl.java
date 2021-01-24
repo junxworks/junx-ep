@@ -138,13 +138,13 @@ public class MenuServiceImpl implements MenuService {
 			if (menu.getParentId() == null) {
 				menu.setParentId(0L);
 			}
-			menu.setCreatorId(user.getId());
-			menu.setCreateDate(new Date());
+			menu.setCreateUser(user.getId());
+			menu.setCreateTime(new Date());
 			menu.setStatus(RecordStatus.NORMAL.getValue());
 			return menuMapper.insertWithoutNull(menu);
 		} else {
-			menuInfo.setModifierId(user.getId());
-			menuInfo.setModifyDate(new Date());
+			menu.setUpdateUser(user.getId());
+			menu.setUpdateTime(new Date());
 			return menuMapper.updateWithoutNull(menu);
 		}
 	}

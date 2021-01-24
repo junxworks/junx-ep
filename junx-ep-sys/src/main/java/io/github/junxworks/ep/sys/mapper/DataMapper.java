@@ -21,7 +21,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
-import io.github.junxworks.ep.sys.entity.SSqls;
+import io.github.junxworks.ep.sys.entity.SSql;
 
 /**
  * {类的详细说明}.
@@ -40,6 +40,6 @@ public interface DataMapper extends BaseMapper {
 	 * @param uid the uid
 	 * @return sql by uid 属性
 	 */
-	@Select("select * from s_sqls where status=0 and uid=#{uid}")
-	SSqls getSqlByUid(@Param("uid") String uid);
+	@Select("select * from s_sql where status=0 and uid=#{uid}")
+	SSql getSqlByUid(@Param("uid") String uid);
 }

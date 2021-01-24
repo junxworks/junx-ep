@@ -16,7 +16,6 @@
  */
 package io.github.junxworks.ep.sys.vo;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,18 +48,6 @@ public class DictVo {
 
 	/** status. */
 	private Byte status;
-
-	/** creator id. */
-	private Long creatorId;
-
-	/** create date. */
-	private Date createDate;
-
-	/** modifier id. */
-	private Long modifierId;
-
-	/** modify date. */
-	private Date modifyDate;
 
 	/** list. */
 	private List<DictVo> list;
@@ -119,38 +106,6 @@ public class DictVo {
 
 	public void setStatus(Byte status) {
 		this.status = status;
-	}
-
-	public Long getCreatorId() {
-		return this.creatorId;
-	}
-
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public Date getCreateDate() {
-		return this.createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Long getModifierId() {
-		return this.modifierId;
-	}
-
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-
-	public Date getModifyDate() {
-		return this.modifyDate;
-	}
-
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
 	}
 
 	public List<DictVo> getList() {

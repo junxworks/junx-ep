@@ -101,8 +101,8 @@ public class OrgServiceImpl implements OrgService {
 		SOrg org = new SOrg();
 		BeanUtils.copyProperties(dto, org);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		org.setCreateDate(new Date());
-		org.setCreatorId(user.getId());
+		org.setCreateTime(new Date());
+		org.setCreateUser(user.getId());
 		org.setStatus(RecordStatus.NORMAL.getValue());
 		//设置组织路径和顶级组织
 		setOrgPath(org);
@@ -146,8 +146,8 @@ public class OrgServiceImpl implements OrgService {
 		SOrg org = new SOrg();
 		BeanUtils.copyProperties(dto, org);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		org.setModifyDate(new Date());
-		org.setModifierId(user.getId());
+		org.setUpdateTime(new Date());
+		org.setUpdateUser(user.getId());
 		//设置组织路径和顶级组织
 		setOrgPath(org);
 		int count = orgMapper.updateWithoutNull(org);
@@ -245,8 +245,8 @@ public class OrgServiceImpl implements OrgService {
 		SOrg org = new SOrg();
 		org.setId(id);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		org.setModifyDate(new Date());
-		org.setModifierId(user.getId());
+		org.setUpdateTime(new Date());
+		org.setUpdateUser(user.getId());
 		org.setStatus(RecordStatus.DELETED.getValue());
 		return orgMapper.updateWithoutNull(org);
 	}

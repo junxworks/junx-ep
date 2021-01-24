@@ -90,7 +90,7 @@ public interface BaseMapper {
 	 * @return the int
 	 */
 	@DeleteProvider(type = MybatisObjectSqlProvider.class, method = "deleteByPK")
-	public int deleteByPK(Object entity);
+	public int deleteByID(Object entity);
 
 	/**
 	 * Delete by PK.
@@ -112,7 +112,7 @@ public interface BaseMapper {
 	 * @return one by PK 属性
 	 */
 	@SelectProvider(type = MybatisObjectSqlProvider.class, method = "getOneByPK")
-	public Map<String,Object> selectMapByPK(@Param("class")Class entity, @Param("id") Long id);
+	public Map<String,Object> selectMapByID(@Param("class")Class entity, @Param("id") Long id);
 
 	/**
 	 * 指定pkName获取实体

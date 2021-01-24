@@ -602,19 +602,20 @@ layui.define(['element', 'layer', 'jquery'], function (drdrdr) {
 
 
 function dictionaryInit() {
-    var DICT_PREFIX="$global_dictionary_";
-    $.ajax({
-        url: appendCtx("/ep/sys/dictionaries/0/children")
-        ,type: "get"
-        ,sync: false
-        ,success: function(res){
-            if(res.ok){
-                for(var i in res.data) {
-                    var dic = res.data[i];
-                    var datalist = JSON.stringify(dic.list);
-                    window.sessionStorage.setItem(DICT_PREFIX + dic.parentCode, datalist);
-                }
-            }
-        }
-    });
+//    var DICT_PREFIX="$global_dictionary_";
+//    $.ajax({
+//        url: appendCtx("/ep/sys/dictionaries/0/children")
+//        ,type: "get"
+//        ,sync: false
+//        ,success: function(res){
+//            if(res.ok){
+//            	console.log(res)
+//                for(var i in res.data) {
+//                    var dic = res.data[i];
+//                    var datalist = JSON.stringify(dic.list);
+//                    window.sessionStorage.setItem(DICT_PREFIX + dic.parentCode, datalist);
+//                }
+//            }
+//        }
+//    });
 }

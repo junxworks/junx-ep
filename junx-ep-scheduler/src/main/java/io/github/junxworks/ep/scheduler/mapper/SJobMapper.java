@@ -1,13 +1,13 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  ScheduleJobMapper.java   
+ * @Title:  SJobMapper.java   
  * @Package io.github.junxworks.ep.scheduler.mapper   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:18:05   
+ * @date:   2021-1-24 17:50:25   
  * @version V1.0 
- * @Copyright: 2020 Junxworks. All rights reserved. 
+ * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
@@ -91,8 +91,8 @@ public interface SJobMapper extends BaseMapper{
 	 * @return the list
 	 */
 	@Select({"<script>",
-		"select j.*,u.name `creatorName`,u2.name `modifierName` from s_job j left join s_user u2 on j.modifierId=u2.id,s_user u ",
-		"where j.creatorId=u.id",
+		"select j.*,u.name `creatUserName`,u2.name `updateUserName` from s_job j left join s_user u2 on j.updateUser=u2.id,s_user u ",
+		"where j.createUser=u.id",
 			"<if test='beanName != null and beanName.trim().length()>0'>",
 				" and j.beanName like concat('%', #{beanName}, '%') ",
 			"</if>",

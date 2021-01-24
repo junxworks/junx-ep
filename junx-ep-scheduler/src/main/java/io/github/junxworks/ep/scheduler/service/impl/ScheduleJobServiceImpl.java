@@ -5,9 +5,9 @@
  * @Package io.github.junxworks.ep.scheduler.service.impl   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:18:05   
+ * @date:   2021-1-24 17:50:25   
  * @version V1.0 
- * @Copyright: 2020 Junxworks. All rights reserved. 
+ * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
@@ -98,14 +98,14 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	public void save(SJob scheduleJob) {
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		if (scheduleJob.getId() == null) {
-			scheduleJob.setCreatorId(user.getId());
-			scheduleJob.setCreateDate(new Date());
+			scheduleJob.setCreateUser(user.getId());
+			scheduleJob.setCreateTime(new Date());
 			scheduleJob.setStatus(ScheduleStatus.NORMAL.getValue());
 			schedulerJobMapper.insertWithoutNull(scheduleJob);
 			ScheduleUtils.createScheduleJob(scheduler, scheduleJob);
 		} else {
-			scheduleJob.setModifierId(user.getId());
-			scheduleJob.setModifyDate(new Date());
+			scheduleJob.setUpdateUser(user.getId());
+			scheduleJob.setUpdateTime(new Date());
 			schedulerJobMapper.updateWithoutNull(scheduleJob);
 			ScheduleUtils.updateScheduleJob(scheduler, scheduleJob);
 		}

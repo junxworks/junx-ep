@@ -16,8 +16,6 @@
  */
 package io.github.junxworks.ep.sys.dto;
 
-import java.util.Date;
-
 public class SDictDto {
 
 	/** id. */
@@ -40,18 +38,6 @@ public class SDictDto {
 
 	/** status. */
 	private Byte status;
-
-	/** creator id. */
-	private Long creatorId;
-
-	/** create date. */
-	private Date createDate;
-
-	/** modifier id. */
-	private Long modifierId;
-
-	/** modify date. */
-	private Date modifyDate;
 
 	public Long getId() {
 		return this.id;
@@ -107,37 +93,5 @@ public class SDictDto {
 
 	public void setStatus(Byte status) {
 		this.status = status;
-	}
-
-	public Long getCreatorId() {
-		return this.creatorId;
-	}
-
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
-	}
-
-	public Date getCreateDate() {
-		return this.createDate;
-	}
-
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
-	}
-
-	public Long getModifierId() {
-		return this.modifierId;
-	}
-
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
-	}
-
-	public Date getModifyDate() {
-		return this.modifyDate;
-	}
-
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
 	}
 }

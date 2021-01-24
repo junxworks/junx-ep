@@ -8,10 +8,10 @@ create table  `s_user`
        `idCard`          VARCHAR(20) comment '身份证号码',
        `email`           VARCHAR(30) comment '邮箱',
        `orgNo`           VARCHAR(50) comment '组织编码',
-       `creatorId`       bigint(20) comment '创建人编号',
-       `createDate`      DATETIME comment '创建日期',
-       `modifierId`      bigint(20) comment '修改人编号',
-       `modifyDate`      DATETIME comment '修改日期',
+	  `createUser`  bigint(20) DEFAULT NULL comment '创建人编号',
+	  `createTime`  DATETIME DEFAULT NULL comment '创建日期',
+	  `updateUser`  bigint(20) DEFAULT NULL comment '修改人编号',
+	  `updateTime`  DATETIME DEFAULT NULL comment '修改日期',
        `status`          tinyint comment '状态 0：正常，1：冻结，2：锁定，3：离职 '
 );
 alter table `s_user` comment= '用户信息表';

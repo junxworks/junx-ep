@@ -63,9 +63,12 @@ public interface DictMapper extends BaseMapper{
 	 * @return the page
 	 */
 	@Select("<script>" +
-				"select * from s_dict where status=0 " +
+				"select * from s_dict where 1=1 " +
+					"<if test='status!=null '> " +
+					" and status = #{status} " +
+					"</if>" +
 					"<if test='parentCode!=null and parentCode.length>0 '> " +
-					" and parentCode like CONCAT('%',#{parentCode},'%') " +
+					" and parentCode =#{parentCode} " +
 					"</if>" +
 					"<if test='dataLabel!=null and dataLabel.length>0 '> " +
 					" and dataLabel like CONCAT('%',#{dataLabel},'%')  " +
@@ -94,5 +97,4 @@ public interface DictMapper extends BaseMapper{
 	 */
 	@Select("select * from s_dict where parentCode=#{parentCode} and status=0")
 	public List<DictVo> selectByParentCode(@Param("parentCode")String parentCode);
-	
 }

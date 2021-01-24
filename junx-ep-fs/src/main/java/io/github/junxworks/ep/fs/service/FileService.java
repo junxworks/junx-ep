@@ -2,65 +2,26 @@ package io.github.junxworks.ep.fs.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.github.junxworks.ep.fs.entity.SFile;
 import io.github.junxworks.ep.fs.entity.SFileThumb;
-import io.github.junxworks.ep.fs.mapper.FSMapper;
-import io.github.junxworks.junx.core.executor.StandardThreadExecutor;
 
 @Service
-public class FileService {
+public interface FileService {
 
-	@Autowired
-	private FSMapper mapper;
+	void inser(SFile file);
 
-	@Autowired
-	private StandardThreadExecutor executor;
+	SFile findById(Object id);
 
-	public void inser(SFile file) {
-		mapper.insert(file);
-	}
+	List<SFile> findByGroup(String group);
 
-	public SFile findById(Object id) {
-		return mapper.findById(Long.valueOf(id.toString()));
-	}
+	List<SFile> findByOrg(String orgNo);
 
-	public List<SFile> findByGroup(String group) {
-		return mapper.findByGroup(group);
-	}
+	void deleteById(Object id);
 
-	public List<SFile> findByOrg(String orgNo) {
-		return mapper.findByOrg(orgNo);
-	}
+	int saveSysFileThumb(SFileThumb t);
 
-	public void deleteById(Object id) {
-		mapper.deleteById(Long.valueOf(String.valueOf(id)));
-	}
-
-	public int saveSysFileThumb(SFileThumb t) {
-		return mapper.insertWithoutNull(t);
-	}
-
-	public SFileThumb findThumbByIdAndSize(Long fileId, int width, int height) {
-		List<SFileThumb> ts = mapper.queryThumbList(fileId, width, height);
-		if (ts.isEmpty()) {
-			return null;
-		}
-		if (ts.size() > 1) {
-			for (int i = 1, len = ts.size(); i < len; i++) {
-				final SFileThumb t = ts.get(i);
-				executor.submit(new Runnable() {
-					@Override
-					public void run() {
-						mapper.deleteByPK(t);
-					}
-
-				});
-			}
-		}
-		return ts.get(0);
-	}
+	SFileThumb findThumbByIdAndSize(Long fileId, int width, int height);
 
 }

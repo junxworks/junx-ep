@@ -1,13 +1,13 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  ScheduleJobEntity.java   
- * @Package io.github.junxworks.ep.scheduler.entity   
+ * @Title:  ScheduleJobVo.java   
+ * @Package io.github.junxworks.ep.scheduler.vo   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-7-19 12:18:05   
+ * @date:   2021-1-24 17:50:25   
  * @version V1.0 
- * @Copyright: 2020 Junxworks. All rights reserved. 
+ * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
@@ -45,19 +45,19 @@ public class ScheduleJobVo {
 
 	private String remark;
 
-	private Long creatorId;
+	private Long creatUser;
 
-	private String creatorName;
-
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date createDate;
-
-	private Long modifierId;
-
-	private String modifierName;
+	private String creatUserName;
 
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	private Date modifyDate;
+	private Date createTime;
+
+	private Long updateUser;
+
+	private String updateUserName;
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Date updateTime;
 
 	public Long getId() {
 		return id;
@@ -123,52 +123,52 @@ public class ScheduleJobVo {
 		this.remark = remark;
 	}
 
-	public Long getCreatorId() {
-		return creatorId;
+	public Long getCreatUser() {
+		return creatUser;
 	}
 
-	public void setCreatorId(Long creatorId) {
-		this.creatorId = creatorId;
+	public void setCreatUser(Long creatUser) {
+		this.creatUser = creatUser;
 	}
 
-	public Date getCreateDate() {
-		return createDate;
+	public String getCreatUserName() {
+		return creatUserName;
 	}
 
-	public void setCreateDate(Date createDate) {
-		this.createDate = createDate;
+	public void setCreatUserName(String creatUserName) {
+		this.creatUserName = creatUserName;
 	}
 
-	public Long getModifierId() {
-		return modifierId;
+	public Date getCreateTime() {
+		return createTime;
 	}
 
-	public void setModifierId(Long modifierId) {
-		this.modifierId = modifierId;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
-	public Date getModifyDate() {
-		return modifyDate;
+	public Long getUpdateUser() {
+		return updateUser;
 	}
 
-	public void setModifyDate(Date modifyDate) {
-		this.modifyDate = modifyDate;
+	public void setUpdateUser(Long updateUser) {
+		this.updateUser = updateUser;
 	}
 
-	public String getCreatorName() {
-		return creatorName;
+	public String getUpdateUserName() {
+		return updateUserName;
 	}
 
-	public void setCreatorName(String creatorName) {
-		this.creatorName = creatorName;
+	public void setUpdateUserName(String updateUserName) {
+		this.updateUserName = updateUserName;
 	}
 
-	public String getModifierName() {
-		return modifierName;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-	public void setModifierName(String modifierName) {
-		this.modifierName = modifierName;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
 }

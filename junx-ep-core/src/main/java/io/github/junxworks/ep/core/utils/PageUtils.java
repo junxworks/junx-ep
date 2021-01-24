@@ -47,6 +47,6 @@ public class PageUtils {
 		}
 		int pageNum = Integer.parseInt(pageNo.toString());
 		int size = Integer.parseInt(pageSize.toString());
-		PageHelper.startPage(pageNum, size == -1 ? Integer.MAX_VALUE : size);
+		PageHelper.startPage(pageNum < 1 ? 1 : pageNum, size == -1 ? Integer.MAX_VALUE : size);
 	}
 }

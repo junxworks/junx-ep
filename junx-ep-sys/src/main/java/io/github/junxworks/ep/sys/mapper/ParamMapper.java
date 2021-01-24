@@ -22,7 +22,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
-import io.github.junxworks.ep.sys.entity.SParams;
+import io.github.junxworks.ep.sys.entity.SParam;
 
 /**
  * <p>Mapper</p>
@@ -32,9 +32,9 @@ import io.github.junxworks.ep.sys.entity.SParams;
  */
 @Mapper
 public interface ParamMapper extends BaseMapper {
-	@Select("select * from s_params where status=0 and paramName=#{paramName} and paramGroup=#{group}")
-	SParams getParam(@Param("group") String group, @Param("paramName") String paramName);
+	@Select("select * from s_param where status=0 and paramName=#{paramName} and paramGroup=#{group}")
+	SParam getParam(@Param("group") String group, @Param("paramName") String paramName);
 
-	@Update("update s_params set paramValue=#{paramValue} where status=0 and paramName=#{paramName} and paramGroup=#{group}")
+	@Update("update s_param set paramValue=#{paramValue} where status=0 and paramName=#{paramName} and paramGroup=#{group}")
 	int updateParam(@Param("group") String group, @Param("paramName") String paramName, @Param("paramValue") String paramValue);
 }

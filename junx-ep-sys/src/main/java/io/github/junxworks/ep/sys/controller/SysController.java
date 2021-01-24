@@ -84,7 +84,7 @@ public class SysController {
 		log.setUrl("/login");
 		log.setData(JSON.toJSONString(map));
 		log.setUserId(user.getId());
-		log.setCreateDate(new Date());
+		log.setCreateTime(new Date());
 		log.setCost(System.currentTimeMillis()-begin);
 		log.setMethod("io.github.junxworks.ep.sys.controller.SysController.login(Map<String, String>,HttpServletRequest)");
 		log.setIp(IPUtils.getIpAddr(request));
@@ -105,7 +105,7 @@ public class SysController {
 		log.setOperation("系统登出");
 		log.setUrl("/logout");
 		log.setUserId(user.getId());
-		log.setCreateDate(new Date());
+		log.setCreateTime(new Date());
 		log.setCost(System.currentTimeMillis()-begin);
 		log.setMethod("io.github.junxworks.ep.sys.controller.SysController.logout(HttpServletRequest)");
 		log.setIp(IPUtils.getIpAddr(request));

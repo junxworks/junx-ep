@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import io.github.junxworks.ep.fs.entity.SFile;
 import io.github.junxworks.ep.fs.entity.SFileThumb;
 import io.github.junxworks.ep.fs.mapper.FSMapper;
+import io.github.junxworks.ep.fs.service.FileService;
 import io.github.junxworks.junx.core.executor.StandardThreadExecutor;
 
 @Service
-public class FileServiceImpl {
+public class FileServiceImpl implements FileService{
 
 	@Autowired
 	private FSMapper mapper;
@@ -54,7 +55,7 @@ public class FileServiceImpl {
 				executor.submit(new Runnable() {
 					@Override
 					public void run() {
-						mapper.deleteByPK(t);
+						mapper.deleteByID(t);
 					}
 
 				});

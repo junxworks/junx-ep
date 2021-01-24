@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.junxworks.ep.core.Result;
-import io.github.junxworks.ep.sys.entity.SParams;
+import io.github.junxworks.ep.sys.entity.SParam;
 import io.github.junxworks.ep.sys.service.ParamService;
 
 /**
@@ -49,7 +49,7 @@ public class ParamController {
 	}
 
 	@PostMapping
-	public Result updateParam(@RequestBody SParams param) throws Exception {
+	public Result updateParam(@RequestBody SParam param) throws Exception {
 		return Result.ok(paramService.updateParam(param));
 	}
 }

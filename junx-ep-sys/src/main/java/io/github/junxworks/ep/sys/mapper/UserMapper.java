@@ -22,7 +22,6 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
 import io.github.junxworks.ep.sys.dto.UserListConditionDto;
@@ -39,38 +38,6 @@ import io.github.junxworks.ep.sys.vo.UserInfoVo;
  */
 @Mapper
 public interface UserMapper extends BaseMapper{
-
-	/**
-	 * Update user status.
-	 *
-	 * @param userId the user id
-	 * @param status the status
-	 * @return the int
-	 */
-	@Update(
-			"<script>"
-					+"update s_user set "
-					+ " status=#{status}"
-					+ " where id=#{userId}"
-					+ "</script>"
-	)
-	public int updateUserStatus(@Param("userId")Long userId,@Param("status")Byte status);
-
-	/**
-	 * Update user pass.
-	 *
-	 * @param userId the user id
-	 * @param password the password
-	 * @return the int
-	 */
-	@Update(
-			"<script>"
-					+"update s_user set "
-					+ " password=#{password}"
-					+ " where id=#{userId}"
-					+ "</script>"
-	)
-	int updateUserPass(@Param("userId")Long userId,@Param("password")String password);
 
 	/**
 	 * Select by id.

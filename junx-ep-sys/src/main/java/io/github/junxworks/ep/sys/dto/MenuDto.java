@@ -16,8 +16,6 @@
  */
 package io.github.junxworks.ep.sys.dto;
 
-import java.util.Date;
-
 import io.github.junxworks.ep.core.orm.annotations.Column;
 import io.github.junxworks.ep.core.orm.annotations.PrimaryKey;
 import io.github.junxworks.ep.core.orm.annotations.Table;
@@ -71,23 +69,6 @@ public class MenuDto {
     @Column(name="status", type="TINYINT", length="3", nullable="true", comment="状态 -1已删除 0正常")
     private Byte status;	
     
-    /** creator id. */
-    @Column(name="creatorId", type="BIGINT", length="19", nullable="true", comment="创建人编号")
-    private Long creatorId;	
-    
-    /** create date. */
-    @Column(name="createDate", type="TIMESTAMP", length="19", nullable="true", comment="创建日期")
-    private Date createDate;	
-    
-    /** modifier id. */
-    @Column(name="modifierId", type="BIGINT", length="19", nullable="true", comment="修改人编号")
-    private Long modifierId;	
-    
-    /** modify date. */
-    @Column(name="modifyDate", type="TIMESTAMP", length="19", nullable="true", comment="修改日期")
-    private Date modifyDate;	
-    
-
     public Long getId(){
         return this.id;
     }
@@ -151,33 +132,5 @@ public class MenuDto {
 
     public void setStatus(Byte status){
         this.status = status;
-    }
-    public Long getCreatorId(){
-        return this.creatorId;
-    }
-
-    public void setCreatorId(Long creatorId){
-        this.creatorId = creatorId;
-    }
-    public Date getCreateDate(){
-        return this.createDate;
-    }
-
-    public void setCreateDate(Date createDate){
-        this.createDate = createDate;
-    }
-    public Long getModifierId(){
-        return this.modifierId;
-    }
-
-    public void setModifierId(Long modifierId){
-        this.modifierId = modifierId;
-    }
-    public Date getModifyDate(){
-        return this.modifyDate;
-    }
-
-    public void setModifyDate(Date modifyDate){
-        this.modifyDate = modifyDate;
     }
 }

@@ -63,7 +63,7 @@ public interface UserService {
 	 * @param userId the user id
 	 * @param status the status
 	 */
-	void updateUserStatus(Long userId, Byte status);
+	int updateUserStatus(UserInfoDto userInfoDto);
 
 	/**
 	 * Update user pass.
@@ -71,7 +71,7 @@ public interface UserService {
 	 * @param userId the user id
 	 * @param pass the pass
 	 */
-	void updateUserPass(Long userId, String pass);
+	int updateUserPass(Long userId, String pass);
 
 	/**
 	 * 返回 user list by auth 属性.

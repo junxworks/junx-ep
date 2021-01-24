@@ -126,13 +126,13 @@ public class DictionaryServiceImpl implements DictionaryService {
 		SDict entity = new SDict();
 		BeanUtils.copyProperties(dictDto, entity);
 		if (dictDto.getId() == null) {
-			entity.setCreatorId(user.getId());
-			entity.setCreateDate(new Date());
+			entity.setCreateUser(user.getId());
+			entity.setCreateTime(new Date());
 			entity.setStatus(RecordStatus.NORMAL.getValue());
 			return dictMapper.insertWithoutNull(entity);
 		} else {
-			entity.setModifierId(user.getId());
-			entity.setModifyDate(new Date());
+			entity.setUpdateUser(user.getId());
+			entity.setUpdateTime(new Date());
 			return dictMapper.updateWithoutNull(entity);
 		}
 	}

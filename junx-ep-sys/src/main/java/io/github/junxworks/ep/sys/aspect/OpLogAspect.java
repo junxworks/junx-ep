@@ -157,7 +157,7 @@ public class OpLogAspect {
 		} catch (Exception e) {
 		}
 		log.setCost(time);
-		log.setCreateDate(new Date());
+		log.setCreateTime(new Date());
 		ServletRequestAttributes ra = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
 		if (ra != null) {
 			HttpServletRequest request = ra.getRequest();

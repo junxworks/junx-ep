@@ -24,7 +24,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.stringtemplate.v4.ST;
 
-import io.github.junxworks.ep.sys.entity.SSqls;
+import io.github.junxworks.ep.sys.entity.SSql;
 import io.github.junxworks.ep.sys.mapper.DataMapper;
 import io.github.junxworks.ep.sys.service.DataService;
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
@@ -58,7 +58,7 @@ public class DataServiceImpl implements DataService {
 	 */
 	@Override
 	public String getSqlTemplate(String uid, Map<String, String> cond) {
-		SSqls sqlTemplate = dataMapper.getSqlByUid(uid);
+		SSql sqlTemplate = dataMapper.getSqlByUid(uid);
 		if (sqlTemplate == null) {
 			return null;
 		}
