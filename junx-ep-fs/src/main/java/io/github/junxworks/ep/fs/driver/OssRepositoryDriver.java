@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.OSSObject;
 
+import io.github.junxworks.ep.fs.config.AliyunOssConfig;
 import io.github.junxworks.junx.core.util.ByteUtils;
 
 /**

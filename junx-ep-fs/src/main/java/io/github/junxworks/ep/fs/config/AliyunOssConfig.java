@@ -14,7 +14,7 @@
  *     文件版本：         修改人：             修改原因：
  ***************************************************************************************
  */
-package io.github.junxworks.ep.fs.driver;
+package io.github.junxworks.ep.fs.config;
 
 /**
  * 阿里云的OSS对象存储服务的配置

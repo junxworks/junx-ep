@@ -32,6 +32,8 @@ import io.github.junxworks.junx.core.lifecycle.Lifecycle;
  */
 public interface FileRepository extends Lifecycle {
 
+	static final String TOKEN_SEP = "/";
+
 	/**
 	 * 存储文件，并且返回文件token，给业务进行存储，token生成的规则不因内部存储驱动而改变，
 	 * 因此业务可以根据实际情况修改底层存储驱动

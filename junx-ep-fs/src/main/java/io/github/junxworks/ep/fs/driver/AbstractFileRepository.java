@@ -54,6 +54,6 @@ public abstract class AbstractFileRepository extends Service implements FileRepo
 		int year = calendar.get(Calendar.YEAR);
 		int mon = calendar.get(Calendar.MONTH) + 1;
 		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		return StringUtils.join(new Object[] { year, mon, day, uuid }, "/");
+		return StringUtils.join(new Object[] { year, mon, day, uuid }, TOKEN_SEP);
 	}
 }

@@ -25,6 +25,9 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
 
+import io.github.junxworks.ep.fs.config.LocalFSConfig;
+import io.github.junxworks.junx.core.util.StringUtils;
+
 public class LocalFileSystemDriver extends AbstractFileRepository {
 	private LocalFSConfig config;
 
@@ -49,13 +52,11 @@ public class LocalFileSystemDriver extends AbstractFileRepository {
 
 	@Override
 	public String storeFile(byte[] bytes) throws StoreFailedException {
-		FileObj destFile = destFile();
 		try (ByteArrayInputStream bi = new ByteArrayInputStream(bytes)) {
-			storeFile(bi);
+			return storeFile(bi);
 		} catch (Exception e) {
 			throw new StoreFailedException("Store file failed.", e);
 		}
-		return destFile.getToken();
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class LocalFileSystemDriver extends AbstractFileRepository {
 	}
 
 	private String getFilePath(String token) {
-		return config.getDataDir() + File.separator + token;
+		return config.getDataDir() + File.separator + StringUtils.replace(token, TOKEN_SEP, File.separator);
 	}
 
 	@Override

@@ -22,9 +22,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import com.google.common.collect.Maps;
 
-import io.github.junxworks.ep.fs.driver.AliyunOssConfig;
-import io.github.junxworks.ep.fs.driver.LocalFSConfig;
-
 /**
  * 文件存储服务的配置
  *
