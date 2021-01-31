@@ -1,14 +1,14 @@
 /*
  ***************************************************************************************
- * All rights Reserved, Designed By www.cqhyrc.com.cn
- * @Title:  FileServiceController.java   
- * @Package com.yrxd.filesvc.controller   
+ * EP for web developers.Supported By Junxworks
+ * @Title:  FileController.java   
+ * @Package io.github.junxworks.ep.fs.controller   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2019-1-9 15:11:25   
+ * @date:   2021-1-31 18:00:37   
  * @version V1.0 
- * @Copyright: 2019 重庆华宇集团. All rights reserved. 
- * 注意：本内容仅限于公司内部使用，禁止外泄以及用于其他的商业目
+ * @Copyright: 2021 Junxworks. All rights reserved. 
+ * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
@@ -48,32 +48,49 @@ import io.github.junxworks.junx.core.util.ExceptionUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
 import net.coobird.thumbnailator.Thumbnails;
 
+/**
+ * {类的详细说明}.
+ *
+ * @ClassName:  FileController
+ * @author: Michael
+ * @date:   2021-1-31 18:00:37
+ * @since:  v1.0
+ */
 @RestController
 @RequestMapping("/ep/fs/files")
 public class FileController {
+	
+	/** 常量 logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
+	/** 常量 ATTACHMENT. */
 	private static final String ATTACHMENT = "file";
 
+	/** 常量 FILE_GROUP. */
 	private static final String FILE_GROUP = "group";
 
+	/** 常量 ORG_NO. */
 	private static final String ORG_NO = "orgNo";
 
+	/** fr. */
 	@Autowired
 	private FileRepository fr;
 
+	/** file service. */
 	@Autowired
 	private FileServiceImpl fileService;
 
+	/** fs config. */
 	@Autowired
 	private FSConfig fsConfig;
 
+	/** 常量 DEFAULT_TYPE. */
 	private static final String DEFAULT_TYPE = "application/octet-stream";
 
 	/**
-	 * 上传一个文件，并且返回文件存储的原数据
+	 * Multi upload.
 	 *
-	 * @param file the file
+	 * @param multiReq the multi req
 	 * @return the result
 	 */
 	@PostMapping(consumes = "multipart/form-data", produces = "application/json; charset=UTF-8")
@@ -112,7 +129,7 @@ public class FileController {
 	}
 
 	/**
-	 * 以附件方式下载上传文件.
+	 * Download attachment.
 	 *
 	 * @param id the id
 	 * @param response the response
@@ -124,7 +141,7 @@ public class FileController {
 	}
 
 	/**
-	 * 以浏览器直接打开方式下载上传文件.
+	 * Download inline.
 	 *
 	 * @param id the id
 	 * @param response the response
@@ -135,6 +152,14 @@ public class FileController {
 		download(id, ContentType.INLINE.getValue(), response);
 	}
 
+	/**
+	 * Download.
+	 *
+	 * @param id the id
+	 * @param type the type
+	 * @param response the response
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
 	private void download(@PathVariable("id") String id, String type, HttpServletResponse response) throws IOException {
 		SFile sysFile = fileService.findById(id);
 		if (sysFile == null) {
@@ -161,7 +186,7 @@ public class FileController {
 	}
 
 	/**
-	 * 获取上传文件的原数据
+	 * Info.
 	 *
 	 * @param id the id
 	 * @return the result
@@ -176,13 +201,13 @@ public class FileController {
 	}
 
 	/**
-	 * 以浏览器直接打开的方式下载缩略图
+	 * Image thumbnail.
 	 *
-	 * @param fileId the file id
+	 * @param id the id
 	 * @param width the width
 	 * @param height the height
 	 * @param response the response
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}/thumbnail/{width}/{height}")
 	public void imageThumbnail(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
@@ -190,19 +215,29 @@ public class FileController {
 	}
 
 	/**
-	 * 以附件的方式下载缩略图
+	 * Image thumbnail attachment.
 	 *
 	 * @param id the id
 	 * @param width the width
 	 * @param height the height
 	 * @param response the response
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}/thumbnail/{width}/{height}/attachment")
 	public void imageThumbnailAttachment(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
 		imageThumbnail(id, width, height, "attachment", response);
 	}
 
+	/**
+	 * Image thumbnail.
+	 *
+	 * @param id the id
+	 * @param width the width
+	 * @param height the height
+	 * @param type the type
+	 * @param response the response
+	 * @throws Exception the exception
+	 */
 	private void imageThumbnail(String id, Integer width, Integer height, String type, HttpServletResponse response) throws Exception {
 		SFile fi = fileService.findById(id);
 		if (fi == null) {
@@ -214,6 +249,17 @@ public class FileController {
 			writeThumbnail(fi, fr.fetchFileAsStream(fi.getStorageId()), width, height, type, response);
 	}
 
+	/**
+	 * Read from cache.
+	 *
+	 * @param file the file
+	 * @param width the width
+	 * @param height the height
+	 * @param type the type
+	 * @param response the response
+	 * @return true, if successful
+	 * @throws Exception the exception
+	 */
 	private boolean readFromCache(SFile file, int width, int height, String type, HttpServletResponse response) throws Exception {
 		SFileThumb t = fileService.findThumbByIdAndSize(file.getId(), width, height);
 		if (t == null) {
@@ -233,6 +279,17 @@ public class FileController {
 		return true;
 	}
 
+	/**
+	 * Write thumbnail.
+	 *
+	 * @param file the file
+	 * @param is the is
+	 * @param width the width
+	 * @param height the height
+	 * @param type the type
+	 * @param response the response
+	 * @throws Exception the exception
+	 */
 	private void writeThumbnail(SFile file, InputStream is, int width, int height, String type, HttpServletResponse response) throws Exception {
 		response.reset();
 		response.addHeader("Content-Disposition", type + ";filename=thumbnail." + file.getFileExt());
