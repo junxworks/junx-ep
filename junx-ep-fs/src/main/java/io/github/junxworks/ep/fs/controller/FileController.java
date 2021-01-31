@@ -25,7 +25,6 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,12 +45,13 @@ import io.github.junxworks.ep.fs.entity.SFile;
 import io.github.junxworks.ep.fs.entity.SFileThumb;
 import io.github.junxworks.ep.fs.service.impl.FileServiceImpl;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
+import io.github.junxworks.junx.core.util.StringUtils;
 import net.coobird.thumbnailator.Thumbnails;
 
 @RestController
-@RequestMapping("/ep/fs")
-public class FSController {
-	private static final Logger logger = LoggerFactory.getLogger(FSController.class);
+@RequestMapping("/ep/fs/files")
+public class FileController {
+	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
 	private static final String ATTACHMENT = "file";
 
@@ -76,7 +76,7 @@ public class FSController {
 	 * @param file the file
 	 * @return the result
 	 */
-	@PostMapping(path = "/files", consumes = "multipart/form-data", produces = "application/json; charset=UTF-8")
+	@PostMapping(consumes = "multipart/form-data", produces = "application/json; charset=UTF-8")
 	public Result multiUpload(MultipartHttpServletRequest multiReq) {
 		MultipartFile file = multiReq.getFile(ATTACHMENT);
 		if (file == null) {
@@ -100,7 +100,7 @@ public class FSController {
 		int idx = fileName.lastIndexOf(".");
 		if (idx > 0) {
 			extName = fileName.substring(idx + 1);
-			sysFile.setFileExtension(extName);
+			sysFile.setFileExt(extName);
 		}
 		sysFile.setFileName(file.getName());
 		sysFile.setOraginalName(file.getOriginalFilename());
@@ -118,7 +118,7 @@ public class FSController {
 	 * @param response the response
 	 * @throws Exception the exception
 	 */
-	@GetMapping("/files/{id}/attachment")
+	@GetMapping("/{id}/attachment")
 	public void downloadAttachment(@PathVariable("id") String id, HttpServletResponse response) throws Exception {
 		download(id, ContentType.ATTACHMENT.getValue(), response);
 	}
@@ -130,7 +130,7 @@ public class FSController {
 	 * @param response the response
 	 * @throws Exception the exception
 	 */
-	@GetMapping("/files/{id}")
+	@GetMapping("/{id}")
 	public void downloadInline(@PathVariable("id") String id, HttpServletResponse response) throws Exception {
 		download(id, ContentType.INLINE.getValue(), response);
 	}
@@ -144,8 +144,12 @@ public class FSController {
 		}
 		try (OutputStream outStream = new BufferedOutputStream(response.getOutputStream());) {
 			response.reset();
-			response.addHeader("Content-Disposition", type + ";filename=" + sysFile.getOraginalName());
-			String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(sysFile.getFileExtension()), DEFAULT_TYPE);
+			String oName = sysFile.getOraginalName();
+			if (StringUtils.isNull(oName)) {
+				oName = "attachment";
+			}
+			response.addHeader("Content-Disposition", type + ";filename=" + new String(oName.getBytes("UTF-8"), "ISO-8859-1"));
+			String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(sysFile.getFileExt()), DEFAULT_TYPE);
 			response.setContentType(contentType);
 			response.addHeader("Content-Length", "" + sysFile.getFileSize());
 			fr.fetchFileIntoStream(sysFile.getStorageId(), outStream);
@@ -162,7 +166,7 @@ public class FSController {
 	 * @param id the id
 	 * @return the result
 	 */
-	@GetMapping("/files/{id}/metadata")
+	@GetMapping("/{id}/metadata")
 	public Result info(@PathVariable String id) {
 		SFile fi = fileService.findById(id);
 		if (fi != null) {
@@ -180,7 +184,7 @@ public class FSController {
 	 * @param response the response
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@GetMapping("/files/{id}/thumbnail/{width}/{height}")
+	@GetMapping("/{id}/thumbnail/{width}/{height}")
 	public void imageThumbnail(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
 		imageThumbnail(id, width, height, "inline", response);
 	}
@@ -194,7 +198,7 @@ public class FSController {
 	 * @param response the response
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	@GetMapping("/files/{id}/thumbnail/{width}/{height}/attachment")
+	@GetMapping("/{id}/thumbnail/{width}/{height}/attachment")
 	public void imageThumbnailAttachment(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
 		imageThumbnail(id, width, height, "attachment", response);
 	}
@@ -231,8 +235,8 @@ public class FSController {
 
 	private void writeThumbnail(SFile file, InputStream is, int width, int height, String type, HttpServletResponse response) throws Exception {
 		response.reset();
-		response.addHeader("Content-Disposition", type + ";filename=thumbnail." + file.getFileExtension());
-		String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(file.getFileExtension()), DEFAULT_TYPE);
+		response.addHeader("Content-Disposition", type + ";filename=thumbnail." + file.getFileExt());
+		String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(file.getFileExt()), DEFAULT_TYPE);
 		response.setContentType(contentType);
 		try (ByteArrayOutputStream os = new ByteArrayOutputStream();) {
 			Thumbnails.of(is).width(width).height(height).toOutputStream(os);
@@ -246,7 +250,7 @@ public class FSController {
 				String token = fr.storeFile(data);
 				SFileThumb t = new SFileThumb();
 				t.setCreateTime(new Date());
-				t.setFileExtension(file.getFileExtension());
+				t.setFileExtension(file.getFileExt());
 				t.setFileId(file.getId());
 				t.setFileSize(Long.valueOf(data.length));
 				t.setHeight(height);

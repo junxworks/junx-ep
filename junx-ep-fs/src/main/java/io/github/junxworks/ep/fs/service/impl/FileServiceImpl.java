@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import io.github.junxworks.ep.fs.entity.SFile;
 import io.github.junxworks.ep.fs.entity.SFileThumb;
-import io.github.junxworks.ep.fs.mapper.FSMapper;
+import io.github.junxworks.ep.fs.mapper.FileMapper;
 import io.github.junxworks.ep.fs.service.FileService;
 import io.github.junxworks.junx.core.util.StringUtils;
 
@@ -38,7 +38,7 @@ public class FileServiceImpl implements FileService {
 	private static final String FILE_ORGNO_DEFAULT = "default";
 
 	@Autowired
-	private FSMapper mapper;
+	private FileMapper mapper;
 
 	public void inser(SFile file) {
 		file.setId(UUID.randomUUID().toString());

@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import io.github.junxworks.ep.fs.controller.FSController;
+import io.github.junxworks.ep.fs.controller.FileController;
 import io.github.junxworks.ep.fs.driver.FileRepository;
 import io.github.junxworks.ep.fs.driver.LocalFileSystemDriver;
 import io.github.junxworks.ep.fs.driver.OssRepositoryDriver;
@@ -30,7 +30,7 @@ import io.github.junxworks.ep.fs.service.impl.FileServiceImpl;
 
 @Configuration
 @EnableConfigurationProperties({ FSConfig.class })
-@Import({ DBInitConfiguration.class, FSController.class, FileServiceImpl.class })
+@Import({ DBInitConfiguration.class, FileController.class, FileServiceImpl.class })
 public class FSConfiguration {
 
 	/**
