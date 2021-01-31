@@ -221,8 +221,8 @@ public class FileController {
 		}
 		byte[] data = fr.fetchFileBytes(t.getStorageId());
 		response.reset();
-		response.addHeader("Content-Disposition", type + ";filename=thumbnail." + t.getFileExtension());
-		String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(t.getFileExtension()), DEFAULT_TYPE);
+		response.addHeader("Content-Disposition", type + ";filename=thumbnail." + t.getFileExt());
+		String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(t.getFileExt()), DEFAULT_TYPE);
 		response.setContentType(contentType);
 		response.addHeader("Content-Length", "" + data.length);
 		try {
@@ -249,8 +249,7 @@ public class FileController {
 			} finally {
 				String token = fr.storeFile(data);
 				SFileThumb t = new SFileThumb();
-				t.setCreateTime(new Date());
-				t.setFileExtension(file.getFileExt());
+				t.setFileExt(file.getFileExt());
 				t.setFileId(file.getId());
 				t.setFileSize(Long.valueOf(data.length));
 				t.setHeight(height);

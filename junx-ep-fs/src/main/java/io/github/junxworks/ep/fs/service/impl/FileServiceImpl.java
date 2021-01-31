@@ -16,6 +16,7 @@
  */
 package io.github.junxworks.ep.fs.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,6 +69,8 @@ public class FileServiceImpl implements FileService {
 	}
 
 	public int saveSysFileThumb(SFileThumb t) {
+		t.setId(UUID.randomUUID().toString());
+		t.setCreateTime(new Date());
 		return mapper.insertWithoutNull(t);
 	}
 
