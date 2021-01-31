@@ -26,7 +26,7 @@ import io.github.junxworks.junx.core.lifecycle.Lifecycle;
  * 文件仓库，支持存储所有非结构化数据。只负责底层文件存储与获取，不负责业务逻辑处理，即业务需要自己处理文件名、扩展类型、mime-type映射等等。
  *
  * @ClassName:  FileRepository
- * @author: 王兴
+ * @author: Michael
  * @date:   2019-1-6 10:58:10
  * @since:  v1.0
  */

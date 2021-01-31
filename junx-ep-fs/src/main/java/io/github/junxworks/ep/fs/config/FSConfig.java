@@ -1,20 +1,20 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  FileRepositoryConfig.java   
- * @Package io.github.junxworks.ep.fs.driver   
+ * @Title:  FSConfig.java   
+ * @Package io.github.junxworks.ep.fs.config   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2020-8-2 14:11:13   
+ * @date:   2021-1-31 16:47:25   
  * @version V1.0 
- * @Copyright: 2020 Junxworks. All rights reserved. 
+ * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
  *     文件版本：         修改人：             修改原因：
  ***************************************************************************************
  */
-package io.github.junxworks.ep.fs.driver;
+package io.github.junxworks.ep.fs.config;
 
 import java.util.Map;
 
@@ -22,16 +22,22 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import com.google.common.collect.Maps;
 
+import io.github.junxworks.ep.fs.driver.AliyunOssConfig;
+import io.github.junxworks.ep.fs.driver.LocalFSConfig;
+
 /**
  * 文件存储服务的配置
  *
  * @ClassName:  FileRepositoryConfig
- * @author: 王兴
+ * @author: Michael
  * @date:   2019-1-6 11:34:29
  * @since:  v1.0
  */
 @ConfigurationProperties(prefix = "junx.ep.fs")
 public class FSConfig {
+
+	/** 文件服务器模式，local：本地,oss：阿里云OSS. */
+	private String mode;
 
 	/** 阿里云的OSS存储配置. */
 	private AliyunOssConfig oss = new AliyunOssConfig();
@@ -41,6 +47,14 @@ public class FSConfig {
 
 	/** mime types. */
 	private Map<String, String> mimeTypes = Maps.newHashMap();
+
+	public String getMode() {
+		return mode;
+	}
+
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
 
 	public Map<String, String> getMimeTypes() {
 		return mimeTypes;

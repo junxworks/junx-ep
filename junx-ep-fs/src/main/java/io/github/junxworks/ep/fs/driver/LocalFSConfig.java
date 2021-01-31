@@ -20,7 +20,7 @@ package io.github.junxworks.ep.fs.driver;
  * 本地文件系统存储的配置
  *
  * @ClassName:  LocalFileSystemStorage
- * @author: 王兴
+ * @author: Michael
  * @date:   2019-1-6 11:36:13
  * @since:  v1.0
  */

@@ -1,5 +1,5 @@
 CREATE TABLE `s_file` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `id` varchar(50) NOT NULL COMMENT '主键',
   `fileName` varchar(100) NOT NULL COMMENT '上传文件名，可人为指定',
   `fileGroup` varchar(50) NOT NULL DEFAULT 'default' COMMENT '文件分组，默认为default',
   `orgNo` varchar(50) NOT NULL COMMENT '组织编号，由于文件服务是公用的，加上组织编号可以区分文件是属于哪个组织',

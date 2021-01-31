@@ -30,7 +30,7 @@ import io.github.junxworks.junx.core.util.ByteUtils;
  * 基于阿里云oss实现的文件存储驱动
  *
  * @ClassName:  OssRepositoryDriver
- * @author: 王兴
+ * @author: Michael
  * @date:   2019-1-6 11:46:57
  * @since:  v1.0
  */

@@ -12,16 +12,16 @@ public interface FileService {
 
 	void inser(SFile file);
 
-	SFile findById(Object id);
+	SFile findById(String id);
 
 	List<SFile> findByGroup(String group);
 
 	List<SFile> findByOrg(String orgNo);
 
-	void deleteById(Object id);
+	void deleteById(String id);
 
 	int saveSysFileThumb(SFileThumb t);
 
-	SFileThumb findThumbByIdAndSize(Long fileId, int width, int height);
+	SFileThumb findThumbByIdAndSize(String fileId, int width, int height);
 
 }

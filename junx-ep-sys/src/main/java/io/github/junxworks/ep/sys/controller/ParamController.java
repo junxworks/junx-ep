@@ -32,7 +32,7 @@ import io.github.junxworks.ep.sys.service.ParamService;
  * 通用数据查询
  *
  * @ClassName:  DataController
- * @author: 王兴
+ * @author: Michael
  * @date:   2020-3-2 13:23:58
  * @since:  v1.0
  */

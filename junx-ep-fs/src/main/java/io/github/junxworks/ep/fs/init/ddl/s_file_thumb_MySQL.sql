@@ -1,6 +1,6 @@
 CREATE TABLE `s_file_thumb` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `fileId` bigint(20) NOT NULL,
+  `id` varchar(50) NOT NULL COMMENT '主键',
+  `fileId` varchar(50) NOT NULL,
   `width` int(10) NOT NULL,
   `height` int(10) NOT NULL,
   `fileSize` bigint(20) NOT NULL COMMENT '文件大小',

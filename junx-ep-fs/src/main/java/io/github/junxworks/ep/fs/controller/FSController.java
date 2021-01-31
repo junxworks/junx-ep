@@ -39,7 +39,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import io.github.junxworks.ep.core.Result;
-import io.github.junxworks.ep.fs.driver.FSConfig;
+import io.github.junxworks.ep.fs.config.FSConfig;
+import io.github.junxworks.ep.fs.constants.ContentType;
 import io.github.junxworks.ep.fs.driver.FileRepository;
 import io.github.junxworks.ep.fs.entity.SFile;
 import io.github.junxworks.ep.fs.entity.SFileThumb;
@@ -56,12 +57,7 @@ public class FSController {
 
 	private static final String FILE_GROUP = "group";
 
-	private static final String FILE_GROUP_DEFAULT = "default";
-
 	private static final String ORG_NO = "orgNo";
-
-	/** 缩略图前缀. */
-	private static final String THUMB_GROUP = "thumbnail";
 
 	@Autowired
 	private FileRepository fr;
@@ -84,18 +80,15 @@ public class FSController {
 	public Result multiUpload(MultipartHttpServletRequest multiReq) {
 		MultipartFile file = multiReq.getFile(ATTACHMENT);
 		if (file == null) {
-			return Result.error("上传文件为空");
+			return Result.error("Empty file.");
 		}
 		String orgNo = multiReq.getParameter(ORG_NO);
 		String fileGroup = multiReq.getParameter(FILE_GROUP);
-		if (StringUtils.isBlank(fileGroup)) {
-			fileGroup = FILE_GROUP_DEFAULT;
-		}
 		String storageId = null;
 		try (InputStream in = file.getInputStream()) {
 			storageId = fr.storeFile(in);
 		} catch (Exception e) {
-			logger.error("上传文件异常", e);
+			logger.error("Store file failed.", e);
 			return Result.error(ExceptionUtils.getCauseMessage(e));
 		}
 		SFile sysFile = new SFile();
@@ -127,7 +120,7 @@ public class FSController {
 	 */
 	@GetMapping("/files/{id}/attachment")
 	public void downloadAttachment(@PathVariable("id") String id, HttpServletResponse response) throws Exception {
-		download(id, "attachment", response);
+		download(id, ContentType.ATTACHMENT.getValue(), response);
 	}
 
 	/**
@@ -139,7 +132,7 @@ public class FSController {
 	 */
 	@GetMapping("/files/{id}")
 	public void downloadInline(@PathVariable("id") String id, HttpServletResponse response) throws Exception {
-		download(id, "inline", response);
+		download(id, ContentType.INLINE.getValue(), response);
 	}
 
 	private void download(@PathVariable("id") String id, String type, HttpServletResponse response) throws IOException {
@@ -151,7 +144,7 @@ public class FSController {
 		}
 		try (OutputStream outStream = new BufferedOutputStream(response.getOutputStream());) {
 			response.reset();
-			response.addHeader("Content-Disposition", type + ";filename=attachment." + sysFile.getFileExtension());
+			response.addHeader("Content-Disposition", type + ";filename=" + sysFile.getOraginalName());
 			String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(sysFile.getFileExtension()), DEFAULT_TYPE);
 			response.setContentType(contentType);
 			response.addHeader("Content-Length", "" + sysFile.getFileSize());

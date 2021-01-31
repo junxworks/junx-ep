@@ -29,7 +29,7 @@ import io.github.junxworks.junx.core.util.StringUtils;
  * 默认文件仓库实现类
  *
  * @ClassName:  DefaultFileRepository
- * @author: 王兴
+ * @author: Michael
  * @date:   2019-1-6 11:38:43
  * @since:  v1.0
  */

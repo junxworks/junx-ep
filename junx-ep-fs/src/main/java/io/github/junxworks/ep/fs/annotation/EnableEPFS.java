@@ -1,7 +1,7 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  LocalRepository.java   
+ * @Title:  OSSRepository.java   
  * @Package io.github.junxworks.ep.fs.annotation   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
@@ -24,20 +24,20 @@ import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Import;
 
-import io.github.junxworks.ep.fs.config.LocalFSConfiguration;
+import io.github.junxworks.ep.fs.config.FSConfiguration;
 
 /**
- * 快速开启本地化存储服务的注解，开启注解后无需配置即可使用本地化存储
+ * 快速开启EP文件服务器服务
  *
- * @ClassName:  UseLocalFileSystemRepository
- * @author: 王兴
+ * @ClassName:  EnableEPFS
+ * @author: Michael
  * @date:   2019-1-6 14:54:17
  * @since:  v1.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ LocalFSConfiguration.class })
-public @interface LocalFS {
+@Import({ FSConfiguration.class })
+public @interface EnableEPFS {
 
 }

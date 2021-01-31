@@ -24,7 +24,7 @@ import io.github.junxworks.ep.core.orm.annotations.Table;
  * 文件服务实体类
  * 
  * @ClassName:  SysFileEntity
- * @author: 王兴
+ * @author: Michael
  * @date:   2019-1-9 16:37:39
  * @since:  v1.0
  */
@@ -32,7 +32,7 @@ import io.github.junxworks.ep.core.orm.annotations.Table;
 public class SFile {
 
 	/** 系统自动生成的id. */
-	private Long id;
+	private String id;
 
 	/** 指定文件名. */
 	private String fileName;
@@ -61,11 +61,12 @@ public class SFile {
 	/** 创建时间 */
 	private Date createTime;
 
-	public Long getId() {
+	
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

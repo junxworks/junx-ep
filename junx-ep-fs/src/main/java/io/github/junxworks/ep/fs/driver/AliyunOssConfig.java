@@ -20,7 +20,7 @@ package io.github.junxworks.ep.fs.driver;
  * 阿里云的OSS对象存储服务的配置
  *
  * @ClassName:  AliCloudOssConfig
- * @author: 王兴
+ * @author: Michael
  * @date:   2019-1-6 11:33:42
  * @since:  v1.0
  */
