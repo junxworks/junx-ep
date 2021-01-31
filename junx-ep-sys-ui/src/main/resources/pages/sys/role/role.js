@@ -47,7 +47,7 @@ function addRolePage(roleId,roleName,roleTag) {
         type: 2,
         title: typeof(roleId) != "undefined" ? '修改角色' : '新增角色',
         shadeClose: true,
-        area: ['700px', '500px'],
+        area: ['500px', '600px'],
         content: 'addRole.html?roleId=' + roleId + '&roleName=' + roleName+'&roleTag='+roleTag,
     });
 }
