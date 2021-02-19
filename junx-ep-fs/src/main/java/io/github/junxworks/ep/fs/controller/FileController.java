@@ -5,7 +5,7 @@
  * @Package io.github.junxworks.ep.fs.controller   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2021-1-31 18:00:37   
+ * @date:   2021-2-19 16:09:15   
  * @version V1.0 
  * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import com.google.common.collect.Lists;
 
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.fs.config.FSConfig;
@@ -59,7 +62,7 @@ import net.coobird.thumbnailator.Thumbnails;
 @RestController
 @RequestMapping("/ep/fs/files")
 public class FileController {
-	
+
 	/** 常量 logger. */
 	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
@@ -88,44 +91,51 @@ public class FileController {
 	private static final String DEFAULT_TYPE = "application/octet-stream";
 
 	/**
-	 * Multi upload.
+	 * 文件上传，支持多文件同时上传，返回的元数据数组顺序同文件传入顺序
 	 *
 	 * @param multiReq the multi req
 	 * @return the result
 	 */
 	@PostMapping(consumes = "multipart/form-data", produces = "application/json; charset=UTF-8")
 	public Result multiUpload(MultipartHttpServletRequest multiReq) {
-		MultipartFile file = multiReq.getFile(ATTACHMENT);
-		if (file == null) {
+		List<MultipartFile> fs = multiReq.getFiles(ATTACHMENT);
+		if (fs == null || fs.isEmpty()) {
 			return Result.error("Empty file.");
 		}
-		String orgNo = multiReq.getParameter(ORG_NO);
-		String fileGroup = multiReq.getParameter(FILE_GROUP);
-		String storageId = null;
-		try (InputStream in = file.getInputStream()) {
-			storageId = fr.storeFile(in);
-		} catch (Exception e) {
-			logger.error("Store file failed.", e);
-			return Result.error(ExceptionUtils.getCauseMessage(e));
+		List<SFile> res = Lists.newArrayList();
+		for (MultipartFile file : fs) {
+			if (file == null) {
+				return Result.error("Empty file.");
+			}
+			String orgNo = multiReq.getParameter(ORG_NO);
+			String fileGroup = multiReq.getParameter(FILE_GROUP);
+			String storageId = null;
+			try (InputStream in = file.getInputStream()) {
+				storageId = fr.storeFile(in);
+			} catch (Exception e) {
+				logger.error("Store file failed.", e);
+				return Result.error(ExceptionUtils.getCauseMessage(e));
+			}
+			SFile sysFile = new SFile();
+			sysFile.setStorageId(storageId);
+			sysFile.setStorageDriver(fr.getClass().getCanonicalName());
+			sysFile.setCreateTime(new Date());
+			String fileName = file.getOriginalFilename();
+			String extName = null;
+			int idx = fileName.lastIndexOf(".");
+			if (idx > 0) {
+				extName = fileName.substring(idx + 1);
+				sysFile.setFileExt(extName);
+			}
+			sysFile.setFileName(file.getName());
+			sysFile.setOraginalName(file.getOriginalFilename());
+			sysFile.setFileSize((int) file.getSize());
+			sysFile.setOrgNo(orgNo);
+			sysFile.setFileGroup(fileGroup);
+			fileService.inser(sysFile);
+			res.add(sysFile);
 		}
-		SFile sysFile = new SFile();
-		sysFile.setStorageId(storageId);
-		sysFile.setStorageDriver(fr.getClass().getCanonicalName());
-		sysFile.setCreateTime(new Date());
-		String fileName = file.getOriginalFilename();
-		String extName = null;
-		int idx = fileName.lastIndexOf(".");
-		if (idx > 0) {
-			extName = fileName.substring(idx + 1);
-			sysFile.setFileExt(extName);
-		}
-		sysFile.setFileName(file.getName());
-		sysFile.setOraginalName(file.getOriginalFilename());
-		sysFile.setFileSize((int) file.getSize());
-		sysFile.setOrgNo(orgNo);
-		sysFile.setFileGroup(fileGroup);
-		fileService.inser(sysFile);
-		return Result.ok(sysFile);
+		return Result.ok(res);
 	}
 
 	/**
@@ -135,7 +145,7 @@ public class FileController {
 	 * @param response the response
 	 * @throws Exception the exception
 	 */
-	@GetMapping("/{id}/attachment")
+	@GetMapping("/{id}/attachments")
 	public void downloadAttachment(@PathVariable("id") String id, HttpServletResponse response) throws Exception {
 		download(id, ContentType.ATTACHMENT.getValue(), response);
 	}
@@ -209,7 +219,7 @@ public class FileController {
 	 * @param response the response
 	 * @throws Exception the exception
 	 */
-	@GetMapping("/{id}/thumbnail/{width}/{height}")
+	@GetMapping("/{id}/thumbnails/{width}/{height}")
 	public void imageThumbnail(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
 		imageThumbnail(id, width, height, "inline", response);
 	}
@@ -223,7 +233,7 @@ public class FileController {
 	 * @param response the response
 	 * @throws Exception the exception
 	 */
-	@GetMapping("/{id}/thumbnail/{width}/{height}/attachment")
+	@GetMapping("/{id}/thumbnails/{width}/{height}/attachments")
 	public void imageThumbnailAttachment(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
 		imageThumbnail(id, width, height, "attachment", response);
 	}

@@ -42,7 +42,7 @@ public interface RoleMenuMapper extends BaseMapper {
 	 * @param roleId the role id
 	 * @return the int
 	 */
-	@Delete("delete from s_role_menu where roleId=#{roleId}")
+	@Delete("delete from s_role_menu where role_id=#{roleId}")
 	public int deleteByRoleId(Long roleId);
 
 	/**
@@ -53,9 +53,9 @@ public interface RoleMenuMapper extends BaseMapper {
 	 * @return the int
 	 */
 	@Delete({"<script>",
-		"delete from s_role_menu where roleId=#{roleId} ",
+		"delete from s_role_menu where role_id=#{roleId} ",
 			"<if test='menuIds!=null'> " +
-				" and  menuId not in " +
+				" and  menu_id not in " +
 				"<foreach collection=\"menuIds\" item=\"menuId\" open=\"(\" close=\")\" separator=\",\">" + 
 					"#{menuId}" + 
 				"</foreach>"+
@@ -70,7 +70,7 @@ public interface RoleMenuMapper extends BaseMapper {
 	 * @param roleId the role id
 	 * @return the list
 	 */
-	@Select("select menuId from s_role_menu where roleId=#{roleId}")
+	@Select("select menuId from s_role_menu where role_id=#{roleId}")
 	public List<Long> queryMenusByRoleId(@Param("roleId") Long roleId);
 
 }

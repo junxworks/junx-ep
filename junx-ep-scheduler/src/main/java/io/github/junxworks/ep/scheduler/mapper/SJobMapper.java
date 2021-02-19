@@ -78,7 +78,7 @@ public interface SJobMapper extends BaseMapper{
 		"select count(1) from s_job ",
 		"<where>",
 			"<if test='beanName != null and beanName.trim().length()>0'>",
-				" beanName like concat('%', #{beanName}, '%') ",
+				" bean_name like concat('%', #{beanName}, '%') ",
 			"</if>",
 		"</where>",
 	"</script>"})
@@ -91,13 +91,13 @@ public interface SJobMapper extends BaseMapper{
 	 * @return the list
 	 */
 	@Select({"<script>",
-		"select j.*,u.name `creatUserName`,u2.name `updateUserName` from s_job j left join s_user u2 on j.updateUser=u2.id,s_user u ",
-		"where j.createUser=u.id",
+		"select j.*,u.name `creat_user_name`,u2.name `update_user_name` from s_job j left join s_user u2 on j.update_user=u2.id,s_user u ",
+		"where j.create_user=u.id",
 			"<if test='beanName != null and beanName.trim().length()>0'>",
-				" and j.beanName like concat('%', #{beanName}, '%') ",
+				" and j.bean_name like concat('%', #{beanName}, '%') ",
 			"</if>",
 			"<if test='jobName != null and jobName.trim().length()>0'>",
-				" and j.jobName like concat('%', #{jobName}, '%') ",
+				" and j.job_name like concat('%', #{jobName}, '%') ",
 			"</if>",
 	"</script>"})
 	public List<ScheduleJobVo> queryList(SJobListConditionDto condition);

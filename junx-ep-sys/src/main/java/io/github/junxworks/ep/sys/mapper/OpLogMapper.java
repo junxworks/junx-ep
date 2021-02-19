@@ -43,7 +43,7 @@ public interface OpLogMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the system log info vo
 	 */
-	@Select("select t.*,u.name from s_op_log t LEFT JOIN s_user u on t.userId=u.id where t.id=#{id}")
+	@Select("select t.*,u.name from s_op_log t LEFT JOIN s_user u on t.user_id=u.id where t.id=#{id}")
 	public SystemLogInfoVo selectById(Long id);
 
 	/**
@@ -64,7 +64,7 @@ public interface OpLogMapper extends BaseMapper{
 	@Select("<script>" +
 			"select t.*,u.name from s_op_log t LEFT JOIN s_user u on t.userId=u.id  where 1=1" +
 			"<if test='createDate!=null and createDate.length>0 '> " +
-			"and TO_DAYS(t.createTime) = TO_DAYS(#{createDate}) " +
+			"and TO_DAYS(t.create_time) = TO_DAYS(#{createDate}) " +
 			"</if>" +
 			"<if test='name!=null and name.length>0 '> " +
 			"and u.name like CONCAT('%',#{name},'%') " +

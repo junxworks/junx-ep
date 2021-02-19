@@ -30,6 +30,6 @@ public interface FileMapper extends BaseMapper{
 	@Select("delete from s_file where file_group=#{fileGroup}")
 	public void deleteByGroup(String fileGroup);
 
-	@Select("select * from s_file_thumb where fileId=#{fileId} and width=#{width} and height=#{height} order by id desc")
+	@Select("select * from s_file_thumb where file_id=#{fileId} and width=#{width} and height=#{height} order by id desc")
 	public List<SFileThumb> queryThumbList(@Param("fileId")String fileId,@Param("width")int width,@Param("height")int height);
 }

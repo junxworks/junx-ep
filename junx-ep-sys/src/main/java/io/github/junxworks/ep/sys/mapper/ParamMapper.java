@@ -32,9 +32,9 @@ import io.github.junxworks.ep.sys.entity.SParam;
  */
 @Mapper
 public interface ParamMapper extends BaseMapper {
-	@Select("select * from s_param where status=0 and paramName=#{paramName} and paramGroup=#{group}")
+	@Select("select * from s_param where status=0 and param_name=#{paramName} and param_group=#{group}")
 	SParam getParam(@Param("group") String group, @Param("paramName") String paramName);
 
-	@Update("update s_param set paramValue=#{paramValue} where status=0 and paramName=#{paramName} and paramGroup=#{group}")
+	@Update("update s_param set param_value=#{paramValue} where status=0 and param_name=#{paramName} and param_group=#{group}")
 	int updateParam(@Param("group") String group, @Param("paramName") String paramName, @Param("paramValue") String paramValue);
 }

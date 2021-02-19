@@ -68,15 +68,15 @@ public interface DictMapper extends BaseMapper{
 					" and status = #{status} " +
 					"</if>" +
 					"<if test='parentCode!=null and parentCode.length>0 '> " +
-					" and parentCode =#{parentCode} " +
+					" and parent_code =#{parentCode} " +
 					"</if>" +
 					"<if test='dataLabel!=null and dataLabel.length>0 '> " +
-					" and dataLabel like CONCAT('%',#{dataLabel},'%')  " +
+					" and data_label like CONCAT('%',#{dataLabel},'%')  " +
 					"</if>" +
 					"<if test='dataCode!=null and dataCode.length>0 '> " +
-					" and dataCode =#{dataCode}   " +
+					" and data_code =#{dataCode}   " +
 					"</if>" +
-				" order by parentCode desc,sort asc"+
+				" order by parent_code desc,sort asc"+
 			"</script>")
 	public List<DictVo> selectByCondition(DictConditionDto entity);
 
@@ -86,15 +86,15 @@ public interface DictMapper extends BaseMapper{
 	 * @param entity the entity
 	 * @return the dictionary info vo
 	 */
-	@Select(" select * from s_dict where status=0 and dataCode =#{dataCode} and parentCode=#{parentCode}")
+	@Select(" select * from s_dict where status=0 and data_code =#{dataCode} and parent_code=#{parentCode}")
 	public DictVo selectByCode(@Param("parentCode")String parentCode,@Param("dataCode")String dataCode);
 
 	/**
 	 * Select by parent code.
 	 *
-	 * @param parentCode the parent code
+	 * @param parent_code the parent code
 	 * @return the list
 	 */
-	@Select("select * from s_dict where parentCode=#{parentCode} and status=0")
+	@Select("select * from s_dict where parent_code=#{parentCode} and status=0")
 	public List<DictVo> selectByParentCode(@Param("parentCode")String parentCode);
 }

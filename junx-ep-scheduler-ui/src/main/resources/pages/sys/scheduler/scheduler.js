@@ -10,7 +10,8 @@ layui.use(['table','laydate','form','element'], function(){
     	});
     laydate.render({ 
     	  elem: '#endTime'
-    	  ,type: 'datetime'
+    	  ,type: 'datetime',
+    	  max: 1
     	});
     jobTable= ltable.render({
         title:"定时任务表",

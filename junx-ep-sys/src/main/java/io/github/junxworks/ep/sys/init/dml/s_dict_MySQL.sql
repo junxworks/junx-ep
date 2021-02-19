@@ -1,2 +1,2 @@
-insert into `s_dict`(`id`,`parentCode`,`dataCode`,`dataLabel`,`sort`,`remark`,`status`,`createUser`,`createTime`,`updateUser`,`updateTime`) values (1,'0','orgType','组织类型',null,'',0,-1,'2019-12-16 16:16:41',null,null);
-insert into `s_dict`(`id`,`parentCode`,`dataCode`,`dataLabel`,`sort`,`remark`,`status`,`createUser`,`createTime`,`updateUser`,`updateTime`) values (2,'orgType','0','默认组织',0,'',0,-1,'2019-12-16 16:16:56',null,null);
+insert into `s_dict`(`id`,`parent_code`,`data_code`,`data_label`,`sort`,`remark`,`status`,`create_user`,`create_time`,`update_user`,`update_time`) values (1,'0','orgType','组织类型',null,'',0,-1,'2019-12-16 16:16:41',null,null);
+insert into `s_dict`(`id`,`parent_code`,`data_code`,`data_label`,`sort`,`remark`,`status`,`create_user`,`create_time`,`update_user`,`update_time`) values (2,'orgType','0','默认组织',0,'',0,-1,'2019-12-16 16:16:56',null,null);

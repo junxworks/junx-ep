@@ -51,7 +51,7 @@ public interface UserRoleMapper extends BaseMapper{
 	 * @param userId the user id
 	 * @return the list
 	 */
-	@Select("select * from s_user_role where userId=#{userId}")
+	@Select("select * from s_user_role where user_id=#{userId}")
 	List<SUserRole> selectByUserId(Long userId);
 
 	/**
@@ -69,7 +69,7 @@ public interface UserRoleMapper extends BaseMapper{
 	 * @param userId the user id
 	 * @return the int
 	 */
-	@Delete("delete from s_user_role where userId=#{userId}")
+	@Delete("delete from s_user_role where user_id=#{userId}")
 	int deleteByUserId(Long userId);
 
 

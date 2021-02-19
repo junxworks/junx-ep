@@ -405,7 +405,7 @@ function showNotice() {
         id: 'LAY_layuipro',
         btn: ['我知道了'],
         moveType: 1,
-        content: '<div style="padding:15px 20px; text-align:justify; line-height: 22px; text-indent:2em;border-bottom:1px solid #e2e2e2;"><p>重庆业如小额贷款有限公司版权所有</p></div>',
+        content: '<div style="padding:15px 20px; text-align:justify; line-height: 22px; text-indent:2em;border-bottom:1px solid #e2e2e2;"><p>Hello Junxworks</p></div>',
         success: function (layero) {
             var btn = layero.find('.layui-layer-btn');
             btn.css('text-align', 'center');

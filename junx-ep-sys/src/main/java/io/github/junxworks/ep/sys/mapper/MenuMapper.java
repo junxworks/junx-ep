@@ -46,7 +46,7 @@ public interface MenuMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the menu info vo
 	 */
-	@Select("select s.*,case when parentId!=0 then (select name from s_menu where id=s.parentId) else '根目录' end `parentName` from s_menu s where s.id=#{id}")
+	@Select("select s.*,case when parent_id!=0 then (select name from s_menu where id=s.parent_id) else '根目录' end `parentName` from s_menu s where s.id=#{id}")
 	public MenuInfoVo selectById(Long id);
 
 	/**
@@ -73,7 +73,7 @@ public interface MenuMapper extends BaseMapper{
 			"and name like CONCAT('%',#{name},'%') " +
 			"</if>" +
 			"<if test='parentId!=null and parentId.length>0 '> " +
-			"and parentId = #{parentId} " +
+			"and parent_id = #{parentId} " +
 			"</if>" +
 			"<if test='type!=null and type.length>0 '> " +
 			"and type = #{type} " +
@@ -104,7 +104,7 @@ public interface MenuMapper extends BaseMapper{
 	 * @param roleId the role id
 	 * @return the list
 	 */
-	@Select("select DISTINCT m.* from s_menu m,s_role_menu rm,s_role r where rm.roleId=#{roleId} and rm.menuId = m.id and rm.roleId=r.id and r.status=0")
+	@Select("select DISTINCT m.* from s_menu m,s_role_menu rm,s_role r where rm.role_id=#{roleId} and rm.menu_id = m.id and rm.role_id=r.id and r.status=0")
 	List<MenuInfoVo> selectByRoleId(Long roleId);
 
 	/**
@@ -114,7 +114,7 @@ public interface MenuMapper extends BaseMapper{
 	 * @return the int
 	 */
 	@Select({"<script>",
-			"select count(1) from s_menu where status=0 and parentId=#{id}",
+			"select count(1) from s_menu where status=0 and parent_id=#{id}",
 			"</script>"})
 	public int selectChildrenCountById(long id);
 
@@ -126,8 +126,8 @@ public interface MenuMapper extends BaseMapper{
 	 */
 	@Select("<script> "+
 			"SELECT m.* FROM "
-			+ "(SELECT DISTINCT rm.menuId FROM s_role_menu rm,s_user_role ur,s_role r WHERE r.status=0 and r.id=rm.roleId and rm.roleId = ur.roleId and ur.userId =#{userId}) menus" +
-			",s_menu m WHERE menus.menuId = m.id and m.type!=1 AND  m.`status`=0"+
+			+ "(SELECT DISTINCT rm.menu_id FROM s_role_menu rm,s_user_role ur,s_role r WHERE r.status=0 and r.id=rm.role_id and rm.role_id = ur.role_id and ur.user_id =#{userId}) menus" +
+			",s_menu m WHERE menus.menu_id = m.id and m.type!=1 AND  m.`status`=0"+
 			"</script>")
 	public List<MenuInfoVo> getAllMenuByUserId(long userId);
 	
@@ -137,6 +137,6 @@ public interface MenuMapper extends BaseMapper{
 	 * @param menuId the menu id
 	 * @return the list
 	 */
-	@Select("select r.* from s_role_menu rm,s_role r where r.status=0 and r.id=rm.roleId and rm.menuId = #{menuId}")
+	@Select("select r.* from s_role_menu rm,s_role r where r.status=0 and r.id=rm.role_id and rm.menu_id = #{menuId}")
 	List<RoleInfoVo> queryRolesByMenuId(@Param("menuId") Long menuId);
 }

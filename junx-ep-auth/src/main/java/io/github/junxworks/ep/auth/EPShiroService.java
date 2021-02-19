@@ -42,19 +42,19 @@ import io.github.junxworks.ep.core.ds.DynamicDataSource;
 public class EPShiroService {
 
 	/** 常量 QUERY_USER. */
-	private static final String QUERY_USER = "select s.*,o.orgName,o.orgType from s_user s left join s_org o on s.orgNo=o.orgNo and o.status=0 where s.username=? and s.password=? and s.status=0";
+	private static final String QUERY_USER = "select s.*,o.org_name,o.org_type from s_user s left join s_org o on s.org_no=o.org_no and o.status=0 where s.username=? and s.password=? and s.status=0";
 
 	/** 常量 QUERY_USER_AUTHORIZATIONS. */
-	private static final String QUERY_USER_AUTHORIZATIONS = "select distinct m.mark from s_user u,s_user_role r,s_role_menu rm,s_menu m where u.id=? and u.status=0 and u.id=r.userId and r.roleId=rm.roleId and rm.menuId=m.id and m.status=0 and m.mark != '' and m.mark is not null";
+	private static final String QUERY_USER_AUTHORIZATIONS = "select distinct m.mark from s_user u,s_user_role r,s_role_menu rm,s_menu m where u.id=? and u.status=0 and u.id=r.user_id and r.role_id=rm.role_id and rm.menu_id=m.id and m.status=0 and m.mark != '' and m.mark is not null";
 
 	/** 常量 QUERY_ALL_AUTHORIZATIONS. */
 	private static final String QUERY_ALL_AUTHORIZATIONS = "select distinct m.mark from s_menu m where m.status=0 and m.mark != '' and m.mark is not null";
 
 	/** 常量 QUERY_USER_ROLES. */
-	private static final String QUERY_USER_ROLES = "select distinct r.roleTag from s_role r,s_user u,s_user_role ur where u.id=? and u.status=0 and u.id=ur.userId and ur.roleId=r.id and r.status=0 and r.roleTag != '' and r.roleTag is not null";
+	private static final String QUERY_USER_ROLES = "select distinct r.role_tag from s_role r,s_user u,s_user_role ur where u.id=? and u.status=0 and u.id=ur.user_id and ur.role_id=r.id and r.status=0 and r.role_tag != '' and r.role_tag is not null";
 
 	/** 常量 QUERY_ALL_ROLES. */
-	private static final String QUERY_ALL_ROLES = "select distinct r.roleTag from s_role r where r.status=0 and r.roleTag != '' and r.roleTag is not null";
+	private static final String QUERY_ALL_ROLES = "select distinct r.role_tag from s_role r where r.status=0 and r.role_tag != '' and r.role_tag is not null";
 
 	/** dynamic data source. */
 	@Autowired
@@ -95,14 +95,14 @@ public class EPShiroService {
 			UserModel model = new UserModel();
 			model.setId(rs.getLong("id"));
 			model.setEmail(rs.getString("email"));
-			model.setIdCard(rs.getString("idCard"));
+			model.setIdCard(rs.getString("id_card"));
 			model.setMobile(rs.getString("mobile"));
 			model.setNick(rs.getString("name"));
 			model.setName(rs.getString("name"));
 			model.setUsername(rs.getString("username"));
-			model.setOrgNo(rs.getString("orgNo"));
-			model.setOrgName(rs.getString("orgName"));
-			model.setOrgType(rs.getString("orgType"));
+			model.setOrgNo(rs.getString("org_no"));
+			model.setOrgName(rs.getString("org_name"));
+			model.setOrgType(rs.getString("org_type"));
 			model.setStatus(rs.getInt("status"));
 			return model;
 		}
@@ -160,7 +160,7 @@ public class EPShiroService {
 			}
 			try (ResultSet rs = pst.executeQuery();) {
 				while (rs.next()) {
-					roles.add(rs.getString("roleTag"));
+					roles.add(rs.getString("role_tag"));
 				}
 			}
 		}

@@ -45,7 +45,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the user info vo
 	 */
-	@Select("select s.*,o.orgName from s_user s left join s_org o on s.orgNo=o.orgNo and o.status=0 where s.id=#{id}")
+	@Select("select s.*,o.org_name from s_user s left join s_org o on s.org_no=o.org_no and o.status=0 where s.id=#{id}")
 	UserInfoVo selectById(Long id);
 
 	/**
@@ -54,7 +54,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param mobile the mobile
 	 * @return the s user
 	 */
-	@Select("select * from s_user where userName=#{userName} and status=0")
+	@Select("select * from s_user where user_name=#{userName} and status=0")
 	SUser selectByUserName(String mobile);
 
 	/**
@@ -73,13 +73,13 @@ public interface UserMapper extends BaseMapper{
 	 * @return the page
 	 */
 	@Select("<script>" +
-			"SELECT u.*, o.orgName,r.roleName " + 
+			"SELECT u.*, o.org_name,r.role_name " + 
 			"FROM s_user u " + 
-			"     LEFT JOIN s_org o ON u.orgNo = o.orgNo AND o.status = 0 " + 
-			"     LEFT JOIN (SELECT ur.userId, group_concat(r.roleName) roleName " + 
+			"     LEFT JOIN s_org o ON u.org_no = o.org_no AND o.status = 0 " + 
+			"     LEFT JOIN (SELECT ur.user_id, group_concat(r.role_name) role_name " + 
 			"                FROM s_user_role ur, s_role r " + 
-			"                WHERE ur.roleId = r.id AND r.status = 0 group by ur.userId) r " + 
-			"        ON u.id = r.userId" +
+			"                WHERE ur.role_id = r.id AND r.status = 0 group by ur.user_id) r " + 
+			"        ON u.id = r.user_id" +
 			"<if test='roleIds!=null'> " +
 				",s_user_role ur"+
 			"</if>"+
@@ -88,11 +88,11 @@ public interface UserMapper extends BaseMapper{
 			"     and (u.name like CONCAT('%',#{query},'%') or u.mobile = #{query}) " +
 			"</if>" +
 			"<if test='orgNo!=null and orgNo.length>0'> " +
-			"     and u.orgNo=#{orgNo} " +
+			"     and u.org_no=#{orgNo} " +
 			"</if>" +
 			"<if test='roleIds!=null'> " +
-				" and u.id=ur.userId"+ 
-			    " and ur.roleId in " +
+				" and u.id=ur.user_id"+ 
+			    " and ur.role_id in " +
 				"<foreach collection=\"roleIds\" item=\"roleId\" open=\"(\" close=\")\" separator=\",\">" + 
 					"#{roleId}" + 
 				"</foreach>"+
@@ -112,10 +112,10 @@ public interface UserMapper extends BaseMapper{
 			+ " where u.status=0 "
 			+ " and r.status=0 "
 			+ " and m.status=0 "
-			+ " and u.id=ur.userId "
-			+ " and ur.roleId = r.id "
-			+ " and r.id=rm.roleId "
-			+ " and rm.menuId=m.id "+
+			+ " and u.id=ur.user_id "
+			+ " and ur.role_id = r.id "
+			+ " and r.id=rm.role_id "
+			+ " and rm.menu_id=m.id "+
 			"<if test='auth!=null '> " +
 			" and m.mark=#{auth} " +
 			"</if>" +
@@ -128,7 +128,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param roleId the role id
 	 * @return user list by role id 属性
 	 */
-	@Select({"SELECT DISTINCT u.* from s_user u,s_user_role ur,s_role r where r.id=#{id} and r.status = 0 and r.id=ur.roleId and ur.userId=u.id and u.status=0 order by u.id asc"})
+	@Select({"SELECT DISTINCT u.* from s_user u,s_user_role ur,s_role r where r.id=#{id} and r.status = 0 and r.id=ur.role_id and ur.user_id=u.id and u.status=0 order by u.id asc"})
 	List<UserInfoVo> getUserListByRoleId(@Param("id")Long roleId);
 	
 	/**
@@ -137,7 +137,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param roleTag the role tag
 	 * @return user list by role tag 属性
 	 */
-	@Select({"SELECT DISTINCT u.* from s_user u,s_user_role ur,s_role r where r.roleTag=#{tag} and r.status = 0 and r.id=ur.roleId and ur.userId=u.id and u.status=0 order by u.id asc"})
+	@Select({"SELECT DISTINCT u.* from s_user u,s_user_role ur,s_role r where r.role_tag=#{tag} and r.status = 0 and r.id=ur.role_id and ur.user_id=u.id and u.status=0 order by u.id asc"})
 	List<UserInfoVo> getUserListByRoleTag(@Param("tag")String roleTag);
 
 }
