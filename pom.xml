@@ -49,7 +49,7 @@
 		<concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
 		<shiro.version>1.4.1</shiro.version>
 		<httpcomponents.version>4.5.6</httpcomponents.version>
-		<poi.version>3.9</poi.version>
+		<poi.version>3.17</poi.version>
 		<poi-ooxml.version>3.10-FINAL</poi-ooxml.version>
 		<validation.version>1.1.0.Final</validation.version>
 		<mybatis.version>2.1.4</mybatis.version>
