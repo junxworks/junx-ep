@@ -39,7 +39,7 @@
 		<nexus-staging-maven-plugin.version>1.6.3</nexus-staging-maven-plugin.version>
 		<maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
 		<java.version>1.8</java.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<slf4j-api.versin>1.7.25</slf4j-api.versin>
 		<log4j-web.version>2.11.2</log4j-web.version>
 		<springboot.version>2.4.1</springboot.version>
