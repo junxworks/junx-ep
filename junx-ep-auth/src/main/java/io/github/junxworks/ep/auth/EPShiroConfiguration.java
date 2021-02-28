@@ -43,7 +43,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import com.google.common.collect.Maps;
 
@@ -112,6 +111,8 @@ public class EPShiroConfiguration {
 			filterMap.put("/**/*.ico", "anon");
 			filterMap.put("/fonts/**", "anon");
 			filterMap.put("/plugins/**", "anon");
+			filterMap.put("/**/login", "anon");
+			filterMap.put("/**/system-name", "anon");
 			filterMap.put("/**", "ep");
 			shiroFilter.setFilterChainDefinitionMap(filterMap);
 		}
@@ -137,11 +138,8 @@ public class EPShiroConfiguration {
 	 */
 	@Bean
 	@ConditionalOnMissingBean(CacheManager.class)
-	public CacheManager cacheManager(RedisTemplate<String, Object> redisTemplate, EPShiroConfig config) {
-		EPShiroRedisCacheManager cacheManager = new EPShiroRedisCacheManager();
-		cacheManager.setRedis(redisTemplate);
-		cacheManager.setConfig(config);
-		return cacheManager;
+	public CacheManager cacheManager() {
+		return new EPShiroRedisCacheManager();
 	}
 
 	/**

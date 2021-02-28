@@ -29,9 +29,6 @@ import org.apache.shiro.cache.Cache;
  * @since:  v1.0
  */
 public abstract class EPBaseCache<K, V> implements Cache<K, V> {
-	
-	/** 常量 REDIS_SHIRO_CACHE. */
-	protected static final String REDIS_SHIRO_CACHE = "shiro-cache";
 
 	/** cache key prefix. */
 	protected String cacheKeyPrefix;
@@ -56,6 +53,7 @@ public abstract class EPBaseCache<K, V> implements Cache<K, V> {
 	 * @param k the k
 	 * @return cache key 属性
 	 */
+	@SuppressWarnings("unchecked")
 	protected K getCacheKey(Object k) {
 		return (K) (this.cacheKeyPrefix + k.toString());
 	}

@@ -31,6 +31,7 @@ import com.alibaba.fastjson.JSON;
 
 import io.github.junxworks.ep.auth.ram.EPRamAuthenticationFilter;
 import io.github.junxworks.ep.core.Result;
+import io.github.junxworks.ep.core.utils.HttpUtils;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 
 /**

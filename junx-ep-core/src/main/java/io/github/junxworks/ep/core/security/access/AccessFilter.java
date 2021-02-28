@@ -14,7 +14,7 @@
  *     文件版本：         修改人：             修改原因：
  ***************************************************************************************
  */
-package io.github.junxworks.ep.core.security;
+package io.github.junxworks.ep.core.security.access;
 
 import java.io.IOException;
 

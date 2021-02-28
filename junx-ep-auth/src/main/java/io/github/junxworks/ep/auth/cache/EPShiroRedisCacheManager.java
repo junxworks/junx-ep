@@ -16,9 +16,12 @@
  */
 package io.github.junxworks.ep.auth.cache;
 
+import javax.annotation.Resource;
+
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import io.github.junxworks.ep.auth.EPShiroConfig;
@@ -34,9 +37,11 @@ import io.github.junxworks.ep.auth.EPShiroConfig;
 public class EPShiroRedisCacheManager implements CacheManager {
 
 	/** redis. */
-	private RedisTemplate<String, Object> redis;
+	@Resource
+	private RedisTemplate<Object, Object> redis;
 
 	/** config. */
+	@Autowired
 	private EPShiroConfig config;
 
 	/**
@@ -56,14 +61,6 @@ public class EPShiroRedisCacheManager implements CacheManager {
 		EPShiroRedisCache<K, V> cache = new EPShiroRedisCache<K, V>(name, redis);
 		cache.setExpire(config.getGlobalSessionTimeout());
 		return cache;
-	}
-
-	public RedisTemplate<String, Object> getRedis() {
-		return redis;
-	}
-
-	public void setRedis(RedisTemplate<String, Object> redis) {
-		this.redis = redis;
 	}
 
 	public EPShiroConfig getConfig() {
