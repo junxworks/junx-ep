@@ -90,7 +90,7 @@ public interface BaseMapper {
 	 * @return the int
 	 */
 	@DeleteProvider(type = MybatisObjectSqlProvider.class, method = "deleteByPK")
-	public int deleteByID(Object entity);
+	public int deleteByPK(Object entity);
 
 	/**
 	 * Delete by PK.

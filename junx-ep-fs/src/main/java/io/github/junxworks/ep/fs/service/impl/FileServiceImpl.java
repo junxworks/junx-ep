@@ -82,7 +82,7 @@ public class FileServiceImpl implements FileService {
 		if (ts.size() > 1) {
 			for (int i = 1, len = ts.size(); i < len; i++) {
 				SFileThumb t = ts.get(i);
-				mapper.deleteByID(t);
+				mapper.deleteByPK(t);
 			}
 		}
 		return ts.get(0);

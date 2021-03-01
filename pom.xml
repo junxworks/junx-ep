@@ -66,6 +66,7 @@
 		<ST.version>4.1</ST.version>
 		<thumbnailator.version>0.4.11</thumbnailator.version>
 		<imageio.version>3.5</imageio.version>
+		<QLExpress.version>3.2.4</QLExpress.version>
 	</properties>
   <dependencies>
 	<dependency>
@@ -172,6 +173,11 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>${druid.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>QLExpress</artifactId>
+		    <version>${QLExpress.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.webjars</groupId>
@@ -389,5 +395,6 @@
 		<module>junx-ep-scheduler</module>
 		<module>junx-ep-fs</module>
 		<module>junx-ep-scheduler-ui</module>
+		<module>junx-ep-qlexp</module>
 	</modules>
 </project>
