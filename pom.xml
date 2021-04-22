@@ -47,7 +47,7 @@
 		<spring.version>5.3.2</spring.version>
 		<aspectj.version>1.8.13</aspectj.version>
 		<concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
-		<shiro.version>1.4.1</shiro.version>
+		<shiro.version>1.7.0</shiro.version>
 		<httpcomponents.version>4.5.6</httpcomponents.version>
 		<poi.version>3.9</poi.version>
 		<poi-ooxml.version>3.10-FINAL</poi-ooxml.version>
