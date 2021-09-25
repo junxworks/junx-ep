@@ -1,0 +1,79 @@
+ <!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>顶部组件管理</title>
+    <link href="../../../plugins/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href="../../../css/components.min.css" rel="stylesheet" media="all" />
+    <link href="../../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all" />
+    <link rel="stylesheet" href="../../../css/font_tnyc012u2rlwstt9.css" media="all" />
+</head>
+
+<body>
+<script src="../../../js/base.js"></script>
+<script src="../../../plugins/layui/layui.js"></script>
+<script src="../../../plugins/jquery.min.js"></script>
+<script src="topItemList.js"></script>
+
+<div class="portlet light" id="form_wizard_1">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="fa fa-beer"></i>
+            <span class="caption-subject font-green sbold uppercase">顶部组件管理</span>
+        </div>
+    </div>
+    <div class="portlet-title">
+        <div class="div-inline" style="clear:both">
+			<form class="layui-form">
+			    <div class="layui-form-item">
+			        <div class="layui-inline">
+			        	<label class="layui-form-label" style="width:120px">组件名称：</label>
+			            <div class="layui-input-inline">
+			                <input name="itemName" class="layui-input">
+			            </div>
+			        </div>
+			        <div class="layui-inline">
+			            <label class="layui-form-label" style="width:120px">状态：</label>
+			            <div class="layui-input-inline" >
+			                <select name="status">
+			                    <option value="">全部</option>
+			                    <option value="0">未启用</option>
+			                    <option value="1">已启用</option>
+			                </select>
+			            </div>
+			        </div>
+			        <div class="layui-inline">
+			            <div class="layui-input-inline" >
+			                <button type="button" class="layui-btn" lay-submit="" lay-filter="search"><i class="fa fa-search"></i> 查询</button>
+			            	<button type="button" class="layui-btn layui-btn-normal" onclick="editItem()"><i class="fa fa-plus-square"></i> 新增</button>
+			            </div>
+			        </div>
+			    </div>
+			</form>
+        </div>
+    </div>
+
+    <div class="portlet-body">
+        <div class="dataTables_wrapper" style="margin-top: 0px!important" >
+			<table id="itemTable" class="layui-table">
+			</table>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="operateTp">
+    <input type="checkbox" name="lock" value="{{d.id}}" title="启用" lay-filter="itemUse" {{ d.status == 1 ? 'checked' : '' }}>
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="editItem({{d.id}})">
+        <i class="layui-icon">&#xe642;</i>编辑
+    </button>
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteItem({{d.id}},'{{d.itemName}}')">
+        <i class="layui-icon">&#xe640;</i>删除
+    </button>
+</script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+DROP TABLE IF EXISTS ep_s_file;
+CREATE TABLE `ep_s_file` (
+  `id` varchar(50) NOT NULL COMMENT '主键',
+  `file_name` varchar(100) NOT NULL COMMENT '上传文件名，可人为指定',
+  `file_group` varchar(50) NOT NULL DEFAULT 'default' COMMENT '文件分组，默认为default',
+  `org_no` varchar(50) NOT NULL COMMENT '组织编号，由于文件服务是公用的，加上组织编号可以区分文件是属于哪个组织',
+  `file_size` int(11) NOT NULL COMMENT '文件大小',
+  `file_ext` varchar(20) DEFAULT NULL COMMENT '文件扩展名',
+  `storage_id` varchar(100) NOT NULL COMMENT '文件存储id，通过这个id取获取',
+  `oraginal_name` varchar(300) NOT NULL COMMENT '文件原名',
+  `storage_driver` varchar(100) NOT NULL COMMENT '存储驱动名，后台程序记录，可用于问题分析',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统文件';
+
+DROP TABLE IF EXISTS ep_s_file_thumb;
+CREATE TABLE `ep_s_file_thumb` (
+  `id` varchar(50) NOT NULL COMMENT '主键',
+  `file_id` varchar(50) NOT NULL,
+  `width` int(10) NOT NULL,
+  `height` int(10) NOT NULL,
+  `file_size` bigint(20) NOT NULL COMMENT '文件大小',
+  `file_ext` varchar(20) DEFAULT NULL COMMENT '文件扩展名',
+  `storage_id` varchar(100) NOT NULL COMMENT '文件存储id，通过这个id取获取',
+  `storage_driver` varchar(100) NOT NULL COMMENT '存储驱动名，后台程序记录，可用于问题分析',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `fwh` (`file_id`,`width`,`height`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='缩略图表 系统文件';
