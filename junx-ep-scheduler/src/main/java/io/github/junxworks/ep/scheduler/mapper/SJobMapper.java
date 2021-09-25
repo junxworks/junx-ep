@@ -26,8 +26,8 @@ import org.apache.ibatis.annotations.Update;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
 import io.github.junxworks.ep.scheduler.dto.SJobListConditionDto;
-import io.github.junxworks.ep.scheduler.entity.SJob;
-import io.github.junxworks.ep.scheduler.vo.ScheduleJobVo;
+import io.github.junxworks.ep.scheduler.entity.EpSJob;
+import io.github.junxworks.ep.scheduler.vo.EpSJobVo;
 
 /**
  * {类的详细说明}.
@@ -41,13 +41,13 @@ import io.github.junxworks.ep.scheduler.vo.ScheduleJobVo;
 public interface SJobMapper extends BaseMapper{
 	
 	/**
-	 * Delete batch.
+	 * 批量软删除
 	 *
 	 * @param id the id
 	 * @return the int
 	 */
 	@Delete({"<script>",
-				"delete from s_job where id in ",
+				"update ep_s_job set status=-1 where id in ",
 				"<foreach item='jobId' collection='array' open='(' separator=',' close=')'>",
 					"#{jobId}",
 				"</foreach>",
@@ -61,7 +61,7 @@ public interface SJobMapper extends BaseMapper{
 	 * @return the int
 	 */
 	@Update({"<script>",
-		"update s_job set status = #{status} where id in ",
+		"update ep_s_job set status = #{status} where id in ",
 		"<foreach item='jobId' collection='list' open='(' separator=',' close=')'>",
 			"#{jobId}",
 		"</foreach>",
@@ -75,12 +75,11 @@ public interface SJobMapper extends BaseMapper{
 	 * @return the int
 	 */
 	@Select({"<script>",
-		"select count(1) from s_job ",
-		"<where>",
+		"select count(1) from ep_s_job ",
+		"where status!=-1 ",
 			"<if test='beanName != null and beanName.trim().length()>0'>",
-				" bean_name like concat('%', #{beanName}, '%') ",
+				" and bean_name like concat('%', #{beanName}, '%') ",
 			"</if>",
-		"</where>",
 	"</script>"})
 	public int queryTotal(Map<String, Object> map);
 	
@@ -91,16 +90,20 @@ public interface SJobMapper extends BaseMapper{
 	 * @return the list
 	 */
 	@Select({"<script>",
-		"select j.*,u.name `creat_user_name`,u2.name `update_user_name` from s_job j left join s_user u2 on j.update_user=u2.id,s_user u ",
-		"where j.create_user=u.id",
+		"select j.*,u.name `creat_user_name`,u2.name `update_user_name` from ep_s_job j left join ep_s_user u2 on j.update_user=u2.id,ep_s_user u ",
+		"where j.create_user=u.id and j.status!=-1 ",
 			"<if test='beanName != null and beanName.trim().length()>0'>",
 				" and j.bean_name like concat('%', #{beanName}, '%') ",
 			"</if>",
 			"<if test='jobName != null and jobName.trim().length()>0'>",
 				" and j.job_name like concat('%', #{jobName}, '%') ",
 			"</if>",
+			"<if test='status != null'>",
+			" and j.status= #{status} ",
+		"</if>",
+		" order by j.status asc,j.job_name asc",
 	"</script>"})
-	public List<ScheduleJobVo> queryList(SJobListConditionDto condition);
+	public List<EpSJobVo> queryList(SJobListConditionDto condition);
 
 	/**
 	 * Query object.
@@ -108,7 +111,7 @@ public interface SJobMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the schedule job entity
 	 */
-	@Select("select * from s_job where id = #{value}")
-	public SJob queryObject(Object id);
+	@Select("select * from ep_s_job where id = #{value}")
+	public EpSJob queryObject(Object id);
 
 }

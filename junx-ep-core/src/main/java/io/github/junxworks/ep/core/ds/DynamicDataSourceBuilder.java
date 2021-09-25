@@ -22,7 +22,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 /**
- * {类的详细说明}.
+ * 动态数据源构造器
  *
  * @ClassName:  DynamicDataSourceBuilder
  * @author: Michael

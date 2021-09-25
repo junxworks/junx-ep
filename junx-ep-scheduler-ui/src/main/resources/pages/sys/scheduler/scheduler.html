@@ -21,14 +21,8 @@
     <div class="layui-tab-item layui-show">
 		    <div class="portlet light" id="form_wizard_1">
 		    <div class="portlet-title">
-		        <div class="caption">
-		            <i class="fa fa-paste"></i>
-		            <span class="caption-subject font-green sbold uppercase">定时任务管理</span>
-		        </div>
-		    </div>
-		    <div class="portlet-title">
 		        <div class="div-inline" style="clear:both">
-					<form class="layui-form" style="padding-top: 20px">
+					<form class="layui-form">
 			            <div class="layui-form-item">
 			                <div class="layui-inline">
 			                    <label class="layui-form-label" style="width:100px">任务名称：</label>
@@ -40,6 +34,16 @@
 			                    <label class=" layui-form-label" style="width:100px">Bean名称：</label>
 			                    <div class="layui-input-inline">
 			                        <input type="text" name="beanName"  autocomplete="off"  class="layui-input">
+			                    </div>
+			                </div>
+			                <div class="layui-inline">
+			                    <label class=" layui-form-label" style="width:100px">任务状态：</label>
+			                    <div class="layui-input-inline">
+			                       	<select name="status">
+					                    <option value="">请选择</option>
+					                    <option value="0">正常</option>
+					                    <option value="1">暂停</option>
+					                </select>
 			                    </div>
 			                </div>
 			                <button type="button" class="layui-btn" lay-submit lay-filter="searchJobs"><i class="fa fa-search"></i> 查询</button>
@@ -68,15 +72,9 @@
     </div>
     <div class="layui-tab-item">
     	<div class="portlet light" id="form_wizard_1">
-		    <div class="portlet-title">
-		        <div class="caption">
-		            <i class="fa fa-paste"></i>
-		            <span class="caption-subject font-green sbold uppercase">任务日志</span>
-		        </div>
-		    </div>
 		     <div class="portlet-title">
 		        <div class="div-inline" style="clear:both">
-					<form class="layui-form" style="padding-top: 20px">
+					<form class="layui-form">
 			            <div class="layui-form-item">
 			                <div class="layui-inline">
 			                    <label class="layui-form-label" style="width:100px">任务名称：</label>

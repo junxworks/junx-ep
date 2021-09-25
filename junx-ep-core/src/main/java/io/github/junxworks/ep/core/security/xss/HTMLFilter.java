@@ -203,7 +203,8 @@ public final class HTMLFilter {
      *
      * @param conf the conf
      */
-    public HTMLFilter(final Map<String,Object> conf) {
+    @SuppressWarnings("unchecked")
+	public HTMLFilter(final Map<String,Object> conf) {
 
         assert conf.containsKey("vAllowed") : "configuration requires vAllowed";
         assert conf.containsKey("vSelfClosingTags") : "configuration requires vSelfClosingTags";

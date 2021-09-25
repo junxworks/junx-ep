@@ -29,7 +29,7 @@ import org.quartz.TriggerKey;
 
 import com.alibaba.fastjson.JSON;
 
-import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.entity.EpSJob;
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 
 /**
@@ -89,7 +89,7 @@ public class ScheduleUtils {
 	 * @param scheduler the scheduler
 	 * @param scheduleJob the schedule job
 	 */
-	public static void createScheduleJob(Scheduler scheduler, SJob scheduleJob) {
+	public static void createScheduleJob(Scheduler scheduler, EpSJob scheduleJob) {
 		try {
 			//构建job
 			JobDetail jobDetail = JobBuilder.newJob(ScheduledJob.class).withIdentity(getJobKey(scheduleJob.getId())).build();
@@ -115,7 +115,7 @@ public class ScheduleUtils {
 	 * @param scheduler the scheduler
 	 * @param scheduleJob the schedule job
 	 */
-	public static void updateScheduleJob(Scheduler scheduler, SJob scheduleJob) {
+	public static void updateScheduleJob(Scheduler scheduler, EpSJob scheduleJob) {
 		try {
 			TriggerKey triggerKey = getTriggerKey(scheduleJob.getId());
 			//表达式调度构建器
@@ -141,7 +141,7 @@ public class ScheduleUtils {
 	 * @param scheduler the scheduler
 	 * @param scheduleJob the schedule job
 	 */
-	public static void run(Scheduler scheduler, SJob scheduleJob) {
+	public static void run(Scheduler scheduler, EpSJob scheduleJob) {
 		try {
 			//参数
 			JobDataMap dataMap = new JobDataMap();

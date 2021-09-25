@@ -11,14 +11,36 @@ function EventBus(){
 			this.channels.set(topic,channel);
 		}
 	};
-	this.broadcast=function(topic,obj){
+	this.broadcast=function(topic,eventContext){
 		var channel=this.channels.get(topic);
-		//console.log(channel)
 		if(channel!=null&&channel!=undefined){
 			channel.forEach(function(v,k,map){
-				v.onEvent(obj);
+				v.onEvent(eventContext);
 			});
 		}
 	}
 };
 
+/**
+ 事件总线，用于跨页面通信
+ */
+var eventBus = new EventBus();
+
+/**
+ 注册事件监听
+ topic：事件主题
+ cmpName：主键名称
+ listener：监听处理器
+ */
+function register(topic,cmpName,listener){
+	eventBus.register(topic,cmpName,listener);
+}
+
+/**
+ 事件广播
+ topic：事件主题
+ eventContext: 事件上下文对象
+ */
+function broadcast(topic,eventContext){
+	eventBus.broadcast(topic,eventContext);
+}

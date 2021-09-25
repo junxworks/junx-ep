@@ -29,7 +29,7 @@ import io.github.junxworks.ep.core.orm.annotations.Table;
  * @since:  v1.0
  */
 
-@Table(tableName = "s_org", tableComment = "")
+@Table(tableName = "ep_s_org", tableComment = "")
 public class OrgVo {
 
 	/** id. */

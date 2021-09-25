@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * {类的详细说明}.
+ * HttpClient封装工具类
  *
  * @ClassName:  HttpClientUtil
  * @author: Michael
@@ -500,7 +500,8 @@ public class HttpClientUtil {
      * @param parameterMap the parameter map
      * @return the string
      */
-    public static String convertStringParamter(Map parameterMap) {
+    @SuppressWarnings("rawtypes")
+	public static String convertStringParamter(Map parameterMap) {
         StringBuffer parameterBuffer = new StringBuffer();
         if (parameterMap != null) {
             Iterator iterator = parameterMap.keySet().iterator();

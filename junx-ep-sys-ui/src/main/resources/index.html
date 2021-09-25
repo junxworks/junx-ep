@@ -24,7 +24,7 @@
     <script src="js/base.js"></script>
     <script src="js/event.js"></script>
     <script src="js/index.js"></script>
-
+    
     <div class="layui-layout layui-layout-admin">
         <!-- 顶部 -->
         <div class="layui-header header">
@@ -34,26 +34,10 @@
                 <a href="index.html" class="logo" id="sysShortName" style="font-size:16px;font-weight:600;">Junx-EP开发平台</a>
                 <!-- 显示/隐藏菜单 -->
                 <a href="javascript:;" class="iconfont hideMenu icon-menu1"></a>
-                <!-- 顶部右侧菜单 -->
+                <!-- 顶部菜单 -->
                 <ul class="layui-nav top_menu">
-                    <li class="layui-nav-item showNotice" id="showNotice" pc>
-                        <a href="javascript:;"><i class="iconfont icon-gonggao"></i><cite>系统公告</cite></a>
-                    </li>
-                    <li class="layui-nav-item indexHelper" id="indexHelper" pc>
-                        <a href="javascript:;" data-url="pages/helper/helper.html"><i data-icon="&#xe607;"
-                                class="layui-icon">&#xe607;</i><cite>常见问题</cite></a>
-                    </li>
-                    <li class="layui-nav-item" mobile>
-                        <a href="javascript:;" class="mobileAddTab" data-url="pages/user/userInfo.html">
-                            <i class="iconfont icon-zhanghu" data-icon="icon-zhanghu"></i>
-                            <cite>个人资料</cite>
-                        </a>
-                    </li>
                     <li class="layui-nav-item" mobile>
                         <a href="login.html" class="signOut"><i class="iconfont icon-loginout"></i> 退出</a>
-                    </li>
-                    <li class="layui-nav-item lockcms" pc>
-                        <a href="javascript:;"><i class="iconfont icon-lock1"></i><cite>锁屏</cite></a>
                     </li>
                     <li class="layui-nav-item" pc>
                         <a href="javascript:;">
@@ -74,12 +58,6 @@
                                     <cite>修改密码</cite>
                                 </a>
                             </dd>
-                            <!-- <dd>
-                                <a href="javascript:;" data-url="pages/headIcon/headIcon.html">
-                                    <i class="layui-icon" data-icon="&#xe650;">&#xe650;</i>
-                                    <cite>更换头像</cite>
-                                </a>
-                            </dd> -->
                             <dd>
                                 <a href="login.html" class="signOut">
                                     <i class="iconfont icon-loginout"></i>
@@ -93,11 +71,7 @@
         </div>
         <!-- 左侧导航 -->
         <div class="layui-side layui-bg-black">
-            <!-- <div class="user-photo">
-                <a class="img" title="我的头像"><img src="/images/face.jpg" class="userIconAs" onerror="javascript:this.src='/images/face.jpg'"></a>
-                <p>你好！<strong><span class="userName userNameAs">admin</span></strong>, 欢迎登录</p>
-            </div> -->
-            <div class="navBar layui-side-scroll"></div>
+            <div class="navBar"></div>
         </div>
         <!-- 右侧内容 -->
         <div class="layui-body layui-form">
@@ -128,60 +102,6 @@
     <!-- 移动导航 -->
     <div class="site-tree-mobile layui-hide"><i class="layui-icon">&#xe602;</i></div>
     <div class="site-mobile-shade"></div>
-
-    <script>
-        (function () {
-            pageKeepTop();
-        }());
-
-        $(function () {
-        	function init(){
-        		io.get("/ep/sys/ep-config",function(res){
-            		var mainPage=res.data.mainPage;
-            		if(!isNull(mainPage)){
-    					$("#mainPage",parent.document.body).attr("src",appendCtx(mainPage));
-            		}
-            		var systemShortName=res.data.systemShortName;
-            		if(!isNull(systemShortName)){
-                		$("#sysShortName").html(systemShortName);
-            		}else{
-            			$("#sysShortName").html("Junx-EP开发平台");
-            		}
-            		var systemName=res.data.systemName;
-            		document.title=systemName;
-            		var todolist=res.data.todolist;
-				});
-            	$.ajax({
-					url: appendCtx("/ep/sys/users/current-user")
-					,type: "get"
-					,success: function(res){
-						if(res.ok){
-							$("#userName").html(res.data.name);
-							$("#userNameAcc").val(res.data.username);
-                            $("#userId").val(res.data.id);
-                            sessionStorage.setItem("_u_",JSON.stringify(res.data));
-                           var authorizations= res.data.authorizations;
-                           if(authorizations!=null){
-                               sessionStorage.setItem("authorizations",JSON.stringify(authorizations));
-                           }
-						}
-						else if(res.code==4){
-							$("#userName").html(res.data.name);
-							$("#userNameAcc").val(res.data.username);
-                            $("#userId").val(res.data.id);
-							//需要重置密码
-                        	sessionStorage.setItem("_u_",JSON.stringify(res.data));
-							resetPassPage();
-						}else{
-							 layer.msg(res.msg, { anim: 10, icon: 0 });
-						}
-					}
-				});
-            }
-            init();
-        });
-    </script>
-
 </body>
 
 </html>

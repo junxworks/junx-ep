@@ -19,12 +19,12 @@ package io.github.junxworks.ep.sys.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.github.junxworks.ep.sys.entity.SParam;
+import io.github.junxworks.ep.sys.entity.EpSParam;
 import io.github.junxworks.ep.sys.mapper.ParamMapper;
 import io.github.junxworks.ep.sys.service.ParamService;
 import io.github.junxworks.junx.core.util.StringUtils;
 
-@Service
+@Service("JunxEPParamService")
 public class ParamServiceImpl implements ParamService {
 	private static final String DEFAULT_GROUP = "default";
 
@@ -32,7 +32,7 @@ public class ParamServiceImpl implements ParamService {
 	private ParamMapper paramMapper;
 
 	@Override
-	public SParam queryParamByGroupAndName(String group, String paramName) {
+	public EpSParam queryParamByGroupAndName(String group, String paramName) {
 		if (StringUtils.isNull(group)) {
 			group = DEFAULT_GROUP;
 		}
@@ -40,7 +40,7 @@ public class ParamServiceImpl implements ParamService {
 	}
 
 	@Override
-	public int updateParam(SParam param) {
+	public int updateParam(EpSParam param) {
 		return paramMapper.updateParam(param.getParamGroup(), param.getParamName(), param.getParamValue());
 	}
 }

@@ -14,7 +14,7 @@ layui.use(['form','xmSelect','transfer'], function () {
             //表单初始赋值
             form.val('userForm', data);
             initOrgTree(data.orgNo);
-            $("#userName").attr("disabled","disabled");
+            $("#username").attr("disabled","disabled");
     	});
     }else{
         userId = 0;
@@ -93,23 +93,6 @@ layui.use(['form','xmSelect','transfer'], function () {
     });
     
 });
-
-/*$.fn.serializeObject = function() {
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-    	if(this.name=='password'){
-    		if(!isEdit){
-        		o[this.name]=createMD5(this.value);
-    		}
-    	}else if (o[this.name]) {
-            o[this.name] = o[this.name] + ',' + this.value || '';
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-}*/
 
 function closePage(){
     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引

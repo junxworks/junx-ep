@@ -19,7 +19,7 @@ package io.github.junxworks.ep.sys.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * {类的详细说明}.
+ * EP框架配置
  *
  * @ClassName:  EPConfig
  * @author: Michael

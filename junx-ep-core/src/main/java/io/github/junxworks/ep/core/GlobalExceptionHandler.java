@@ -17,13 +17,9 @@
 package io.github.junxworks.ep.core;
 
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,7 +28,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import io.github.junxworks.ep.core.exception.BusinessException;
 import io.github.junxworks.ep.core.exception.UnknownTokenException;
-
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
@@ -76,18 +71,6 @@ public class GlobalExceptionHandler {
 	}
 
 	/**
-	 * Handle duplicate key exception.
-	 *
-	 * @param e the e
-	 * @return the result
-	 */
-	@ExceptionHandler(DuplicateKeyException.class)
-	public Result handleDuplicateKeyException(DuplicateKeyException e) {
-		logger.error(e.getMessage(), e);
-		return Result.error("Duplicate key");
-	}
-
-	/**
 	 * Handle unknown token exception.
 	 *
 	 * @param e the e
@@ -122,42 +105,6 @@ public class GlobalExceptionHandler {
 		logger.error(e.getMessage(), e);
 		String message = ExceptionUtils.getCauseMessage(e);
 		return Result.error(StringUtils.isNull(message) ? "Authentication failed" : message);
-	}
-
-	/**
-	 * Handle authorization exception.
-	 *
-	 * @param e the e
-	 * @return the result
-	 */
-	@ExceptionHandler(IncorrectCredentialsException.class)
-	public Result handleAuthorizationException(IncorrectCredentialsException e) {
-		logger.error(e.getMessage(), e);
-		return Result.error("Incorrect username or password");
-	}
-
-	/**
-	 * Handle unknown account exception.
-	 *
-	 * @param e the e
-	 * @return the result
-	 */
-	@ExceptionHandler(UnknownAccountException.class)
-	public Result handleUnknownAccountException(UnknownAccountException e) {
-		logger.error(e.getMessage(), e);
-		return Result.error("Incorrect username or password");
-	}
-
-	/**
-	 * Handle locked account exception.
-	 *
-	 * @param e the e
-	 * @return the result
-	 */
-	@ExceptionHandler(LockedAccountException.class)
-	public Result handleLockedAccountException(LockedAccountException e) {
-		logger.warn(e.getMessage(), e);
-		return Result.error("Account locked");
 	}
 
 	/**

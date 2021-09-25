@@ -18,7 +18,7 @@ function resetPass(){
         return;
     }
     $.ajax({
-        url: appendCtx('/ep/sys/users/' + userId + '/pass'),
+        url: appendCtx('/ep/sys/users/pass'),
         type: "put",
         contentType: 'application/json; charset=utf-8',
         data: JSON.stringify({

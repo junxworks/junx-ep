@@ -21,7 +21,6 @@ import java.io.Serializable;
 import org.springframework.ui.ModelMap;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
 
 /**
  * {类的详细说明}.
@@ -43,7 +42,7 @@ public class Result implements Serializable {
 	private String msg = Status.OK.getMessage();
 
 	/** data. */
-	private Object data = Maps.newHashMap();
+	private Object data;
 
 	/** attr. */
 	private ModelMap attr = new ModelMap();
@@ -215,7 +214,6 @@ public class Result implements Serializable {
 		this.data = data;
 	}
 
-
 	/**
 	 * To json.
 	 *
@@ -228,7 +226,7 @@ public class Result implements Serializable {
 	public boolean isOk() {
 		return ok;
 	}
-	
+
 	/**
 	 * {类的详细说明}.
 	 *
@@ -241,16 +239,16 @@ public class Result implements Serializable {
 
 		/** error. */
 		ERROR(-1, "error"),
-		
+
 		/** ok. */
 		OK(0, "success"),
-		
+
 		/** warn. */
 		WARN(1, "warn"),
-		
+
 		/** unauthenticated. */
 		UNAUTHENTICATED(-2, "unauthenticated"),
-		
+
 		/** unauthorized. */
 		UNAUTHORIZED(-3, "unauthorized");
 

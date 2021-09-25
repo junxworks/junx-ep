@@ -37,7 +37,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.PageUtils;
-import io.github.junxworks.ep.sys.annotations.OpLog;
+import io.github.junxworks.ep.sys.annotations.EpLog;
 import io.github.junxworks.ep.sys.dto.MenuPageable;
 import io.github.junxworks.ep.sys.dto.RoleInfoDto;
 import io.github.junxworks.ep.sys.dto.RoleConditionDto;
@@ -56,7 +56,7 @@ import io.github.junxworks.ep.sys.vo.RoleInfoVo;
  * @since:  v1.0
  */
 @RestController
-@RequestMapping("/ep/sys")
+@RequestMapping("/ep/sys/roles")
 public class RoleController {
 
 	/** role service. */
@@ -73,7 +73,7 @@ public class RoleController {
 	 * @param pageable the pageable
 	 * @return role list 属性
 	 */
-	@GetMapping(value = "/roles")
+	@GetMapping()
 	public Result getRoleList(RoleConditionDto condition) {
 		PageUtils.setPage(condition);
 		return Result.ok(new PageInfo<RoleInfoVo>(roleService.findRoleListByCondition(condition)));
@@ -85,7 +85,7 @@ public class RoleController {
 	 * @param roleId the role id
 	 * @return all menu list 属性
 	 */
-	@GetMapping(value = "/roles/{roleId}/menus")
+	@GetMapping(value = "/{roleId}/menus")
 	public Result getAllMenuList(@PathVariable Long roleId) {
 		Result result = Result.ok();
 		MenuPageable pageable = new MenuPageable();
@@ -170,8 +170,8 @@ public class RoleController {
 	 * @param dto the dto
 	 * @return the result
 	 */
-	@PostMapping(value = "/roles")
-	@OpLog("保存角色信息")
+	@PostMapping()
+	@EpLog("EP-系统支撑-保存角色")
 	public Result saveRoleInfo(@RequestBody RoleInfoDto dto) {
 		roleService.saveRoleInfo(dto);
 		return Result.ok();
@@ -183,8 +183,8 @@ public class RoleController {
 	 * @param roleId the role id
 	 * @return the result
 	 */
-	@DeleteMapping(value = "/roles/{roleId}")
-	@OpLog("删除角色信息")
+	@DeleteMapping(value = "/{roleId}")
+	@EpLog("EP-系统支撑-删除角色")
 	public Result deleteRole(@PathVariable("roleId") Long roleId) {
 		return Result.ok(roleService.deleteRoleById(roleId));
 	}
@@ -195,7 +195,7 @@ public class RoleController {
 	 * @param roleTag the role tag
 	 * @return user list by rot tag 属性
 	 */
-	@GetMapping(value = "/roles/{rotTag}/users")
+	@GetMapping(value = "/{rotTag}/users")
 	public Result getUserListByRotTag(@PathVariable("rotTag") String roleTag) {
 		return Result.ok(roleService.findUserListByRoleTag(roleTag));
 	}

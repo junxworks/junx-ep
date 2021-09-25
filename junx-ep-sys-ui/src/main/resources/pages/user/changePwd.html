@@ -25,7 +25,7 @@
                 <div class="layui-input-block">
                     <input value="" lay-verType="tips" placeholder="请输入旧密码" name="used" type="password" readonly
                            onfocus="this.removeAttribute('readonly');"
-                        lay-verify="sonPwd" class="layui-input pwd">
+                        lay-verify="sonPwd" class="layui-input pwd" autocomplete="off">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -33,7 +33,7 @@
                 <div class="layui-input-block">
                     <input type="password" value="" lay-verType="tips" placeholder="请输入新密码" lay-verify="newPwd" readonly
                            onfocus="this.removeAttribute('readonly');"
-                        id="oldPwd" name="oldPwd" class="layui-input pwd">
+                        id="oldPwd" name="oldPwd" class="layui-input pwd" autocomplete="off">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -41,7 +41,7 @@
                 <div class="layui-input-block">
                     <input type="password" value="" lay-verType="tips" name="pass" placeholder="请确认密码" readonly
                            onfocus="this.removeAttribute('readonly');"
-                        lay-verify="newPwd2" class="layui-input pwd">
+                        lay-verify="newPwd2" class="layui-input pwd" autocomplete="off">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -126,7 +126,7 @@
                     layui.layer.closeAll('tips');
                     var dataValue =data.field;
                     $.ajax({
-                        url: appendCtx('/ep/sys/users/'+dataValue.id+'/change-pass'),
+                        url: appendCtx('/ep/sys/users/passwords'),
                         type: "put",
                         contentType: 'application/json; charset=utf-8',
                         data: JSON.stringify({'password' :createMD5(dataValue.pass),'pass':createMD5(dataValue.used),'id':dataValue.id,'userName':dataValue.acc}),

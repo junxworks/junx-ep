@@ -29,7 +29,7 @@ import com.github.pagehelper.PageInfo;
 
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.PageUtils;
-import io.github.junxworks.ep.sys.annotations.OpLog;
+import io.github.junxworks.ep.sys.annotations.EpLog;
 import io.github.junxworks.ep.sys.dto.DictConditionDto;
 import io.github.junxworks.ep.sys.dto.SDictDto;
 import io.github.junxworks.ep.sys.service.DictionaryService;
@@ -70,7 +70,7 @@ public class DictionaryController {
 	 * @return the result
 	 */
 	@PostMapping()
-	@OpLog("保存数据字典信息")
+	@EpLog("EP-系统支撑-保存字典")
 	public Result saveDictionaryInfo(@RequestBody SDictDto dictDto) {
 		return Result.ok(dictionaryService.saveDict(dictDto));
 	}
@@ -93,7 +93,7 @@ public class DictionaryController {
 	 * @return the result
 	 */
 	@DeleteMapping("/{id}")
-	@OpLog("删除数据字典信息")
+	@EpLog("EP-系统支撑-删除字典")
 	public Result putDictionaryInfo(@PathVariable("id") Long id) {
 		dictionaryService.deleteDictById(id);
 		return Result.ok();

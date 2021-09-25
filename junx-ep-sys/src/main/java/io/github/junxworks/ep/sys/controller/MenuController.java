@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.Result;
-import io.github.junxworks.ep.sys.annotations.OpLog;
+import io.github.junxworks.ep.sys.annotations.EpLog;
 import io.github.junxworks.ep.sys.constants.MenuType;
 import io.github.junxworks.ep.sys.constants.RecordStatus;
 import io.github.junxworks.ep.sys.dto.MenuDto;
@@ -42,7 +42,7 @@ import io.github.junxworks.ep.sys.service.MenuService;
 import io.github.junxworks.ep.sys.vo.MenuInfoVo;
 
 /**
- * {类的详细说明}.
+ * 菜单管理控制器
  *
  * @ClassName:  MenuController
  * @author: Michael
@@ -83,7 +83,7 @@ public class MenuController {
 	 * @return the result
 	 */
 	@PostMapping()
-	@OpLog("保存菜单信息")
+	@EpLog("EP-系统支撑-保存菜单权限")
 	public Result saveMenuInfo(@RequestBody MenuDto menuInfo) {
 		return Result.ok(menuService.saveMenuInfo(menuInfo));
 	}
@@ -106,7 +106,7 @@ public class MenuController {
 	 * @return the result
 	 */
 	@DeleteMapping("/{id}")
-	@OpLog("删除菜单信息")
+	@EpLog("EP-系统支撑-删除菜单权限")
 	public Result delMenuInfo(@PathVariable("id") Long id) {
 		int childrenCount = menuService.selectChildrenCountById(id);
 		if (childrenCount > 0) {

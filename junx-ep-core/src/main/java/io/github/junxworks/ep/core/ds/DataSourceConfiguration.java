@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import io.github.junxworks.ep.core.ds.aspect.DataSourceAspect;
 
 /**
- * {类的详细说明}.
+ * 数据源配置类
  *
  * @ClassName:  DataSourceConfiguration
  * @author: Michael

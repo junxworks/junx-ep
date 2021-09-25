@@ -16,12 +16,19 @@
  */
 package io.github.junxworks.ep.sys.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Random;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,17 +39,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 
 import io.github.junxworks.ep.auth.DefaultToken;
+import io.github.junxworks.ep.auth.AuthConstants;
 import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.IPUtils;
 import io.github.junxworks.ep.sys.config.EPConfig;
-import io.github.junxworks.ep.sys.entity.SOpLog;
-import io.github.junxworks.ep.sys.service.SystemLogService;
+import io.github.junxworks.ep.sys.entity.EpSLog;
+import io.github.junxworks.ep.sys.service.SysLogService;
+import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * 系统基础控制器
  *
  * @ClassName:  SysController
  * @author: Michael
@@ -58,8 +68,11 @@ public class SysController {
 	private EPConfig config;
 
 	@Autowired
-	@Qualifier("SystemLogService")
-	private SystemLogService sysLog;
+	@Qualifier("JunxEPSystemLogService")
+	private SysLogService sysLog;
+
+	@Autowired
+	private DefaultKaptcha producer;
 
 	/**
 	 * Login.
@@ -68,28 +81,56 @@ public class SysController {
 	 * @return the result
 	 */
 	@PostMapping(value = "/login", consumes = "application/json;charset=UTF-8")
-	public Result login(@RequestBody Map<String, String> map,HttpServletRequest request) {
+	public Result login(@RequestBody Map<String, String> map, HttpServletRequest request) {
 		long begin = System.currentTimeMillis();
 		Subject subject = SecurityUtils.getSubject();
+		Object checkVf = subject.getSession().getAttribute(AuthConstants.CHECK_VERIFICATION_CODE);
+		if (checkVf != null && Boolean.valueOf(checkVf.toString())) {
+			String vf = map.get(AuthConstants.VERIFICATION_CODE);
+			if (StringUtils.isNull(vf)) {
+				return Result.unauthenticated("无效的验证码");
+			}
+			String code = subject.getSession().getAttribute(AuthConstants.VERIFICATION_CODE).toString();
+			if (!code.equalsIgnoreCase(vf)) {
+				return Result.unauthenticated("无效的验证码");
+			}
+		}
 		DefaultToken token = new DefaultToken();
 		//进行验证，这里可以捕获异常，然后返回对应信息
-		String username = map.get("username");
-		String password = map.get("password");
+		String username = map.get(AuthConstants.USERNAME);
+		String password = map.get(AuthConstants.PASSWD);
 		token.setPrincipal(username);
 		token.setCredential(password);
-		subject.login(token);
+		try {
+			subject.login(token);
+		} catch (IncorrectCredentialsException e) {
+			return Result.unauthenticated("用户名或密码错误");
+		}
+		subject.getSession().setAttribute(AuthConstants.CHECK_VERIFICATION_CODE, false); //登录成功，取消验证码限制
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		SOpLog log = new SOpLog();
-		log.setOperation("系统登录");
+		EpSLog log = new EpSLog();
+		log.setOperation("EP-系统支撑-系统登录");
 		log.setUrl("/login");
 		log.setData(JSON.toJSONString(map));
 		log.setUserId(user.getId());
 		log.setCreateTime(new Date());
-		log.setCost(System.currentTimeMillis()-begin);
+		log.setCost(System.currentTimeMillis() - begin);
 		log.setMethod("io.github.junxworks.ep.sys.controller.SysController.login(Map<String, String>,HttpServletRequest)");
 		log.setIp(IPUtils.getIpAddr(request));
 		sysLog.saveSystemLog(log);
 		return Result.ok(subject.getSession().getId());
+	}
+
+	@GetMapping(value = "/verification-codes")
+	public void generateVerificationCode(HttpServletResponse response) throws IOException {
+		String code = String.valueOf(1000 + new Random().nextInt(8999));
+		BufferedImage image = producer.createImage(code);
+		SecurityUtils.getSubject().getSession().setAttribute(AuthConstants.VERIFICATION_CODE, code);
+		response.setHeader("Cache-Control", "no-store, no-cache");
+		response.setContentType("image/jpeg");
+		try (ServletOutputStream out = response.getOutputStream();) {
+			ImageIO.write(image, "jpg", out);
+		}
 	}
 
 	/**
@@ -101,12 +142,12 @@ public class SysController {
 	public Result logout(HttpServletRequest request) {
 		long begin = System.currentTimeMillis();
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		SOpLog log = new SOpLog();
-		log.setOperation("系统登出");
+		EpSLog log = new EpSLog();
+		log.setOperation("EP-系统支撑-系统登出");
 		log.setUrl("/logout");
 		log.setUserId(user.getId());
 		log.setCreateTime(new Date());
-		log.setCost(System.currentTimeMillis()-begin);
+		log.setCost(System.currentTimeMillis() - begin);
 		log.setMethod("io.github.junxworks.ep.sys.controller.SysController.logout(HttpServletRequest)");
 		log.setIp(IPUtils.getIpAddr(request));
 		sysLog.saveSystemLog(log);

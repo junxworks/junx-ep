@@ -24,7 +24,7 @@ import com.github.pagehelper.Page;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
 import io.github.junxworks.ep.sys.dto.SystemLogConditionDto;
-import io.github.junxworks.ep.sys.vo.SystemLogInfoVo;
+import io.github.junxworks.ep.sys.vo.SLogVo;
 
 /**
  * {类的详细说明}.
@@ -43,8 +43,8 @@ public interface OpLogMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the system log info vo
 	 */
-	@Select("select t.*,u.name from s_op_log t LEFT JOIN s_user u on t.user_id=u.id where t.id=#{id}")
-	public SystemLogInfoVo selectById(Long id);
+	@Select("select t.*,u.name from ep_s_log t LEFT JOIN ep_s_user u on t.user_id=u.id where t.id=#{id}")
+	public SLogVo selectById(Long id);
 
 	/**
 	 * Delete by id.
@@ -52,7 +52,7 @@ public interface OpLogMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the int
 	 */
-	@Delete("delete from s_op_log where id=#{id}")
+	@Delete("delete from ep_s_log where id=#{id}")
 	public int deleteById(Long id);
 	
 	/**
@@ -62,7 +62,7 @@ public interface OpLogMapper extends BaseMapper{
 	 * @return the page
 	 */
 	@Select("<script>" +
-			"select t.*,u.name from s_op_log t LEFT JOIN s_user u on t.userId=u.id  where 1=1" +
+			"select t.*,u.name from ep_s_log t LEFT JOIN ep_s_user u on t.user_id=u.id  where 1=1" +
 			"<if test='createDate!=null and createDate.length>0 '> " +
 			"and TO_DAYS(t.create_time) = TO_DAYS(#{createDate}) " +
 			"</if>" +
@@ -74,6 +74,6 @@ public interface OpLogMapper extends BaseMapper{
 			"</if>" +
 			" order by t.id desc"+
 			"</script>")
-	public Page<SystemLogInfoVo> selectAll(SystemLogConditionDto entity);
+	public Page<SLogVo> selectAll(SystemLogConditionDto entity);
 
 }

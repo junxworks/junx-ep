@@ -42,19 +42,21 @@ import io.github.junxworks.ep.core.ds.DynamicDataSource;
 public class EPShiroService {
 
 	/** 常量 QUERY_USER. */
-	private static final String QUERY_USER = "select s.*,o.org_name,o.org_type from s_user s left join s_org o on s.org_no=o.org_no and o.status=0 where s.username=? and s.password=? and s.status=0";
+	private static final String QUERY_USER = "select s.*,o.org_name,o.org_type from ep_s_user s left join ep_s_org o on s.org_no=o.org_no where s.username=? and s.password=?";
+
+	private static final String LOCK_USER = "update ep_s_user set status=2 where username=?";
 
 	/** 常量 QUERY_USER_AUTHORIZATIONS. */
-	private static final String QUERY_USER_AUTHORIZATIONS = "select distinct m.mark from s_user u,s_user_role r,s_role_menu rm,s_menu m where u.id=? and u.status=0 and u.id=r.user_id and r.role_id=rm.role_id and rm.menu_id=m.id and m.status=0 and m.mark != '' and m.mark is not null";
+	private static final String QUERY_USER_AUTHORIZATIONS = "select distinct m.mark from ep_s_user u,ep_s_user_role r,ep_s_role_menu rm,ep_s_menu m where u.id=? and u.status=0 and u.id=r.user_id and r.role_id=rm.role_id and rm.menu_id=m.id and m.status=0 and m.mark != '' and m.mark is not null";
 
 	/** 常量 QUERY_ALL_AUTHORIZATIONS. */
-	private static final String QUERY_ALL_AUTHORIZATIONS = "select distinct m.mark from s_menu m where m.status=0 and m.mark != '' and m.mark is not null";
+	private static final String QUERY_ALL_AUTHORIZATIONS = "select distinct m.mark from ep_s_menu m where m.status=0 and m.mark != '' and m.mark is not null";
 
 	/** 常量 QUERY_USER_ROLES. */
-	private static final String QUERY_USER_ROLES = "select distinct r.role_tag from s_role r,s_user u,s_user_role ur where u.id=? and u.status=0 and u.id=ur.user_id and ur.role_id=r.id and r.status=0 and r.role_tag != '' and r.role_tag is not null";
+	private static final String QUERY_USER_ROLES = "select distinct r.role_tag from ep_s_role r,ep_s_user u,ep_s_user_role ur where u.id=? and u.status=0 and u.id=ur.user_id and ur.role_id=r.id and r.status=0 and r.role_tag != '' and r.role_tag is not null";
 
 	/** 常量 QUERY_ALL_ROLES. */
-	private static final String QUERY_ALL_ROLES = "select distinct r.role_tag from s_role r where r.status=0 and r.role_tag != '' and r.role_tag is not null";
+	private static final String QUERY_ALL_ROLES = "select distinct r.role_tag from ep_s_role r where r.status=0 and r.role_tag != '' and r.role_tag is not null";
 
 	/** dynamic data source. */
 	@Autowired
@@ -80,6 +82,21 @@ public class EPShiroService {
 				}
 			}
 			return null;
+		}
+	}
+
+	/**
+	 * Lock user.
+	 *
+	 * @param username the username
+	 * @throws SQLException the SQL exception
+	 */
+	public void lockUser(String username) throws SQLException {
+		//所有验证均从主库中取数据
+		DataSource primary = dynamicDataSource.getPrimaryDataSource();
+		try (Connection conn = primary.getConnection(); PreparedStatement pst = conn.prepareStatement(LOCK_USER);) {
+			pst.setString(1, username);
+			pst.execute();
 		}
 	}
 

@@ -31,12 +31,12 @@ import com.github.pagehelper.PageInfo;
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.scheduler.dto.SJobListConditionDto;
-import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.entity.EpSJob;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobService;
-import io.github.junxworks.ep.sys.annotations.OpLog;
+import io.github.junxworks.ep.sys.annotations.EpLog;
 
 /**
- * {类的详细说明}.
+ * 定时任务控制器类
  *
  * @ClassName:  ScheduleJobController
  * @author: Michael
@@ -81,9 +81,9 @@ public class ScheduleJobController {
 	 * @param scheduleJob the schedule job
 	 * @return the result
 	 */
-	@OpLog("保存定时任务")
+	@EpLog("EP-定时任务管理-新增任务")
 	@PostMapping("/jobs")
-	public Result save(@RequestBody SJob scheduleJob) {
+	public Result save(@RequestBody EpSJob scheduleJob) {
 		scheduleJobService.save(scheduleJob);
 		return Result.ok();
 	}
@@ -94,7 +94,7 @@ public class ScheduleJobController {
 	 * @param jobId the job id
 	 * @return the result
 	 */
-	@OpLog("删除定时任务")
+	@EpLog("EP-定时任务管理-删除任务")
 	@DeleteMapping("/jobs/{jobId}")
 	public Result delete(@PathVariable("jobId") Long jobId) {
 		scheduleJobService.deleteBatch(new Long[] { jobId });
@@ -107,7 +107,7 @@ public class ScheduleJobController {
 	 * @param jobId the job id
 	 * @return the result
 	 */
-	@OpLog("立即执行任务")
+	@EpLog("EP-定时任务管理-执行任务")
 	@PutMapping("/jobs/{jobId}/run")
 	public Result run(@PathVariable("jobId") Long jobId) {
 		scheduleJobService.run(new Long[] { jobId });
@@ -120,7 +120,7 @@ public class ScheduleJobController {
 	 * @param jobId the job id
 	 * @return the result
 	 */
-	@OpLog("暂停定时任务")
+	@EpLog("EP-定时任务管理-暂停任务")
 	@PutMapping("/jobs/{jobId}/pause")
 	public Result pause(@PathVariable("jobId") Long jobId) {
 		scheduleJobService.pause(new Long[] { jobId });
@@ -133,7 +133,7 @@ public class ScheduleJobController {
 	 * @param jobId the job id
 	 * @return the result
 	 */
-	@OpLog("恢复定时任务")
+	@EpLog("EP-定时任务管理-恢复任务")
 	@PutMapping("/jobs/{jobId}/resume")
 	public Result resume(@PathVariable("jobId") Long jobId) {
 		scheduleJobService.resume(new Long[] { jobId });

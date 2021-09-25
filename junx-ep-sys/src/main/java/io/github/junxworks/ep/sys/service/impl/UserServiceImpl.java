@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.cache.Cache;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +37,8 @@ import io.github.junxworks.ep.sys.constants.EPConstants;
 import io.github.junxworks.ep.sys.dto.TransferDto;
 import io.github.junxworks.ep.sys.dto.UserInfoDto;
 import io.github.junxworks.ep.sys.dto.UserListConditionDto;
-import io.github.junxworks.ep.sys.entity.SUser;
-import io.github.junxworks.ep.sys.entity.SUserRole;
+import io.github.junxworks.ep.sys.entity.EpSUser;
+import io.github.junxworks.ep.sys.entity.EpSUserRole;
 import io.github.junxworks.ep.sys.mapper.UserMapper;
 import io.github.junxworks.ep.sys.mapper.UserRoleMapper;
 import io.github.junxworks.ep.sys.service.UserService;
@@ -51,7 +53,7 @@ import io.github.junxworks.junx.core.util.StringUtils;
  * @date:   2020-7-19 12:17:47
  * @since:  v1.0
  */
-@Service
+@Service("JunxEPUserService")
 public class UserServiceImpl implements UserService {
 
 	/** user mapper. */
@@ -61,6 +63,9 @@ public class UserServiceImpl implements UserService {
 	/** user role mapper. */
 	@Autowired
 	private UserRoleMapper userRoleMapper;
+
+	@Autowired
+	Cache<Object, AuthenticationInfo> authenticationCache;
 
 	/**
 	 * Find user list by page.
@@ -98,12 +103,12 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public void saveUserInfo(UserInfoDto dto) {
 		//更新用户基本信息
-		SUser user = new SUser();
+		EpSUser user = new EpSUser();
 		BeanUtils.copyProperties(dto, user);
 		UserModel operator = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		Long operatorId = operator.getId();
 		if (user.getId() == null) {//新增
-			SUser existsUser = userMapper.selectByUserName(dto.getUserName());
+			EpSUser existsUser = userMapper.selectByUsername(dto.getUsername());
 			if (existsUser != null) {
 				throw new BusinessException("用户名已被用户：" + existsUser.getName() + "注册");
 			}
@@ -121,9 +126,9 @@ public class UserServiceImpl implements UserService {
 		//删除历史角色，然后全量更新
 		userRoleMapper.deleteByUserId(userId);
 		if (dto.getRoles() != null) {
-			List<SUserRole> roles = Lists.newArrayList();
+			List<EpSUserRole> roles = Lists.newArrayList();
 			for (TransferDto role : dto.getRoles()) {
-				SUserRole userRole = new SUserRole();
+				EpSUserRole userRole = new EpSUserRole();
 				userRole.setRoleId(Long.valueOf(role.getValue()));
 				userRole.setUserId(userId);
 				roles.add(userRole);
@@ -140,7 +145,7 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public int updateUserStatus(UserInfoDto userInfoDto) {
-		SUser user = new SUser();
+		EpSUser user = new EpSUser();
 		user.setId(userInfoDto.getId());
 		user.setStatus(userInfoDto.getStatus());
 		UserModel _user = (UserModel) SecurityUtils.getSubject().getPrincipal();
@@ -157,7 +162,11 @@ public class UserServiceImpl implements UserService {
 	 */
 	@Override
 	public int updateUserPass(Long userId, String pass) {
-		SUser user = new SUser();
+		if (authenticationCache != null) {
+			UserInfoVo user = userMapper.selectById(userId);
+			authenticationCache.remove(user.getUsername());
+		}
+		EpSUser user = new EpSUser();
 		user.setId(userId);
 		user.setPassword(pass);
 		UserModel _user = (UserModel) SecurityUtils.getSubject().getPrincipal();
@@ -184,12 +193,16 @@ public class UserServiceImpl implements UserService {
 	 * @param userInfoDto the user info dto
 	 */
 	@Override
-	public void changeUserPass(Long userId, UserInfoDto userInfoDto) {
-		SUser userName = userMapper.selectByUserName(userInfoDto.getUserName());
-		if (userName != null && userInfoDto.getPass().equals(userName.getPassword())) {
+	public void changeUserPass(UserInfoDto userInfoDto) {
+		Long userId = userInfoDto.getId();
+		UserInfoVo user = userMapper.selectById(userId);
+		if (user != null && userInfoDto.getPass().equals(user.getPassword())) {
 			updateUserPass(userId, userInfoDto.getPassword());
 		} else {
 			throw new BusinessException("旧密码输入错误");
+		}
+		if (authenticationCache != null) {
+			authenticationCache.remove(user.getUsername());
 		}
 	}
 

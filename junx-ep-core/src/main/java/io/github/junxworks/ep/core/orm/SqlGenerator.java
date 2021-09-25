@@ -162,6 +162,7 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static final String deleteSQL(Class clazz, Long id) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(clazz);
 		SQL sql = new SQL();
@@ -174,6 +175,7 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static final String getOneSQL(Class clazz, Long id) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(clazz);
 		SQL sql = new SQL();
@@ -186,6 +188,7 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static final String getOneSQL(Class clazz,String pkName, Long id) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(clazz);
 		SQL sql = new SQL();

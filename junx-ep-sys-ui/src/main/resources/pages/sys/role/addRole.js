@@ -1,5 +1,10 @@
-layui.use(['tree', 'util', 'layer'], function () {
-    var tree = layui.tree;
+layui.config({
+    base: '../../../../eui/plugins/layui-extend/' //这是你存放拓展模块的根目录
+});
+
+var tree;
+layui.use(['tree', 'util', 'layer', 'eleTree'], function () {
+    var eleTree = layui.eleTree;
     var roleId = getParam("roleId");
     var roleName = getParam("roleName");
     var roleTag = getParam("roleTag");
@@ -10,17 +15,24 @@ layui.use(['tree', 'util', 'layer'], function () {
     } else {
         roleId = -1;
     }
-    //初始化菜单树
-    io.get('/ep/sys/roles/'+roleId+'/menus',function(res){
-    	var menuList = res.data;
-        var tree = layui.tree;
-        //开启复选框
-        tree.render({
-            elem: '#menuTree'
-            , data: menuList
-            , id: 'menuTree'
-            , showCheckbox: true
-        });
+    // 初始化菜单树
+    io.get('/ep/sys/roles/' + roleId + '/menus', function (res) {
+        var menuList = res.data;
+        tree = eleTree({
+            el: '#menuTree',
+            data: menuList,
+            showCheckbox: true,
+            highlightCurrent: true,
+            isDefaultChangePstatus: true,
+            request: {     // 对后台返回的数据格式重新定义
+                name: "title",
+                key: "id",
+                children: "children",
+                checked: "checked",
+                disabled: "disabled",
+                isLeaf: "isLeaf"
+            },
+        })
     });
 });
 
@@ -33,8 +45,7 @@ function addRole() {
         return;
     }
 
-    var tree = layui.tree;
-    var menuTrees = tree.getChecked('menuTree');
+    var menuTrees = tree.getChecked(false, true);
     var data = JSON.stringify({'id': roleId, 'roleName': roleName,'roleTag':roleTag, 'menuInfoList': JSON.stringify(menuTrees)});
     io.post("/ep/sys/roles",data,function(res){
     	setTimeout(function () {

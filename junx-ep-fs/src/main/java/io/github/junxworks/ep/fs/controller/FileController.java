@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
@@ -38,14 +39,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import com.google.common.collect.Lists;
-
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.fs.config.FSConfig;
 import io.github.junxworks.ep.fs.constants.ContentType;
 import io.github.junxworks.ep.fs.driver.FileRepository;
-import io.github.junxworks.ep.fs.entity.SFile;
-import io.github.junxworks.ep.fs.entity.SFileThumb;
+import io.github.junxworks.ep.fs.entity.EpSFile;
+import io.github.junxworks.ep.fs.entity.EpSFileThumb;
 import io.github.junxworks.ep.fs.service.impl.FileServiceImpl;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
@@ -102,40 +101,40 @@ public class FileController {
 		if (fs == null || fs.isEmpty()) {
 			return Result.error("Empty file.");
 		}
-		List<SFile> res = Lists.newArrayList();
-		for (MultipartFile file : fs) {
-			if (file == null) {
-				return Result.error("Empty file.");
-			}
-			String orgNo = multiReq.getParameter(ORG_NO);
-			String fileGroup = multiReq.getParameter(FILE_GROUP);
-			String storageId = null;
-			try (InputStream in = file.getInputStream()) {
-				storageId = fr.storeFile(in);
-			} catch (Exception e) {
-				logger.error("Store file failed.", e);
-				return Result.error(ExceptionUtils.getCauseMessage(e));
-			}
-			SFile sysFile = new SFile();
-			sysFile.setStorageId(storageId);
-			sysFile.setStorageDriver(fr.getClass().getCanonicalName());
-			sysFile.setCreateTime(new Date());
-			String fileName = file.getOriginalFilename();
-			String extName = null;
-			int idx = fileName.lastIndexOf(".");
-			if (idx > 0) {
-				extName = fileName.substring(idx + 1);
-				sysFile.setFileExt(extName);
-			}
-			sysFile.setFileName(file.getName());
-			sysFile.setOraginalName(file.getOriginalFilename());
-			sysFile.setFileSize((int) file.getSize());
-			sysFile.setOrgNo(orgNo);
-			sysFile.setFileGroup(fileGroup);
-			fileService.inser(sysFile);
-			res.add(sysFile);
+		if (fs.size() > 1) {
+			return Result.error("Current now just support 1 file.");
 		}
-		return Result.ok(res);
+		MultipartFile file = fs.get(0);
+		if (file == null) {
+			return Result.error("Empty file.");
+		}
+		String orgNo = multiReq.getParameter(ORG_NO);
+		String fileGroup = multiReq.getParameter(FILE_GROUP);
+		String storageId = null;
+		try (InputStream in = file.getInputStream()) {
+			storageId = fr.storeFile(in);
+		} catch (Exception e) {
+			logger.error("Store file failed.", e);
+			return Result.error(ExceptionUtils.getCauseMessage(e));
+		}
+		EpSFile sysFile = new EpSFile();
+		sysFile.setStorageId(storageId);
+		sysFile.setStorageDriver(fr.getClass().getCanonicalName());
+		sysFile.setCreateTime(new Date());
+		String fileName = file.getOriginalFilename();
+		String extName = null;
+		int idx = fileName.lastIndexOf(".");
+		if (idx > 0) {
+			extName = fileName.substring(idx + 1);
+			sysFile.setFileExt(extName);
+		}
+		sysFile.setFileName(file.getName());
+		sysFile.setOraginalName(file.getOriginalFilename());
+		sysFile.setFileSize((int) file.getSize());
+		sysFile.setOrgNo(orgNo);
+		sysFile.setFileGroup(fileGroup);
+		fileService.inser(sysFile);
+		return Result.ok(sysFile);
 	}
 
 	/**
@@ -146,8 +145,8 @@ public class FileController {
 	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}/attachments")
-	public void downloadAttachment(@PathVariable("id") String id, HttpServletResponse response) throws Exception {
-		download(id, ContentType.ATTACHMENT.getValue(), response);
+	public void downloadAttachment(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		download(id, ContentType.ATTACHMENT.getValue(), request, response);
 	}
 
 	/**
@@ -158,8 +157,8 @@ public class FileController {
 	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}")
-	public void downloadInline(@PathVariable("id") String id, HttpServletResponse response) throws Exception {
-		download(id, ContentType.INLINE.getValue(), response);
+	public void downloadInline(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		download(id, ContentType.INLINE.getValue(), request, response);
 	}
 
 	/**
@@ -170,8 +169,8 @@ public class FileController {
 	 * @param response the response
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void download(@PathVariable("id") String id, String type, HttpServletResponse response) throws IOException {
-		SFile sysFile = fileService.findById(id);
+	private void download(@PathVariable("id") String id, String type, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		EpSFile sysFile = fileService.findById(id);
 		if (sysFile == null) {
 			response.setStatus(HttpStatus.SC_NOT_FOUND);
 			response.getWriter().write(Result.error("File info does not exist.").toJson());
@@ -179,11 +178,16 @@ public class FileController {
 		}
 		try (OutputStream outStream = new BufferedOutputStream(response.getOutputStream());) {
 			response.reset();
-			String oName = sysFile.getOraginalName();
-			if (StringUtils.isNull(oName)) {
-				oName = "attachment";
+			String userAgent = request.getHeader("User-Agent");
+			String formFileName = StringUtils.isEmpty(sysFile.getOraginalName()) ? "attachment" : sysFile.getOraginalName();
+			// 针对IE或者以IE为内核的浏览器：
+			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+				formFileName = java.net.URLEncoder.encode(formFileName, "UTF-8");
+			} else {
+				// 非IE浏览器的处理：
+				formFileName = new String(formFileName.getBytes("UTF-8"), "ISO-8859-1");
 			}
-			response.addHeader("Content-Disposition", type + ";filename=" + new String(oName.getBytes("UTF-8"), "ISO-8859-1"));
+			response.addHeader("Content-Disposition", type + ";filename=" + formFileName);
 			String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(sysFile.getFileExt()), DEFAULT_TYPE);
 			response.setContentType(contentType);
 			response.addHeader("Content-Length", "" + sysFile.getFileSize());
@@ -203,7 +207,7 @@ public class FileController {
 	 */
 	@GetMapping("/{id}/metadata")
 	public Result info(@PathVariable String id) {
-		SFile fi = fileService.findById(id);
+		EpSFile fi = fileService.findById(id);
 		if (fi != null) {
 			return Result.ok(fi);
 		}
@@ -249,7 +253,7 @@ public class FileController {
 	 * @throws Exception the exception
 	 */
 	private void imageThumbnail(String id, Integer width, Integer height, String type, HttpServletResponse response) throws Exception {
-		SFile fi = fileService.findById(id);
+		EpSFile fi = fileService.findById(id);
 		if (fi == null) {
 			response.setStatus(HttpStatus.SC_NOT_FOUND);
 			response.getWriter().print(Result.error("File does't exists.").toJson());
@@ -270,8 +274,8 @@ public class FileController {
 	 * @return true, if successful
 	 * @throws Exception the exception
 	 */
-	private boolean readFromCache(SFile file, int width, int height, String type, HttpServletResponse response) throws Exception {
-		SFileThumb t = fileService.findThumbByIdAndSize(file.getId(), width, height);
+	private boolean readFromCache(EpSFile file, int width, int height, String type, HttpServletResponse response) throws Exception {
+		EpSFileThumb t = fileService.findThumbByIdAndSize(file.getId(), width, height);
 		if (t == null) {
 			return false;
 		}
@@ -300,7 +304,7 @@ public class FileController {
 	 * @param response the response
 	 * @throws Exception the exception
 	 */
-	private void writeThumbnail(SFile file, InputStream is, int width, int height, String type, HttpServletResponse response) throws Exception {
+	private void writeThumbnail(EpSFile file, InputStream is, int width, int height, String type, HttpServletResponse response) throws Exception {
 		response.reset();
 		response.addHeader("Content-Disposition", type + ";filename=thumbnail." + file.getFileExt());
 		String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(file.getFileExt()), DEFAULT_TYPE);
@@ -315,7 +319,7 @@ public class FileController {
 				logger.error("Exception occurred when response thumbnail data.\"{}\"", ExceptionUtils.getCause(e));
 			} finally {
 				String token = fr.storeFile(data);
-				SFileThumb t = new SFileThumb();
+				EpSFileThumb t = new EpSFileThumb();
 				t.setFileExt(file.getFileExt());
 				t.setFileId(file.getId());
 				t.setFileSize(Long.valueOf(data.length));

@@ -19,9 +19,13 @@ package io.github.junxworks.ep.auth;
 import java.sql.SQLException;
 import java.util.Set;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -39,10 +43,10 @@ import io.github.junxworks.junx.core.util.StringUtils;
 /**
  * {类的详细说明}.
  *
- * @ClassName:  EPShiroRealm
+ * @ClassName: EPShiroRealm
  * @author: Michael
- * @date:   2020-7-19 12:18:42
- * @since:  v1.0
+ * @date: 2020-7-19 12:18:42
+ * @since: v1.0
  */
 @Component
 public class EPShiroRealm extends AuthorizingRealm {
@@ -51,14 +55,21 @@ public class EPShiroRealm extends AuthorizingRealm {
 	@Autowired
 	private EPShiroService shiroService;
 
+	@Autowired
+	private EPShiroConfig shiroConfig;
+	
 	/**
 	 * Supports.
 	 *
 	 * @param token the token
 	 * @return true, if successful
 	 */
-	/* (non-Javadoc)
-	 * @see org.apache.shiro.realm.AuthenticatingRealm#supports(org.apache.shiro.authc.AuthenticationToken)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.apache.shiro.realm.AuthenticatingRealm#supports(org.apache.shiro.authc.
+	 * AuthenticationToken)
 	 */
 	@Override
 	public boolean supports(AuthenticationToken token) {
@@ -73,7 +84,7 @@ public class EPShiroRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		//用户权限列表
+		// 用户权限列表
 		UserModel user = (UserModel) principals.getPrimaryPrincipal();
 		Set<String> permsSet = Sets.newHashSet();
 		permsSet.addAll(user.getAuthorizations());
@@ -95,16 +106,32 @@ public class EPShiroRealm extends AuthorizingRealm {
 		if (StringUtils.isNull(dToken.getPrincipal())) {
 			throw new AuthenticationException(new UnknownTokenException("请重新登录"));
 		}
-		//暂时用户名和密码
+		// 暂时用户名和密码
 		UserModel user = null;
 		try {
 			if (DefaultToken.LOGIN_TYPE_DEFAULT == dToken.getLoginType()) {
 				user = shiroService.getUser(dToken.getPrincipal(), dToken.getCredentials().toString());
 				if (user == null) {
-					throw new AuthenticationException("用户名或密码错误");
+					int _failedCount = 1;
+					Object failedCount = SecurityUtils.getSubject().getSession().getAttribute(AuthConstants.LOGIN_FAILED_COUNT_PREFIX + dToken.getPrincipal());
+					if (failedCount != null) {
+						_failedCount = (int) failedCount;
+						_failedCount++;
+						if(shiroConfig.getLoginFailThreshold()==_failedCount) {
+							shiroService.lockUser(dToken.getPrincipal());
+							SecurityUtils.getSubject().getSession().setAttribute(AuthConstants.LOGIN_FAILED_COUNT_PREFIX + dToken.getPrincipal(), 0);
+						}
+					}
+					SecurityUtils.getSubject().getSession().setAttribute(AuthConstants.LOGIN_FAILED_COUNT_PREFIX + dToken.getPrincipal(), _failedCount);
+					SecurityUtils.getSubject().getSession().setAttribute(AuthConstants.CHECK_VERIFICATION_CODE, true);
+					throw new IncorrectCredentialsException("用户名或密码错误");
+				} else if (user.getStatus() == AuthConstants.USER_STATUS_DISABLED) {
+					throw new DisabledAccountException("用户账户不可用");
+				} else if (user.getStatus() == AuthConstants.USER_STATUS_LOCKED) {
+					throw new LockedAccountException("用户账户已锁定");
 				}
-				user.setAuthorizations(shiroService.getUserAuthorizations(user.getId()));//权限
-				user.setRoles(shiroService.getUserRoles(user.getId()));//角色标签
+				user.setAuthorizations(shiroService.getUserAuthorizations(user.getId()));// 权限
+				user.setRoles(shiroService.getUserRoles(user.getId()));// 角色标签
 			} else {
 				throw new AuthenticationException("不支持的登录方式");
 			}

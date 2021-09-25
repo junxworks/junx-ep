@@ -44,7 +44,7 @@ public class EPShiroMemCacheManager implements CacheManager {
 	 */
 	@Override
 	public <K, V> Cache<K, V> getCache(String name) throws CacheException {
-		EPShiroMemCache<K, V> cache = new EPShiroMemCache<K, V>();
+		EPShiroMemCache<K, V> cache = new EPShiroMemCache<K, V>(name);
 		return cache;
 	}
 

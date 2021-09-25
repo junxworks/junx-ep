@@ -22,8 +22,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import com.google.common.collect.Maps;
 
+// TODO: Auto-generated Javadoc
 /**
- * {类的详细说明}.
+ * EP的Shiro配置.
  *
  * @ClassName:  EPShiroConfig
  * @author: Michael
@@ -39,108 +40,103 @@ public class EPShiroConfig {
 	/** login url. */
 	private String loginUrl = "/ep/sys/login";
 
+	/**  登录失败次数限制，等于这个次数的时候帐号就会被锁定. */
+	private int loginFailThreshold = 5;
+
+	/** 认证是否缓存，开启后登录首先从缓存匹配，默认true. */
+	private boolean authenticationCachingEnabled = true;
+
+	/** 鉴权是否缓存，默认true. */
+	private boolean authorizationCachingEnabled = true;
+
 	/** filters. */
 	private Map<String, String> filters = Maps.newLinkedHashMap();
 
-	/** ram enabled. */
-	private boolean ramEnabled = false;
+	public boolean isAuthenticationCachingEnabled() {
+		return authenticationCachingEnabled;
+	}
 
-	/** ram header key name. */
-	private String ramHeaderKeyName = RamConstants.RAM_HEADER_ACCESSKEY;
+	public void setAuthenticationCachingEnabled(boolean authenticationCachingEnabled) {
+		this.authenticationCachingEnabled = authenticationCachingEnabled;
+	}
 
-	/** ram header secret name. */
-	private String ramHeaderSecretName = RamConstants.RAM_HEADER_ACCESSSECRET;
+	public boolean isAuthorizationCachingEnabled() {
+		return authorizationCachingEnabled;
+	}
 
-	/** ram auth center addr. */
-	private String ramAuthCenterAddr;
+	public void setAuthorizationCachingEnabled(boolean authorizationCachingEnabled) {
+		this.authorizationCachingEnabled = authorizationCachingEnabled;
+	}
 
-	/** ram auth path. */
-	private String ramAuthPath;
-
-	/** ram key. */
-	private String ramKey;
-
-	/** ram secret. */
-	private String ramSecret;
-
+	/**
+	 * Gets the login url.
+	 *
+	 * @return the login url
+	 */
 	public String getLoginUrl() {
 		return loginUrl;
 	}
 
+	/**
+	 * Sets the login url.
+	 *
+	 * @param loginUrl the new login url
+	 */
 	public void setLoginUrl(String loginUrl) {
 		this.loginUrl = loginUrl;
 	}
 
+	/**
+	 * Gets the filters.
+	 *
+	 * @return the filters
+	 */
 	public Map<String, String> getFilters() {
 		return filters;
 	}
 
+	/**
+	 * Sets the filters.
+	 *
+	 * @param filters the filters
+	 */
 	public void setFilters(Map<String, String> filters) {
 		this.filters = filters;
 	}
 
+	/**
+	 * Gets the global session timeout.
+	 *
+	 * @return the global session timeout
+	 */
 	public long getGlobalSessionTimeout() {
 		return globalSessionTimeout;
 	}
 
+	/**
+	 * Sets the global session timeout.
+	 *
+	 * @param globalSessionTimeout the new global session timeout
+	 */
 	public void setGlobalSessionTimeout(long globalSessionTimeout) {
 		this.globalSessionTimeout = globalSessionTimeout;
 	}
 
-	public boolean isRamEnabled() {
-		return ramEnabled;
+	/**
+	 * Gets the login fail threshold.
+	 *
+	 * @return the login fail threshold
+	 */
+	public int getLoginFailThreshold() {
+		return loginFailThreshold;
 	}
 
-	public void setRamEnabled(boolean ramEnabled) {
-		this.ramEnabled = ramEnabled;
+	/**
+	 * Sets the login fail threshold.
+	 *
+	 * @param loginFailThreshold the new login fail threshold
+	 */
+	public void setLoginFailThreshold(int loginFailThreshold) {
+		this.loginFailThreshold = loginFailThreshold;
 	}
-
-	public String getRamAuthCenterAddr() {
-		return ramAuthCenterAddr;
-	}
-
-	public void setRamAuthCenterAddr(String ramAuthCenterAddr) {
-		this.ramAuthCenterAddr = ramAuthCenterAddr;
-	}
-
-	public String getRamAuthPath() {
-		return ramAuthPath;
-	}
-
-	public void setRamAuthPath(String ramAuthPath) {
-		this.ramAuthPath = ramAuthPath;
-	}
-
-	public String getRamHeaderKeyName() {
-		return ramHeaderKeyName;
-	}
-
-	public void setRamHeaderKeyName(String ramHeaderKeyName) {
-		this.ramHeaderKeyName = ramHeaderKeyName;
-	}
-
-	public String getRamHeaderSecretName() {
-		return ramHeaderSecretName;
-	}
-
-	public void setRamHeaderSecretName(String ramHeaderSecretName) {
-		this.ramHeaderSecretName = ramHeaderSecretName;
-	}
-
-	public String getRamKey() {
-		return ramKey;
-	}
-
-	public void setRamKey(String ramKey) {
-		this.ramKey = ramKey;
-	}
-
-	public String getRamSecret() {
-		return ramSecret;
-	}
-
-	public void setRamSecret(String ramSecret) {
-		this.ramSecret = ramSecret;
-	}
-
 }

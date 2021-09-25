@@ -5,7 +5,7 @@
  * @Package io.github.junxworks.ep.sys.annotations   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2021-1-24 15:35:41   
+ * @date:   2021-3-28 17:06:52   
  * @version V1.0 
  * @Copyright: 2021 Junxworks. All rights reserved. 
  * 注意：
@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 import io.github.junxworks.ep.auth.EnableEPShiroProxy;
 
 /**
- * {类的详细说明}.
+ * 开启EP基础系统模块，含系统支撑以及EP认证
  *
  * @ClassName:  EnableEPSys
  * @author: Michael
@@ -35,9 +35,7 @@ import io.github.junxworks.ep.auth.EnableEPShiroProxy;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@EnableEPSysInitializer //系统初始化检查
 @EnableBaseEPModules //EP基础系统模块
 @EnableEPShiroProxy //开启EP认证
 public @interface EnableEPSys {
-
 }

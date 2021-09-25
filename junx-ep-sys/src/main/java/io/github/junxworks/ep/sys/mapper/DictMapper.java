@@ -44,7 +44,7 @@ public interface DictMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the dictionary info vo
 	 */
-	@Select("select * from s_dict where id=#{id}")
+	@Select("select * from ep_s_dict where id=#{id}")
 	public DictVo selectById(Long id);
 
 	/**
@@ -53,7 +53,7 @@ public interface DictMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the int
 	 */
-	@Delete("delete from s_dict where id=#{id}")
+	@Delete("delete from ep_s_dict where id=#{id}")
 	public int deleteById(Long id);
 	
 	/**
@@ -63,7 +63,7 @@ public interface DictMapper extends BaseMapper{
 	 * @return the page
 	 */
 	@Select("<script>" +
-				"select * from s_dict where 1=1 " +
+				"select * from ep_s_dict where 1=1 " +
 					"<if test='status!=null '> " +
 					" and status = #{status} " +
 					"</if>" +
@@ -86,7 +86,7 @@ public interface DictMapper extends BaseMapper{
 	 * @param entity the entity
 	 * @return the dictionary info vo
 	 */
-	@Select(" select * from s_dict where status=0 and data_code =#{dataCode} and parent_code=#{parentCode}")
+	@Select(" select * from ep_s_dict where status=0 and data_code =#{dataCode} and parent_code=#{parentCode}")
 	public DictVo selectByCode(@Param("parentCode")String parentCode,@Param("dataCode")String dataCode);
 
 	/**
@@ -95,6 +95,6 @@ public interface DictMapper extends BaseMapper{
 	 * @param parent_code the parent code
 	 * @return the list
 	 */
-	@Select("select * from s_dict where parent_code=#{parentCode} and status=0")
+	@Select("select * from ep_s_dict where parent_code=#{parentCode} and status=0")
 	public List<DictVo> selectByParentCode(@Param("parentCode")String parentCode);
 }

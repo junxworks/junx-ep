@@ -39,6 +39,10 @@ public class EPShiroMemCache<K, V> extends EPBaseCache<K, V> {
 	/** mem cache. */
 	private Map<K, V> memCache = Maps.newConcurrentMap();
 
+	public EPShiroMemCache(String prefix) {
+		this.cacheKeyPrefix = prefix + "-";
+	}
+
 	/**
 	 * Clear.
 	 *
@@ -61,7 +65,7 @@ public class EPShiroMemCache<K, V> extends EPBaseCache<K, V> {
 		if (key == null) {
 			return null;
 		}
-		return memCache.get(key);
+		return memCache.get(getCacheKey(key));
 	}
 
 	/**
@@ -84,7 +88,7 @@ public class EPShiroMemCache<K, V> extends EPBaseCache<K, V> {
 	 */
 	@Override
 	public V put(K key, V value) throws CacheException {
-		return memCache.put(key, value);
+		return memCache.put(getCacheKey(key), value);
 	}
 
 	/**
@@ -96,7 +100,7 @@ public class EPShiroMemCache<K, V> extends EPBaseCache<K, V> {
 	 */
 	@Override
 	public V remove(K key) throws CacheException {
-		return memCache.remove(key);
+		return memCache.remove(getCacheKey(key));
 	}
 
 	/**

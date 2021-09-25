@@ -17,7 +17,7 @@
 package io.github.junxworks.ep.sys.constants;
 
 /**
- * {类的详细说明}.
+ * EP常量
  *
  * @ClassName:  EPConstants
  * @author: Michael
@@ -26,9 +26,9 @@ package io.github.junxworks.ep.sys.constants;
  */
 public class EPConstants {
 
-	/** 常量 DEFAULT_PASSWORD. */
+	/** 常量 DEFAULT_PASSWORD.默认的用户密码，123456，首次进入后强制修改 */
 	public static final String DEFAULT_PASSWORD = "e10adc3949ba59abbe56e057f20f883e";
 
-	/** 常量 CODE_NEED_RESET_PASSWORD. */
+	/** 常量 CODE_NEED_RESET_PASSWORD，判断用户需要重置密码的result标志位 */
 	public static final int CODE_NEED_RESET_PASSWORD = 4;
 }

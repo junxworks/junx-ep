@@ -32,6 +32,8 @@ public class SJobListConditionDto extends Pageable {
 
 	private String beanName;
 
+	private Byte status;
+
 	public String getJobName() {
 		return jobName;
 	}
@@ -46,6 +48,14 @@ public class SJobListConditionDto extends Pageable {
 
 	public void setBeanName(String beanName) {
 		this.beanName = beanName;
+	}
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public void setStatus(Byte status) {
+		this.status = status;
 	}
 
 }

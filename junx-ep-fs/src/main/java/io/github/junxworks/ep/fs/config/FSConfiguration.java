@@ -19,19 +19,29 @@ package io.github.junxworks.ep.fs.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
 
-import io.github.junxworks.ep.fs.controller.FileController;
+import io.github.junxworks.ep.core.pvc.PersistenceVersionController;
+import io.github.junxworks.ep.core.utils.SpringContextUtils;
 import io.github.junxworks.ep.fs.driver.FileRepository;
 import io.github.junxworks.ep.fs.driver.LocalFileSystemDriver;
 import io.github.junxworks.ep.fs.driver.OssRepositoryDriver;
-import io.github.junxworks.ep.fs.service.impl.FileServiceImpl;
 
 @Configuration
 @EnableConfigurationProperties({ FSConfig.class })
-@Import({ DBInitConfiguration.class, FileController.class, FileServiceImpl.class })
+@ComponentScan("io.github.junxworks.ep.fs")
+@Import({ SpringContextUtils.class})
+@ConditionalOnProperty(prefix = "junx.ep.fs", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class FSConfiguration {
+
+	/** 常量 PVC_PATH.持久化版本控制路径 */
+	private static final String PVC_PATH = "/io/github/junxworks/ep/fs/pvc";
+
+	/** 常量 MODULE_NAME.pvc参数，模块名 */
+	private static final String MODULE_NAME = "junx_ep_fs";
 
 	/**
 	 * 阿里云OSS远程存储
@@ -59,5 +69,14 @@ public class FSConfiguration {
 		LocalFileSystemDriver localFileSystemRepository = new LocalFileSystemDriver();
 		localFileSystemRepository.setConfig(config.getLocal());
 		return localFileSystemRepository;
+	}
+
+	@DependsOn("JunxEpSpringContextUtils")
+	@Bean(name = "junxEpFsPvc", initMethod = "start", destroyMethod = "stop")
+	public PersistenceVersionController junxEpFsPvc() {
+		PersistenceVersionController pvc = new PersistenceVersionController();
+		pvc.setPvcPath(PVC_PATH);
+		pvc.setModuleName(MODULE_NAME);
+		return pvc;
 	}
 }

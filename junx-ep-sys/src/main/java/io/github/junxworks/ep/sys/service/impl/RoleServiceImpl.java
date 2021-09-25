@@ -35,8 +35,8 @@ import io.github.junxworks.ep.core.exception.BusinessException;
 import io.github.junxworks.ep.sys.constants.RecordStatus;
 import io.github.junxworks.ep.sys.dto.RoleConditionDto;
 import io.github.junxworks.ep.sys.dto.RoleInfoDto;
-import io.github.junxworks.ep.sys.entity.SRole;
-import io.github.junxworks.ep.sys.entity.SRoleMenu;
+import io.github.junxworks.ep.sys.entity.EpSRole;
+import io.github.junxworks.ep.sys.entity.EpSRoleMenu;
 import io.github.junxworks.ep.sys.mapper.RoleMapper;
 import io.github.junxworks.ep.sys.mapper.RoleMenuMapper;
 import io.github.junxworks.ep.sys.service.RoleService;
@@ -52,7 +52,7 @@ import io.github.junxworks.junx.core.util.StringUtils;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-@Service
+@Service("JunxEPRoleService")
 public class RoleServiceImpl implements RoleService {
 
 	/** role mapper. */
@@ -93,11 +93,11 @@ public class RoleServiceImpl implements RoleService {
 	@Transactional
 	public void saveRoleInfo(RoleInfoDto dto) {
 		//保存角色基本信息
-		SRole role = new SRole();
+		EpSRole role = new EpSRole();
 		BeanUtils.copyProperties(dto, role);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		SRole nameRole = roleMapper.selectByName(dto.getRoleName());
-		SRole tagRole = null;
+		EpSRole nameRole = roleMapper.selectByName(dto.getRoleName());
+		EpSRole tagRole = null;
 		if (StringUtils.notNull(dto.getRoleTag())) {
 			tagRole = roleMapper.selectByTag(dto.getRoleTag());
 		}
@@ -115,7 +115,7 @@ public class RoleServiceImpl implements RoleService {
 			role.setStatus(RecordStatus.NORMAL.getValue());
 			roleMapper.insertWithoutNull(role);
 			for (Long menuId : menuIdList) {
-				SRoleMenu roleMenu = new SRoleMenu();
+				EpSRoleMenu roleMenu = new EpSRoleMenu();
 				roleMenu.setRoleId(role.getId());
 				roleMenu.setMenuId(menuId);
 				roleMenuMapper.insertWithoutNull(roleMenu);
@@ -135,7 +135,7 @@ public class RoleServiceImpl implements RoleService {
 			List<Long> existsMenuIds = roleMenuMapper.queryMenusByRoleId(roleId);
 			menuIdList.forEach(m -> {
 				if (!existsMenuIds.contains(m)) {
-					SRoleMenu roleMenu = new SRoleMenu();
+					EpSRoleMenu roleMenu = new EpSRoleMenu();
 					roleMenu.setRoleId(roleId);
 					roleMenu.setMenuId(m);
 					roleMenuMapper.insertWithoutNull(roleMenu);
@@ -182,7 +182,7 @@ public class RoleServiceImpl implements RoleService {
 	 */
 	@Override
 	public int deleteRoleById(Long id) {
-		SRole role = roleMapper.selectById(id);
+		EpSRole role = roleMapper.selectById(id);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		role.setId(id);
 		role.setStatus(RecordStatus.DELETED.getValue());

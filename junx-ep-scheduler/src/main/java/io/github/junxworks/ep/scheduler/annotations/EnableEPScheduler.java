@@ -37,7 +37,7 @@ import io.github.junxworks.ep.scheduler.config.ScheduleConfiguration;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ ScheduleConfiguration.class})
+@Import({ ScheduleConfiguration.class })
+@Deprecated
 public @interface EnableEPScheduler {
-
 }

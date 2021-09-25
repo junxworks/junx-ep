@@ -39,6 +39,7 @@ public class SQLFilterConfig {
 	 *
 	 * @return the filter registration bean
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
 	public FilterRegistrationBean sqlFilterRegistration() {
 		FilterRegistrationBean registration = new FilterRegistrationBean();

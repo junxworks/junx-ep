@@ -28,7 +28,7 @@
     </div>
     <div class="portlet-title">
         <div class="div-inline" style="clear:both">
-			<form class="layui-form" style="padding-top: 20px">
+			<form class="layui-form">
 			    <div class="layui-form-item">
 			        <div class="layui-inline">
 			        	<label class="layui-form-label" style="width:120px">用户名或手机号：</label>
@@ -48,8 +48,21 @@
 			                <div id="roles"></div>
 			            </div>
 			        </div>
+			     </div>
+			    <div class="layui-form-item">
 			        <div class="layui-inline">
-			            <div class="layui-input-inline">
+			            <label class="layui-form-label" style="width:120px">状态：</label>
+			            <div class="layui-input-inline" >
+			                <select name="status">
+			                    <option value="">全部</option>
+			                    <option value="0">正常</option>
+			                    <option value="1">冻结</option>
+			                    <option value="2">锁定</option>
+			                </select>
+			            </div>
+			        </div>
+			        <div class="layui-inline">
+			            <div class="layui-input-inline" >
 			                <button type="button" class="layui-btn" lay-submit="" lay-filter="search"><i class="fa fa-search"></i> 查询</button>
 			            	<button type="button" class="layui-btn layui-btn-normal" onclick="addUserPage()"><i class="fa fa-plus-square"></i> 新增</button>
 			            </div>
@@ -73,8 +86,6 @@
         <span style="color: #FFB800"> 冻结 </span>
     {{#  } else if(d.status === 2) { }}
         <span style="color: #FFB800"> 锁定 </span>
-    {{#  } else if(d.status === 3) { }}
-        <span style="color: #393D49"> 离职 </span>
     {{#  } else { }}
         <span>未知状态</span>
     {{#  } }}

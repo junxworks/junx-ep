@@ -17,7 +17,7 @@
 package io.github.junxworks.ep.sys.constants;
 
 /**
- * {类的详细说明}.
+ * 基础记录状态枚举
  *
  * @ClassName:  RecordStatus
  * @author: Michael

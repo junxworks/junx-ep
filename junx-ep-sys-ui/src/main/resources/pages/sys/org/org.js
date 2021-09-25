@@ -39,7 +39,7 @@ var renderTable =function (){
 						key: 'parentNo',
 						title: '上级编码',
 						width: '100px',
-						align: 'center',
+						align: 'left',
 					},
 					{
 						key: 'orgType',

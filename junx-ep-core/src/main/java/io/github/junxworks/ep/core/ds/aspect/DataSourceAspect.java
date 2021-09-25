@@ -33,7 +33,7 @@ import io.github.junxworks.ep.core.ds.annotation.DS;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * 数据源AOP类
  *
  * @ClassName:  DataSourceAspect
  * @author: Michael
@@ -55,7 +55,7 @@ public class DataSourceAspect implements Ordered {
 	}
 
 	/**
-	 * Around.
+	 * 切面设置数据上下文.
 	 *
 	 * @param point the point
 	 * @return the object

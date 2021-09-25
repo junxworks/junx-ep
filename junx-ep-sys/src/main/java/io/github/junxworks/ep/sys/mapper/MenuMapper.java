@@ -46,16 +46,19 @@ public interface MenuMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the menu info vo
 	 */
-	@Select("select s.*,case when parent_id!=0 then (select name from s_menu where id=s.parent_id) else '根目录' end `parentName` from s_menu s where s.id=#{id}")
+	@Select("select s.*,case when parent_id!=0 then (select name from ep_s_menu where id=s.parent_id) else '根目录' end `parentName` from ep_s_menu s where s.id=#{id}")
 	public MenuInfoVo selectById(Long id);
 
+	@Select("select count(1) from ep_s_menu where status=0 and mark=#{mark}")
+	public int queryCountByMenuMark(String mark);
+	
 	/**
 	 * Delete by id.
 	 *
 	 * @param id the id
 	 * @return the int
 	 */
-	@Delete("delete from s_menu where id=#{id}")
+	@Delete("delete from ep_s_menu where id=#{id}")
 	public int deleteById(Long id);
 
 	/**
@@ -65,7 +68,7 @@ public interface MenuMapper extends BaseMapper{
 	 * @return the page
 	 */
 	@Select("<script>" +
-			"select * from s_menu where 1=1" +
+			"select * from ep_s_menu where 1=1" +
 			"<if test='status!=null '> " +
 			"and status = #{status} " +
 			"</if>" +
@@ -87,7 +90,7 @@ public interface MenuMapper extends BaseMapper{
 	 *
 	 * @return the list
 	 */
-	@Select("select * from s_menu where status=0 and type!=1")
+	@Select("select * from ep_s_menu where status=0 and type!=1")
 	public List<MenuInfoVo> selectAllMenus();
 	
 	/**
@@ -95,7 +98,7 @@ public interface MenuMapper extends BaseMapper{
 	 *
 	 * @return the list
 	 */
-	@Select("select * from s_menu where status=0 order by sort asc")
+	@Select("select * from ep_s_menu where status=0 order by sort asc")
 	public List<MenuInfoVo> selectAllMenusItems();
 	
 	/**
@@ -104,7 +107,7 @@ public interface MenuMapper extends BaseMapper{
 	 * @param roleId the role id
 	 * @return the list
 	 */
-	@Select("select DISTINCT m.* from s_menu m,s_role_menu rm,s_role r where rm.role_id=#{roleId} and rm.menu_id = m.id and rm.role_id=r.id and r.status=0")
+	@Select("select DISTINCT m.* from ep_s_menu m,ep_s_role_menu rm,ep_s_role r where rm.role_id=#{roleId} and rm.menu_id = m.id and rm.role_id=r.id and r.status=0")
 	List<MenuInfoVo> selectByRoleId(Long roleId);
 
 	/**
@@ -114,7 +117,7 @@ public interface MenuMapper extends BaseMapper{
 	 * @return the int
 	 */
 	@Select({"<script>",
-			"select count(1) from s_menu where status=0 and parent_id=#{id}",
+			"select count(1) from ep_s_menu where status=0 and parent_id=#{id}",
 			"</script>"})
 	public int selectChildrenCountById(long id);
 
@@ -126,8 +129,8 @@ public interface MenuMapper extends BaseMapper{
 	 */
 	@Select("<script> "+
 			"SELECT m.* FROM "
-			+ "(SELECT DISTINCT rm.menu_id FROM s_role_menu rm,s_user_role ur,s_role r WHERE r.status=0 and r.id=rm.role_id and rm.role_id = ur.role_id and ur.user_id =#{userId}) menus" +
-			",s_menu m WHERE menus.menu_id = m.id and m.type!=1 AND  m.`status`=0"+
+			+ "(SELECT DISTINCT rm.menu_id FROM ep_s_role_menu rm,ep_s_user_role ur,ep_s_role r WHERE r.status=0 and r.id=rm.role_id and rm.role_id = ur.role_id and ur.user_id =#{userId}) menus" +
+			",ep_s_menu m WHERE menus.menu_id = m.id and m.type!=1 AND  m.`status`=0"+
 			"</script>")
 	public List<MenuInfoVo> getAllMenuByUserId(long userId);
 	
@@ -137,6 +140,6 @@ public interface MenuMapper extends BaseMapper{
 	 * @param menuId the menu id
 	 * @return the list
 	 */
-	@Select("select r.* from s_role_menu rm,s_role r where r.status=0 and r.id=rm.role_id and rm.menu_id = #{menuId}")
+	@Select("select r.* from ep_s_role_menu rm,ep_s_role r where r.status=0 and r.id=rm.role_id and rm.menu_id = #{menuId}")
 	List<RoleInfoVo> queryRolesByMenuId(@Param("menuId") Long menuId);
 }

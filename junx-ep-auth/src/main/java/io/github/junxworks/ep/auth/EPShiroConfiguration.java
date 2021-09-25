@@ -43,7 +43,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import com.google.common.collect.Maps;
 
@@ -62,7 +61,7 @@ import io.github.junxworks.ep.auth.cache.EPShiroRedisCacheManager;
 @EnableConfigurationProperties({ EPShiroConfig.class })
 @Order
 public class EPShiroConfiguration {
-	
+
 	/** 常量 AUTHENTICATION_CACHE. */
 	private static final String AUTHENTICATION_CACHE = "ep-authen";
 
@@ -91,11 +90,6 @@ public class EPShiroConfiguration {
 		EPTokenAuthenticatingFilter authenticatingFilter = new EPTokenAuthenticatingFilter();
 		authenticatingFilter.setLoginUrl(shiroConfig.getLoginUrl());
 		authenticatingFilter.setConfig(shiroConfig);
-		authenticatingFilter.setRamEnabled(shiroConfig.isRamEnabled());
-		authenticatingFilter.setRamAuthCenterAddr(shiroConfig.getRamAuthCenterAddr());
-		authenticatingFilter.setRamAuthPath(shiroConfig.getRamAuthPath());
-		authenticatingFilter.setRamHeaderKeyName(shiroConfig.getRamHeaderKeyName());
-		authenticatingFilter.setRamHeaderSecretName(shiroConfig.getRamHeaderSecretName());
 		ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
 		shiroFilter.setSecurityManager(securityManager);
 		Map<String, Filter> filters = new HashMap<>();
@@ -112,6 +106,9 @@ public class EPShiroConfiguration {
 			filterMap.put("/**/*.ico", "anon");
 			filterMap.put("/fonts/**", "anon");
 			filterMap.put("/plugins/**", "anon");
+			filterMap.put("/**/verification-codes", "anon");
+			filterMap.put("/**/login", "anon");
+			filterMap.put("/**/system-name", "anon");
 			filterMap.put("/**", "ep");
 			shiroFilter.setFilterChainDefinitionMap(filterMap);
 		}
@@ -124,8 +121,13 @@ public class EPShiroConfiguration {
 	 * @return the EP shiro realm
 	 */
 	@Bean
-	public EPShiroRealm shiroRealm() {
-		return new EPShiroRealm();
+	public EPShiroRealm shiroRealm(Cache<Object, AuthenticationInfo> authenticationCache, Cache<Object, AuthorizationInfo> authorizationCache, EPShiroConfig shiroConfig) {
+		EPShiroRealm shiroRealm = new EPShiroRealm();
+		shiroRealm.setAuthenticationCachingEnabled(shiroConfig.isAuthenticationCachingEnabled());//认证
+		shiroRealm.setAuthenticationCache(authenticationCache);
+		shiroRealm.setAuthorizationCachingEnabled(shiroConfig.isAuthorizationCachingEnabled());//权限
+		shiroRealm.setAuthorizationCache(authorizationCache);
+		return shiroRealm;
 	}
 
 	/**
@@ -137,11 +139,8 @@ public class EPShiroConfiguration {
 	 */
 	@Bean
 	@ConditionalOnMissingBean(CacheManager.class)
-	public CacheManager cacheManager(RedisTemplate<String, Object> redisTemplate, EPShiroConfig config) {
-		EPShiroRedisCacheManager cacheManager = new EPShiroRedisCacheManager();
-		cacheManager.setRedis(redisTemplate);
-		cacheManager.setConfig(config);
-		return cacheManager;
+	public CacheManager cacheManager() {
+		return new EPShiroRedisCacheManager();
 	}
 
 	/**
@@ -196,15 +195,11 @@ public class EPShiroConfiguration {
 	 * @return the security manager
 	 */
 	@Bean
-	public SecurityManager securityManager(AuthorizingRealm shiroRealm, SessionManager sessionManager, CacheManager cacheManager, Cache<Object, AuthenticationInfo> authenticationCache, Cache<Object, AuthorizationInfo> authorizationCache) {
+	public SecurityManager securityManager(AuthorizingRealm shiroRealm, SessionManager sessionManager, CacheManager cacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		securityManager.setRealm(shiroRealm);
 		securityManager.setSessionManager(sessionManager);
 		securityManager.setCacheManager(cacheManager);
-		shiroRealm.setAuthenticationCachingEnabled(false);//认证
-		shiroRealm.setAuthenticationCache(authenticationCache);
-		shiroRealm.setAuthorizationCachingEnabled(false);//权限
-		shiroRealm.setAuthorizationCache(authorizationCache);
 		SecurityUtils.setSecurityManager(securityManager);
 		return securityManager;
 	}

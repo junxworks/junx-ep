@@ -20,8 +20,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.shiro.cache.CacheException;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,7 +37,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class EPShiroRedisCache<K, V> extends EPBaseCache<K, V> {
 
 	/** redis. */
-	private RedisTemplate<String, Object> redis;
+	private RedisTemplate<Object, Object> redis;
 
 	/**
 	 * 构造一个新的 EP shiro redis cache 对象.
@@ -47,8 +45,8 @@ public class EPShiroRedisCache<K, V> extends EPBaseCache<K, V> {
 	 * @param name the name
 	 * @param redis the redis
 	 */
-	public EPShiroRedisCache(String name, RedisTemplate<String, Object> redis) {
-		this.cacheKeyPrefix = REDIS_SHIRO_CACHE + "-" + name + ":";
+	public EPShiroRedisCache(String name, RedisTemplate<Object, Object> redis) {
+		this.cacheKeyPrefix = name + "-";
 		this.redis = redis;
 	}
 
@@ -120,7 +118,7 @@ public class EPShiroRedisCache<K, V> extends EPBaseCache<K, V> {
 	 */
 	@Override
 	public void clear() throws CacheException {
-		redis.delete(stringKeys());
+		redis.delete(keys());
 	}
 
 	/**
@@ -146,18 +144,7 @@ public class EPShiroRedisCache<K, V> extends EPBaseCache<K, V> {
 	 */
 	@Override
 	public Set<K> keys() {
-		return (Set<K>) redis.keys(String.valueOf(getCacheKey("*")));
-	}
-
-	/**
-	 * String keys.
-	 *
-	 * @return the sets the
-	 */
-	private Set<String> stringKeys() {
-		return keys().stream().flatMap(k -> {
-			return Stream.of(k.toString());
-		}).collect(Collectors.toSet());
+		return (Set<K>)redis.keys(getCacheKey("*"));
 	}
 
 	/**
@@ -170,6 +157,6 @@ public class EPShiroRedisCache<K, V> extends EPBaseCache<K, V> {
 	 */
 	@Override
 	public Collection<V> values() {
-		return (List<V>) redis.opsForValue().multiGet(stringKeys());
+		return (List<V>) redis.opsForValue().multiGet((Set<Object>)keys());
 	}
 }

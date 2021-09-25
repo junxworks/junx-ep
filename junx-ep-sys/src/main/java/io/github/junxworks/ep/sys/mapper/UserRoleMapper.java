@@ -23,7 +23,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
-import io.github.junxworks.ep.sys.entity.SUserRole;
+import io.github.junxworks.ep.sys.entity.EpSUserRole;
 
 /**
  * {类的详细说明}.
@@ -42,8 +42,8 @@ public interface UserRoleMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the s user role
 	 */
-	@Select("select * from s_user_role where id=#{id}")
-	public SUserRole selectById(Long id);
+	@Select("select * from ep_s_user_role where id=#{id}")
+	public EpSUserRole selectById(Long id);
 
 	/**
 	 * Select by user id.
@@ -51,8 +51,8 @@ public interface UserRoleMapper extends BaseMapper{
 	 * @param userId the user id
 	 * @return the list
 	 */
-	@Select("select * from s_user_role where user_id=#{userId}")
-	List<SUserRole> selectByUserId(Long userId);
+	@Select("select * from ep_s_user_role where user_id=#{userId}")
+	List<EpSUserRole> selectByUserId(Long userId);
 
 	/**
 	 * Delete by id.
@@ -60,7 +60,7 @@ public interface UserRoleMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the int
 	 */
-	@Delete("delete from s_user_role where id=#{id}")
+	@Delete("delete from ep_s_user_role where id=#{id}")
 	public int deleteById(Long id);
 
 	/**
@@ -69,7 +69,7 @@ public interface UserRoleMapper extends BaseMapper{
 	 * @param userId the user id
 	 * @return the int
 	 */
-	@Delete("delete from s_user_role where user_id=#{userId}")
+	@Delete("delete from ep_s_user_role where user_id=#{userId}")
 	int deleteByUserId(Long userId);
 
 

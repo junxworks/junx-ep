@@ -18,8 +18,6 @@ package io.github.junxworks.ep.sys.vo;
 
 import java.util.List;
 
-import org.springframework.util.StringUtils;
-
 import com.google.common.collect.Lists;
 
 /**
@@ -31,7 +29,7 @@ import com.google.common.collect.Lists;
  * @since:  v1.0
  */
 public class MenuInfoVo {
-	
+
 	/** id. */
 	private Long id;
 
@@ -149,7 +147,7 @@ public class MenuInfoVo {
 	}
 
 	public String getTypeDesc() {
-		if (!StringUtils.isEmpty(this.type)) {
+		if (this.type != null) {
 			if (this.type == 0) {
 				return "菜单";
 			} else if (this.type == 1) {

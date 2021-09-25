@@ -45,7 +45,7 @@ public interface OrgMapper extends BaseMapper {
 	 * @param dto the dto
 	 * @return the list
 	 */
-	@Select("select * from s_org where status=0")
+	@Select("select * from ep_s_org where status=0")
 	List<OrgVo> queryOrgList(OrgDto dto);
 
 	/**
@@ -54,7 +54,7 @@ public interface OrgMapper extends BaseMapper {
 	 * @param id the id
 	 * @return the org vo
 	 */
-	@Select("select s.*,ss.org_name `parentName` from s_org s left join s_org ss on s.parent_no=ss.org_no and ss.status=0 where s.id=#{id} and s.status=0")
+	@Select("select s.*,ss.org_name `parentName` from ep_s_org s left join ep_s_org ss on s.parent_no=ss.org_no and ss.status=0 where s.id=#{id} and s.status=0")
 	OrgVo selectById(Long id);
 
 	/**
@@ -63,7 +63,7 @@ public interface OrgMapper extends BaseMapper {
 	 * @param orgNo the org no
 	 * @return the org vo
 	 */
-	@Select("select * from s_org where org_no=#{orgNo} and status=0")
+	@Select("select * from ep_s_org where org_no=#{orgNo} and status=0")
 	OrgVo selectByOrgNo(String orgNo);
 
 	/**
@@ -72,7 +72,7 @@ public interface OrgMapper extends BaseMapper {
 	 * @param id the id
 	 * @return the int
 	 */
-	@Delete("update s_org set status=-1 where id=#{id}")
+	@Delete("update ep_s_org set status=-1 where id=#{id}")
 	int deleteById(Long id);
 
 	/**
@@ -82,7 +82,7 @@ public interface OrgMapper extends BaseMapper {
 	 * @param newNo the new no
 	 * @return the int
 	 */
-	@Update("update s_org set parent_no=#{newNo} where parent_no=#{oldNo}")
+	@Update("update ep_s_org set parent_no=#{newNo} where parent_no=#{oldNo}")
 	int updateSubParentNo(@Param("oldNo") String oldNo, @Param("newNo") String newNo);
 
 	/**
@@ -91,7 +91,7 @@ public interface OrgMapper extends BaseMapper {
 	 * @param parentNo the parent no
 	 * @return the list
 	 */
-	@Select("select * from s_org where parent_no=#{parentNo} and status=0")
+	@Select("select * from ep_s_org where parent_no=#{parentNo} and status=0")
 	List<OrgVo> queryChildrenByOrgNo(@Param("parentNo") String parentNo);
 
 	/**
@@ -100,6 +100,6 @@ public interface OrgMapper extends BaseMapper {
 	 * @param id the id
 	 * @return the list
 	 */
-	@Select("select * from s_org where parent_no=(select orgNo from s_org where id=#{id}) and status=0")
+	@Select("select * from ep_s_org where parent_no=(select org_no from ep_s_org where id=#{id}) and status=0")
 	List<OrgVo> queryChildrenById(@Param("id") Long id);
 }

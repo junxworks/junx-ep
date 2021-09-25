@@ -1,1 +1,0 @@
-insert into `s_menu`(`parent_id`,`name`,`type`,`url`,`icon`,`sort`,`status`,`create_user`,`create_time`) values (1,'定时任务管理',0,'/eui/pages/sys/scheduler/scheduler.html','fa fa-clock-o',8,0,-1,'2019-07-03 14:58:21');

@@ -31,7 +31,7 @@ import io.github.junxworks.ep.core.exception.BusinessException;
 import io.github.junxworks.ep.sys.constants.RecordStatus;
 import io.github.junxworks.ep.sys.dto.DictConditionDto;
 import io.github.junxworks.ep.sys.dto.SDictDto;
-import io.github.junxworks.ep.sys.entity.SDict;
+import io.github.junxworks.ep.sys.entity.EpSDict;
 import io.github.junxworks.ep.sys.mapper.DictMapper;
 import io.github.junxworks.ep.sys.service.DictionaryService;
 import io.github.junxworks.ep.sys.vo.DictVo;
@@ -44,7 +44,7 @@ import io.github.junxworks.ep.sys.vo.DictVo;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-@Service
+@Service("JunxEPDictionaryService")
 public class DictionaryServiceImpl implements DictionaryService {
 
 	/** dict mapper. */
@@ -78,7 +78,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 * @return the int
 	 */
 	public int deleteDictById(Long id) {
-		SDict dictionary = new SDict();
+		EpSDict dictionary = new EpSDict();
 		dictionary.setId(id);
 		dictionary.setStatus(RecordStatus.DELETED.getValue());
 		return dictMapper.updateWithoutNull(dictionary);
@@ -123,7 +123,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 			throw new BusinessException("已存在该编码数据字典");
 		}
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
-		SDict entity = new SDict();
+		EpSDict entity = new EpSDict();
 		BeanUtils.copyProperties(dictDto, entity);
 		if (dictDto.getId() == null) {
 			entity.setCreateUser(user.getId());

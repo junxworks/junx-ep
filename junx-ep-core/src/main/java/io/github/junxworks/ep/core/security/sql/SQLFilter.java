@@ -34,7 +34,7 @@ import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * sql注入过滤器
  *
  * @ClassName:  SQLFilter
  * @author: Michael

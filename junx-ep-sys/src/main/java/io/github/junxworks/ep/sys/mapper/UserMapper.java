@@ -25,7 +25,7 @@ import org.apache.ibatis.annotations.Select;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
 import io.github.junxworks.ep.sys.dto.UserListConditionDto;
-import io.github.junxworks.ep.sys.entity.SUser;
+import io.github.junxworks.ep.sys.entity.EpSUser;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
 
 /**
@@ -45,7 +45,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the user info vo
 	 */
-	@Select("select s.*,o.org_name from s_user s left join s_org o on s.org_no=o.org_no and o.status=0 where s.id=#{id}")
+	@Select("select s.*,o.org_name from ep_s_user s left join ep_s_org o on s.org_no=o.org_no where s.id=#{id}")
 	UserInfoVo selectById(Long id);
 
 	/**
@@ -54,8 +54,8 @@ public interface UserMapper extends BaseMapper{
 	 * @param mobile the mobile
 	 * @return the s user
 	 */
-	@Select("select * from s_user where user_name=#{userName} and status=0")
-	SUser selectByUserName(String mobile);
+	@Select("select * from ep_s_user where username=#{username} and status=0")
+	EpSUser selectByUsername(String username);
 
 	/**
 	 * Delete by id.
@@ -63,7 +63,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the int
 	 */
-	@Delete("delete from s_user where id=#{id}")
+	@Delete("delete from ep_s_user where id=#{id}")
 	int deleteById(Long id);
 
 	/**
@@ -74,14 +74,14 @@ public interface UserMapper extends BaseMapper{
 	 */
 	@Select("<script>" +
 			"SELECT u.*, o.org_name,r.role_name " + 
-			"FROM s_user u " + 
-			"     LEFT JOIN s_org o ON u.org_no = o.org_no AND o.status = 0 " + 
+			"FROM ep_s_user u " + 
+			"     LEFT JOIN ep_s_org o ON u.org_no = o.org_no " + 
 			"     LEFT JOIN (SELECT ur.user_id, group_concat(r.role_name) role_name " + 
-			"                FROM s_user_role ur, s_role r " + 
+			"                FROM ep_s_user_role ur, ep_s_role r " + 
 			"                WHERE ur.role_id = r.id AND r.status = 0 group by ur.user_id) r " + 
 			"        ON u.id = r.user_id" +
 			"<if test='roleIds!=null'> " +
-				",s_user_role ur"+
+				",ep_s_user_role ur"+
 			"</if>"+
 			" where 1=1 "+ 
 			"<if test='query!=null and query.length>0'> " +
@@ -89,6 +89,9 @@ public interface UserMapper extends BaseMapper{
 			"</if>" +
 			"<if test='orgNo!=null and orgNo.length>0'> " +
 			"     and u.org_no=#{orgNo} " +
+			"</if>" + 
+			"<if test='status!=null'> " +
+			"     and u.status=#{status} " +
 			"</if>" +
 			"<if test='roleIds!=null'> " +
 				" and u.id=ur.user_id"+ 
@@ -108,7 +111,7 @@ public interface UserMapper extends BaseMapper{
 	 * @return user list by auth 属性
 	 */
 	@Select("<script>" +
-			"SELECT DISTINCT u.* from s_user u,s_user_role ur,s_role r,s_role_menu rm,s_menu m "
+			"SELECT DISTINCT u.* from ep_s_user u,ep_s_user_role ur,ep_s_role r,ep_s_role_menu rm,ep_s_menu m "
 			+ " where u.status=0 "
 			+ " and r.status=0 "
 			+ " and m.status=0 "
@@ -128,7 +131,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param roleId the role id
 	 * @return user list by role id 属性
 	 */
-	@Select({"SELECT DISTINCT u.* from s_user u,s_user_role ur,s_role r where r.id=#{id} and r.status = 0 and r.id=ur.role_id and ur.user_id=u.id and u.status=0 order by u.id asc"})
+	@Select({"SELECT DISTINCT u.* from ep_s_user u,ep_s_user_role ur,ep_s_role r where r.id=#{id} and r.status = 0 and r.id=ur.role_id and ur.user_id=u.id and u.status=0 order by u.id asc"})
 	List<UserInfoVo> getUserListByRoleId(@Param("id")Long roleId);
 	
 	/**
@@ -137,7 +140,7 @@ public interface UserMapper extends BaseMapper{
 	 * @param roleTag the role tag
 	 * @return user list by role tag 属性
 	 */
-	@Select({"SELECT DISTINCT u.* from s_user u,s_user_role ur,s_role r where r.role_tag=#{tag} and r.status = 0 and r.id=ur.role_id and ur.user_id=u.id and u.status=0 order by u.id asc"})
+	@Select({"SELECT DISTINCT u.* from ep_s_user u,ep_s_user_role ur,ep_s_role r where r.role_tag=#{tag} and r.status = 0 and r.id=ur.role_id and ur.user_id=u.id and u.status=0 order by u.id asc"})
 	List<UserInfoVo> getUserListByRoleTag(@Param("tag")String roleTag);
 
 }

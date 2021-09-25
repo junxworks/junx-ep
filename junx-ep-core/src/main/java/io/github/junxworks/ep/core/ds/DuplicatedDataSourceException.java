@@ -19,7 +19,7 @@ package io.github.junxworks.ep.core.ds;
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 
 /**
- * {类的详细说明}.
+ * 重复的数据源异常
  *
  * @ClassName:  DuplicatedDataSourceException
  * @author: Michael

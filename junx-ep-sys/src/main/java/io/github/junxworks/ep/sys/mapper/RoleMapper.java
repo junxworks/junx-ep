@@ -25,7 +25,7 @@ import org.apache.ibatis.annotations.Select;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
 import io.github.junxworks.ep.sys.dto.RoleConditionDto;
-import io.github.junxworks.ep.sys.entity.SRole;
+import io.github.junxworks.ep.sys.entity.EpSRole;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
 
@@ -46,8 +46,8 @@ public interface RoleMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the s role
 	 */
-	@Select("select * from s_role where id=#{id} and status=0")
-	SRole selectById(Long id);
+	@Select("select * from ep_s_role where id=#{id} and status=0")
+	EpSRole selectById(Long id);
 
 	/**
 	 * Select by user id.
@@ -55,7 +55,7 @@ public interface RoleMapper extends BaseMapper{
 	 * @param userId the user id
 	 * @return the list
 	 */
-	@Select("select r.* from s_role r inner join s_user_role ur on ur.role_id = r.id where r.status=0 and ur.user_id=#{userId}")
+	@Select("select r.* from ep_s_role r inner join ep_s_user_role ur on ur.role_id = r.id where r.status=0 and ur.user_id=#{userId}")
 	List<RoleInfoVo> selectByUserId(Long userId);
 
 	/**
@@ -64,7 +64,7 @@ public interface RoleMapper extends BaseMapper{
 	 * @param userId the user id
 	 * @return the list
 	 */
-	@Select("select r.id from s_role r inner join s_user_role ur on ur.role_id = r.id where r.status=0 and ur.user_id=#{userId}")
+	@Select("select r.id from ep_s_role r inner join ep_s_user_role ur on ur.role_id = r.id where r.status=0 and ur.user_id=#{userId}")
 	List<Long> selectIdsByUserId(Long userId);
 	
 	/**
@@ -73,8 +73,8 @@ public interface RoleMapper extends BaseMapper{
 	 * @param roleName the role name
 	 * @return the s role
 	 */
-	@Select("select * from s_role where role_name=#{roleName} and status=0")
-	SRole selectByName(String roleName);
+	@Select("select * from ep_s_role where role_name=#{roleName} and status=0")
+	EpSRole selectByName(String roleName);
 
 	/**
 	 * Select by tag.
@@ -82,8 +82,8 @@ public interface RoleMapper extends BaseMapper{
 	 * @param roleTag the role tag
 	 * @return the s role
 	 */
-	@Select("select * from s_role where role_tag=#{roleTag} and status=0")
-	SRole selectByTag(String roleTag);
+	@Select("select * from ep_s_role where role_tag=#{roleTag} and status=0")
+	EpSRole selectByTag(String roleTag);
 	
 	/**
 	 * Delete by id.
@@ -91,7 +91,7 @@ public interface RoleMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the int
 	 */
-	@Delete("update s_role set status=-1 where id=#{id}")
+	@Delete("update ep_s_role set status=-1 where id=#{id}")
 	int deleteById(Long id);
 
 	/**
@@ -101,7 +101,7 @@ public interface RoleMapper extends BaseMapper{
 	 * @return the page
 	 */
 	@Select("<script>" +
-			"select * from s_role where status=0 " +
+			"select * from ep_s_role where status=0 " +
 			"<if test='roleName!=null and roleName.length>0'> " +
 				" and role_name like CONCAT('%',#{roleName},'%') " +
 			"</if>" +
@@ -114,6 +114,6 @@ public interface RoleMapper extends BaseMapper{
 	 * @param roleTag the role tag
 	 * @return the list
 	 */
-	@Select("select distinct u.* from s_role r,s_user_role ur,s_user u where ur.role_id = r.id and r.status=0 and ur.user_id=u.id and u.status=0 and r.role_tag=#{roleTag}")
+	@Select("select distinct u.* from ep_s_role r,ep_s_user_role ur,ep_s_user u where ur.role_id = r.id and r.status=0 and ur.user_id=u.id and u.status=0 and r.role_tag=#{roleTag}")
 	List<UserInfoVo> findUserListByRoleTag(@Param("roleTag")String roleTag);
 }

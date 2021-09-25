@@ -18,8 +18,6 @@ package io.github.junxworks.ep.sys.service;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestBody;
-
 import io.github.junxworks.ep.sys.dto.UserInfoDto;
 import io.github.junxworks.ep.sys.dto.UserListConditionDto;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
@@ -87,7 +85,7 @@ public interface UserService {
 	 * @param userId the user id
 	 * @param userInfoDto the user info dto
 	 */
-	void changeUserPass(Long userId, @RequestBody UserInfoDto userInfoDto);
+	void changeUserPass(UserInfoDto userInfoDto);
 
 	/**
 	 * 返回 user list by role tag 属性.

@@ -4,24 +4,24 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import io.github.junxworks.ep.fs.entity.SFile;
-import io.github.junxworks.ep.fs.entity.SFileThumb;
+import io.github.junxworks.ep.fs.entity.EpSFile;
+import io.github.junxworks.ep.fs.entity.EpSFileThumb;
 
 @Service
 public interface FileService {
 
-	void inser(SFile file);
+	void inser(EpSFile file);
 
-	SFile findById(String id);
+	EpSFile findById(String id);
 
-	List<SFile> findByGroup(String group);
+	List<EpSFile> findByGroup(String group);
 
-	List<SFile> findByOrg(String orgNo);
+	List<EpSFile> findByOrg(String orgNo);
 
 	void deleteById(String id);
 
-	int saveSysFileThumb(SFileThumb t);
+	int saveSysFileThumb(EpSFileThumb t);
 
-	SFileThumb findThumbByIdAndSize(String fileId, int width, int height);
+	EpSFileThumb findThumbByIdAndSize(String fileId, int width, int height);
 
 }

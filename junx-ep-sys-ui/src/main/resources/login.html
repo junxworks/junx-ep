@@ -32,150 +32,52 @@
     <script src="plugins/jquery.min.js"></script>
     <script src="plugins/layui/layui.js"></script>
     <script src="js/base.js"></script>
+    <script src="js/login.js"></script>
 
     <div class="login-background">
         <div class="login-page">
-
             <div class="main-login-contain">
                 <div class="login-overlay-form login-form">
-
                     <div class="main-login-contain">
                         <form id="form-validation" class="layui-form">
-
                             <h4 id="systemName"></h4>
-
                             <div class="form-group">
                                 <input type="text" required="required" name="username" lay-verify="username"
                                     autocomplete="off" lay-verType="tips">
                                 <label class="control-label" style="color:white">请输入账号</label><i class="bar"></i>
                             </div>
-
                             <div class="form-group">
                                 <input type="password" required="required" name="password" lay-verify="password"
                                     autocomplete="off" lay-verType="tips">
                                 <label class="control-label" style="color:white">请输入密码</label><i class="bar"></i>
                             </div>
-
+                            <div class="form-group" id="vcarea" style="display:none;">
+	        					<div class="layui-inline">
+	                                <input type="text" required="required" name="verificationCode" lay-verify="vcode" style="width:230px;height:35px;text-align:center;font-size:18px" autocomplete="off" lay-verType="tips">
+	                                <label class="control-label" style="color:white;text-align:center;">请输入验证码</label><i class="bar" style="width:230px;"></i>
+                           	 	</div>
+	        					<div class="layui-inline">
+	                            	<img id="vcImg" onclick="resetVCode()" style="width:150px;float:right;"></img>
+                           	 	</div>
+                            </div>
                             <div class="goto-login">
-                                <div class="forgot-password-login">
-                                    <a href="javascript:void(0)">
-                                        <i class="icon icon_lock"></i> 忘记密码？
-                                    </a>
-                                </div>
                                 <button type="submit"
-                                    class="layui-btn layui-btn-normal btn-login float-button-light waves-effect waves-button waves-float waves-light"
+                                    class="layui-btn layui-btn-normal float-button-light waves-effect waves-button waves-float waves-light"
+                                    style="width:130px;float:center;background-color:#4390ff;border-color:#4390ff"
                                     lay-submit="" lay-filter="user-login-submit" id="submitBtn">登入
                                 </button>
                             </div>
-
                         </form>
                     </div>
-
                 </div>
             </div>
-
         </div>
-
         <div class="footer-copyright">
             <p>
                  &copy; 2020 Junxworks 
             </p>
         </div>
-
     </div>
-
-
-
-    <script>
-        $(function () {
-
-            layui.use(["form", "layer"], function () {
-                var form = layui.form;
-                var layer = layui.layer;
-
-
-                //自定义验证规则
-                form.verify({
-                	username: function (value) {
-                        if (value.length < 1) {
-                            return '请输入账号';
-                        }
-                    }
-                    , password: function (value) {
-                        if (value.length < 1) {
-                            return '请输入密码';
-                        }
-                    }
-                });
-
-                //提交
-                form.on('submit(user-login-submit)', function (obj) {
-                    var data = obj.field;
-                    var user = {
-                    	username: data.username,
-                    	password: createMD5(data.password)
-                    }
-
-                    $("#submitBtn").addClass("layui-btn-disabled").prop("disabled", true).text("登录中…");
-
-					$.ajax({
-						url: appendCtx("/ep/sys/login")
-						,data: JSON.stringify(user)
-						,dataType: "JSON"
-						,contentType: "application/json;charset=UTF-8"
-						,type: "POST"
-						,success: function(res){
-							if(res.ok){
-								sessionStorage.setItem("_SSOID",res.data);
-								setTimeout("top.location.replace('index.html')", "1000");
-							}else{
-								 layer.msg(res.msg, { anim: 10, icon: 0 });
-			                     $("#submitBtn").removeClass("layui-btn-disabled").prop("disabled", false).text("登入");
-							}
-						}
-					});
-                    return false;
-                });
-
-
-
-            });
-
-
-            if (typeof Waves !== 'undefined') {
-                Waves.attach('.float-button-light', ['waves-button', 'waves-float', 'waves-light']);
-                Waves.init();
-            }
-
-            $(document).on("keyup", "input", function (event) {
-                if (event.keyCode == 13) {
-                    $('#submitBtn').click();
-                }
-            });
-
-            $(window).resize(function () {
-                try {
-                    //解决移动端输入法弹出收回提示位置错误问题
-                    layui.layer.closeAll('tips'); //关闭所有的tips层 
-                } catch (e) { }
-            });
-			
-            function init(){
-            	$.ajax({
-					url: appendCtx("/ep/sys/system-name")
-					,type: "get"
-					,success: function(res){
-						if(res.ok){
-							 $("#systemName").html(res.data);
-						}else{
-							 layer.msg(res.msg, { anim: 10, icon: 0 });
-						}
-					}
-				});
-            }
-            init();
-        });
-    </script>
 </body>
 
 </html>

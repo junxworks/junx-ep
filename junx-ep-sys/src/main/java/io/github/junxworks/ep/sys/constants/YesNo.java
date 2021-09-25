@@ -17,7 +17,7 @@
 package io.github.junxworks.ep.sys.constants;
 
 /**
- * {类的详细说明}.
+ * 是否枚举
  *
  * @ClassName:  YesNo
  * @author: Michael

@@ -35,22 +35,24 @@ import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.sys.constants.RecordStatus;
 import io.github.junxworks.ep.sys.dto.MenuDto;
 import io.github.junxworks.ep.sys.dto.MenuPageable;
-import io.github.junxworks.ep.sys.entity.SMenu;
+import io.github.junxworks.ep.sys.entity.EpSMenu;
+import io.github.junxworks.ep.sys.exception.DuplicateMenuMarkException;
 import io.github.junxworks.ep.sys.mapper.MenuMapper;
 import io.github.junxworks.ep.sys.service.MenuService;
 import io.github.junxworks.ep.sys.vo.MenuInfoVo;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
 import io.github.junxworks.ep.sys.vo.TreeSelectVo;
+import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
  * {类的详细说明}.
  *
- * @ClassName:  MenuServiceImpl
+ * @ClassName: MenuServiceImpl
  * @author: Michael
- * @date:   2020-7-19 12:17:47
- * @since:  v1.0
+ * @date: 2020-7-19 12:17:47
+ * @since: v1.0
  */
-@Service
+@Service("JunxEPMenuService")
 public class MenuServiceImpl implements MenuService {
 
 	/** 常量 ROOT. */
@@ -131,7 +133,12 @@ public class MenuServiceImpl implements MenuService {
 	 */
 	@Override
 	public int saveMenuInfo(MenuDto menuInfo) {
-		SMenu menu = new SMenu();
+		if (StringUtils.notNull(menuInfo.getMark())) {
+			if (menuMapper.queryCountByMenuMark(menuInfo.getMark()) > 0) {
+				throw new DuplicateMenuMarkException("重复的菜单标识");
+			}
+		}
+		EpSMenu menu = new EpSMenu();
 		BeanUtils.copyProperties(menuInfo, menu);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		if (menuInfo.getId() == null) {
@@ -156,7 +163,7 @@ public class MenuServiceImpl implements MenuService {
 	 * @return the int
 	 */
 	public int deleteMenuInfoById(Long id) {
-		SMenu menu = new SMenu();
+		EpSMenu menu = new EpSMenu();
 		menu.setId(id);
 		menu.setStatus(RecordStatus.DELETED.getValue());
 		return menuMapper.updateWithoutNull(menu);

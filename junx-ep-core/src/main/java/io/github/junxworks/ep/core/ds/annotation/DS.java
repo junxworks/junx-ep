@@ -21,7 +21,8 @@ import java.lang.annotation.*;
 import org.springframework.core.annotation.AliasFor;
 
 /**
- * {类的详细说明}.
+ * DataSouce数据源，指定当前线程上下文中的数据源用哪个
+ * 注意：目前不支持嵌套数据源
  *
  * @ClassName:  DS
  * @author: Michael

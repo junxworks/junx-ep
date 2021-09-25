@@ -28,7 +28,7 @@ import io.github.junxworks.ep.sys.config.BaseModuleConfiguration;
 import io.github.junxworks.ep.sys.config.WebConfig;
 
 /**
- * {类的详细说明}.
+ * 开启EP系统支撑基础功能模块
  *
  * @ClassName:  EnableBaseEPModules
  * @author: Michael

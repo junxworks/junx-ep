@@ -37,7 +37,7 @@ import io.github.junxworks.ep.fs.config.FSConfiguration;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ FSConfiguration.class })
+@Import({FSConfiguration.class })
+@Deprecated
 public @interface EnableEPFS {
-
 }

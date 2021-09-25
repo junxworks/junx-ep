@@ -32,16 +32,16 @@ var renderTable =function (){
 					},
 					{
 						key: 'name',
-						title: '菜单名称',
+						title: '名称',
 						width: '300px'
 					},
 					{
 						key: 'parentId',
-						title: '上级编号',
-						width: '100px',
+						title: '上级ID',
+						width: '80px',
 						align: 'center',
 					},
-					{key: 'typeDesc', title: '菜单类型',align: 'center',width: '100px'},
+					{key: 'typeDesc', title: '类型',align: 'center',width: '80px'},
 	                {key: 'mark', title: '权限标识', align: 'left',width: '150px',template:
 	                	function(d){
 		                	if(d.mark){
@@ -58,14 +58,18 @@ var renderTable =function (){
 	                		return '';
 	                	}
 	                }},
-	                {key: 'icon', title: '菜单图标', width: '120px', align: 'center' ,template:
+	                {key: 'icon', title: '菜单图标', width: '80px', align: 'center' ,template:
 	                	function(d){
 	                        return ' <i class="'+d.icon+'"></i>';
 	                    }
 	                },
-	                {key: 'sort', title: '排序', align: 'center',width: '100px' },
-					{title: '操作',align: 'center',width: '300px',template: function(d){
-							return '<button class="layui-btn layui-btn-xs" onclick="update('+d.id+')"><i class="fa fa-edit"></i>修改 </button><button class="layui-btn layui-btn-xs layui-btn-normal" onclick="roles(\''+d.name+'\','+d.id+')"><i class="fa fa-users"></i>查看关联角色 </button><button class="layui-btn layui-btn-xs layui-btn-danger" onclick="deleteFunc('+d.id+')"><i class="fa fa-remove"></i>删除 </button>';
+	                {key: 'sort', title: '排序', align: 'center',width: '80px' },
+					{title: '操作',align: 'left',width: '300px',template: function(d){
+							var html = '<button class="layui-btn layui-btn-xs" onclick="update('+d.id+')"><i class="fa fa-edit"></i>修改 </button><button class="layui-btn layui-btn-xs layui-btn-danger" onclick="deleteFunc('+d.id+')"><i class="fa fa-remove"></i>删除 </button>';
+							if(d.type!=2){
+								html+='<button class="layui-btn layui-btn-xs layui-btn-normal" onclick="roles(\''+d.name+'\','+d.id+')"><i class="fa fa-users"></i>查看关联角色</button>'; 
+							}
+							return html;
 						}
 					}
 				],

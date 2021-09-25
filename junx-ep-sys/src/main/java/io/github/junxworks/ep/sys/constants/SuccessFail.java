@@ -17,7 +17,7 @@
 package io.github.junxworks.ep.sys.constants;
 
 /**
- * {类的详细说明}.
+ * 成功失败枚举
  *
  * @ClassName:  SuccessFail
  * @author: Michael

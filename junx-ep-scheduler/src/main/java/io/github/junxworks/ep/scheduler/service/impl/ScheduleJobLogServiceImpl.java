@@ -23,10 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
-import io.github.junxworks.ep.scheduler.entity.SJobLog;
+import io.github.junxworks.ep.scheduler.entity.EpSJobLog;
 import io.github.junxworks.ep.scheduler.mapper.SJobLogMapper;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobLogService;
-import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
+import io.github.junxworks.ep.scheduler.vo.EpSJobLogVo;
 
 /**
  * {类的详细说明}.
@@ -50,7 +50,7 @@ public class ScheduleJobLogServiceImpl implements ScheduleJobLogService {
 	 * @return the schedule job log entity
 	 */
 	@Override
-	public SJobLog queryObject(Long jobId) {
+	public EpSJobLog queryObject(Long jobId) {
 		return scheduleJobLogDao.queryObject(jobId);
 	}
 
@@ -61,7 +61,7 @@ public class ScheduleJobLogServiceImpl implements ScheduleJobLogService {
 	 * @return the list
 	 */
 	@Override
-	public List<ScheduleJobLogVo> queryList(SJobLogListConditionDto condition) {
+	public List<EpSJobLogVo> queryList(SJobLogListConditionDto condition) {
 		return scheduleJobLogDao.queryList(condition);
 	}
 
@@ -82,7 +82,7 @@ public class ScheduleJobLogServiceImpl implements ScheduleJobLogService {
 	 * @param log the log
 	 */
 	@Override
-	public void save(SJobLog log) {
+	public void save(EpSJobLog log) {
 		scheduleJobLogDao.insertWithoutNull(log);
 	}
 

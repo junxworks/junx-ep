@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.junxworks</groupId>
   <artifactId>junx-ep</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.2</version>
   <packaging>pom</packaging>
   <name>junx-ep</name>
    <description>junx-ep开源开发平台</description>
@@ -47,25 +47,26 @@
 		<spring.version>5.3.2</spring.version>
 		<aspectj.version>1.8.13</aspectj.version>
 		<concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
-		<shiro.version>1.4.1</shiro.version>
+		<shiro.version>1.8.0</shiro.version>
 		<httpcomponents.version>4.5.6</httpcomponents.version>
-		<poi.version>3.9</poi.version>
-		<poi-ooxml.version>3.10-FINAL</poi-ooxml.version>
+		<poi.version>5.0.0</poi.version>
+		<poi-ooxml.version>5.0.0</poi-ooxml.version>
 		<validation.version>1.1.0.Final</validation.version>
 		<mybatis.version>2.1.4</mybatis.version>
 		<pagehelper.version>1.3.0</pagehelper.version>
-		<druid.version>1.1.10</druid.version>
-		<webjars.version>0.36</webjars.version>
-		<quartz.version>2.3.0</quartz.version>
+		<druid.version>1.2.6</druid.version>
+		<webjars.version>0.42</webjars.version>
+		<quartz.version>2.3.2</quartz.version>
 		<gson.version>2.8.5</gson.version>
 		<activiti.version>5.22.0</activiti.version>
 		<batik.version>1.7</batik.version>
-		<junx.version>[0.0.1-SNAPSHOT,)</junx.version>
+		<junx.version>1.0.9</junx.version>
 		<kaptcha.version>0.0.9</kaptcha.version>
 		<fastjson.version>1.2.70</fastjson.version>
 		<ST.version>4.1</ST.version>
 		<thumbnailator.version>0.4.11</thumbnailator.version>
 		<imageio.version>3.5</imageio.version>
+		<QLExpress.version>3.2.4</QLExpress.version>
 	</properties>
   <dependencies>
 	<dependency>
@@ -86,6 +87,11 @@
   		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+	  	<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
 			<version>${springboot.version}</version>
 		</dependency>
 	  	<dependency>
@@ -116,6 +122,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-autoconfigure</artifactId>
 			<version>${springboot.version}</version>
 		</dependency>
 		<dependency>
@@ -174,6 +185,11 @@
 			<version>${druid.version}</version>
 		</dependency>
 		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>QLExpress</artifactId>
+		    <version>${QLExpress.version}</version>
+		</dependency>
+		<dependency>
 		    <groupId>org.webjars</groupId>
 		    <artifactId>webjars-locator</artifactId>
 		    <version>${webjars.version}</version>
@@ -193,6 +209,11 @@
 		    <groupId>com.google.code.gson</groupId>
 		    <artifactId>gson</artifactId>
 		    <version>${gson.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.googlecode.concurrentlinkedhashmap</groupId>
+		    <artifactId>concurrentlinkedhashmap-lru</artifactId>
+		    <version>${concurrentlinkedhashmap-lru.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
@@ -320,14 +341,6 @@
 						<showWarnings>true</showWarnings>
 					</configuration>
 				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.8.1</version>
-					<configuration>
-						<generateBackupPoms>false</generateBackupPoms>
-					</configuration>
-				</plugin>
 				<!-- 新增发布插件与源码打包插件，让发布的jar包带源码 Michael2017-5-15 -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -389,5 +402,6 @@
 		<module>junx-ep-scheduler</module>
 		<module>junx-ep-fs</module>
 		<module>junx-ep-scheduler-ui</module>
+		<module>junx-ep-qlexp</module>
 	</modules>
 </project>

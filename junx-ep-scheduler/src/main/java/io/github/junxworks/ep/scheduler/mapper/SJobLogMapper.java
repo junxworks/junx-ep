@@ -25,8 +25,8 @@ import org.apache.ibatis.annotations.Select;
 
 import io.github.junxworks.ep.core.orm.BaseMapper;
 import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
-import io.github.junxworks.ep.scheduler.entity.SJobLog;
-import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
+import io.github.junxworks.ep.scheduler.entity.EpSJobLog;
+import io.github.junxworks.ep.scheduler.vo.EpSJobLogVo;
 
 /**
  * {类的详细说明}.
@@ -45,8 +45,8 @@ public interface SJobLogMapper extends BaseMapper{
 	 * @param id the id
 	 * @return the schedule job log entity
 	 */
-	@Select("select * from s_job_log where id = #{id}")
-	SJobLog queryObject(Object id);
+	@Select("select * from ep_s_job_log where id = #{id}")
+	EpSJobLog queryObject(Object id);
 	
 	/**
 	 * Query list.
@@ -56,7 +56,7 @@ public interface SJobLogMapper extends BaseMapper{
 	 */
 	@Select({
 		"<script>",
-			" select l.*,j.job_name from s_job_log l,s_job j where l.job_id = j.id ",
+			" select l.*,j.job_name from ep_s_job_log l,ep_s_job j where l.job_id = j.id ",
 				"<if test='jobName != null and jobName.trim().length()>0'>",
 					" and j.job_name like concat('%', #{jobName}, '%') ",
 				"</if>",
@@ -78,7 +78,7 @@ public interface SJobLogMapper extends BaseMapper{
 			" order by l.id desc ",
 		"</script>"
 	})
-	List<ScheduleJobLogVo> queryList(SJobLogListConditionDto condition);
+	List<EpSJobLogVo> queryList(SJobLogListConditionDto condition);
 	
 	/**
 	 * Query total.
@@ -88,7 +88,7 @@ public interface SJobLogMapper extends BaseMapper{
 	 */
 	@Select({
 		"<script>",
-		"select count(1) from s_job_log ",
+		"select count(1) from ep_s_job_log ",
 		"<where>",
 			"<if test='jobId != null and jobId.trim().length()>0'>",
 				" and job_id = #{jobId} ",

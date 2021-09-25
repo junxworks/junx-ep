@@ -31,10 +31,10 @@ import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.scheduler.ScheduleStatus;
 import io.github.junxworks.ep.scheduler.ScheduleUtils;
 import io.github.junxworks.ep.scheduler.dto.SJobListConditionDto;
-import io.github.junxworks.ep.scheduler.entity.SJob;
+import io.github.junxworks.ep.scheduler.entity.EpSJob;
 import io.github.junxworks.ep.scheduler.mapper.SJobMapper;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobService;
-import io.github.junxworks.ep.scheduler.vo.ScheduleJobVo;
+import io.github.junxworks.ep.scheduler.vo.EpSJobVo;
 
 /**
  * {类的详细说明}.
@@ -62,7 +62,7 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 * @return the schedule job entity
 	 */
 	@Override
-	public SJob queryObject(Long jobId) {
+	public EpSJob queryObject(Long jobId) {
 		return schedulerJobMapper.queryObject(jobId);
 	}
 
@@ -73,7 +73,7 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 * @return the list
 	 */
 	@Override
-	public List<ScheduleJobVo> queryList(SJobListConditionDto condition) {
+	public List<EpSJobVo> queryList(SJobListConditionDto condition) {
 		return schedulerJobMapper.queryList(condition);
 	}
 
@@ -95,7 +95,7 @@ public class ScheduleJobServiceImpl implements ScheduleJobService {
 	 */
 	@Override
 	@Transactional
-	public void save(SJob scheduleJob) {
+	public void save(EpSJob scheduleJob) {
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		if (scheduleJob.getId() == null) {
 			scheduleJob.setCreateUser(user.getId());

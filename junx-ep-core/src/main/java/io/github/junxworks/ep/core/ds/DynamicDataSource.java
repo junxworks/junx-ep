@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * {类的详细说明}.
+ * 动态数据源，支持service对数据源的选择，默认是主数据源primaryDataSource
  *
  * @ClassName:  DynamicDataSource
  * @author: Michael

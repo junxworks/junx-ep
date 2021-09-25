@@ -39,6 +39,7 @@ public class XssConfig {
 	 *
 	 * @return the filter registration bean
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Bean
 	public FilterRegistrationBean xssFilterRegistration() {
 		FilterRegistrationBean registration = new FilterRegistrationBean();

@@ -25,23 +25,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.util.WebUtils;
 
 import com.alibaba.fastjson.JSON;
 
-import io.github.junxworks.ep.auth.ram.EPRamAuthenticationFilter;
 import io.github.junxworks.ep.core.Result;
+import io.github.junxworks.ep.core.utils.HttpUtils;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 
 /**
- * {类的详细说明}.
+ * Shiro 认证filter
  *
  * @ClassName:  EPTokenAuthenticatingFilter
  * @author: Michael
  * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
-public class EPTokenAuthenticatingFilter extends EPRamAuthenticationFilter {
+public class EPTokenAuthenticatingFilter extends AuthenticatingFilter {
 
 	/** 常量 USERNAME. */
 	private static final String USERNAME = "username";
@@ -96,7 +97,12 @@ public class EPTokenAuthenticatingFilter extends EPRamAuthenticationFilter {
 		if (isLoginRequest(request, response)) {
 			return executeLogin(request, response);
 		}
-		return super.onAccessDenied(request, response);
+		Result res = Result.unauthenticated();
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		httpResponse.setContentType("application/json;charset=utf-8");
+		String json = JSON.toJSONString(res);
+		httpResponse.getWriter().print(json);
+		return false;
 	}
 
 	/**
@@ -129,12 +135,11 @@ public class EPTokenAuthenticatingFilter extends EPRamAuthenticationFilter {
 		try {
 			//处理登录失败的异常
 			String message = ExceptionUtils.getCauseMessage(e);
-			Result r = Result.error(message);
+			Result r = Result.unauthenticated(message);
 			String json = JSON.toJSONString(r);
 			httpResponse.getWriter().print(json);
 		} catch (IOException e1) {
 		}
-
 		return false;
 	}
 }

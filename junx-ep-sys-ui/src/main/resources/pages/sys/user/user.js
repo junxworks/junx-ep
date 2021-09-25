@@ -57,7 +57,7 @@ layui.use(['table','form','xmSelect'], function () {
         , page: true
         , cols: [[ //表头
               {field: 'id', title: '用户ID',width:80}
-            , {field: 'userName', title: '账号',width:180}
+            , {field: 'username', title: '账号',width:180}
             , {field: 'name', title: '用户姓名',width:120}
             , {field: 'orgName', title: '所属组织',width:180}
             , {field: 'mobile', title: '手机号',align:'center',width:140}
@@ -82,9 +82,9 @@ layui.use(['table','form','xmSelect'], function () {
 
     form.on('checkbox(userLock)', function(data){
         if(data.elem.checked){
-            updateLockStstus(data.value,2);
+            updateUserStstus(data.value,2);
         }else{
-            updateLockStstus(data.value,0);
+            updateUserStstus(data.value,0);
         }
     });
     
@@ -124,22 +124,8 @@ function resetPassPage(userId) {
     });
 }
 
-function updateLockStstus(userId,status){
-    $.ajax({
-        url: appendCtx('/ep/sys/users/' + userId + '/status'),
-        type: "put",
-        contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify({'status' :status}),
-        success: function (result) {
-            if(result.code == 0){
-            	refreshTableData();
-            }else{
-            	layer.alert(result.msg, {icon: 2});
-            }
-
-        },
-        error: function (data) {
-        	layer.alert(data.responseText, {icon: 2});
-        }
-    });
+function updateUserStstus(userId,status){
+	io.put("/ep/sys/users/status", JSON.stringify({'id':userId,'status' :status}),function(res){
+		refreshTableData();
+	});
 }

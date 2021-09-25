@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
-import io.github.junxworks.ep.scheduler.entity.SJobLog;
-import io.github.junxworks.ep.scheduler.vo.ScheduleJobLogVo;
+import io.github.junxworks.ep.scheduler.entity.EpSJobLog;
+import io.github.junxworks.ep.scheduler.vo.EpSJobLogVo;
 
 /**
  * {类的详细说明}.
@@ -39,7 +39,7 @@ public interface ScheduleJobLogService {
 	 * @param jobId the job id
 	 * @return the schedule job log entity
 	 */
-	SJobLog queryObject(Long jobId);
+	EpSJobLog queryObject(Long jobId);
 	
 	/**
 	 * Query list.
@@ -47,7 +47,7 @@ public interface ScheduleJobLogService {
 	 * @param map the map
 	 * @return the list
 	 */
-	List<ScheduleJobLogVo> queryList(SJobLogListConditionDto condition);
+	List<EpSJobLogVo> queryList(SJobLogListConditionDto condition);
 	
 	/**
 	 * Query total.
@@ -62,6 +62,6 @@ public interface ScheduleJobLogService {
 	 *
 	 * @param log the log
 	 */
-	void save(SJobLog log);
+	void save(EpSJobLog log);
 	
 }

@@ -17,7 +17,7 @@
 package io.github.junxworks.ep.sys.constants;
 
 /**
- * {类的详细说明}.
+ * 菜单类型枚举类
  *
  * @ClassName:  MenuType
  * @author: Michael
@@ -27,11 +27,11 @@ package io.github.junxworks.ep.sys.constants;
 public enum MenuType {
 
 	/** menu. */
-	MENU((byte) 0, "菜单"), 
- /** auth. */
- AUTH((byte) 1, "权限"), 
- /** directory. */
- DIRECTORY((byte) 2, "目录");
+	MENU((byte) 0, "菜单"),
+	/** auth. */
+	AUTH((byte) 1, "权限"),
+	/** directory. */
+	DIRECTORY((byte) 2, "目录");
 
 	/** value. */
 	private byte value;

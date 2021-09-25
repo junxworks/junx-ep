@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
 
 /**
- * {类的详细说明}.
+ * 开启SQL注入过滤
  *
  * @ClassName:  EnableSQLFilter
  * @author: Michael

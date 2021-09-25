@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import io.github.junxworks.ep.core.ds.DynamicDataSource;
 
 /**
- * {类的详细说明}.
+ * DB工具类
  *
  * @ClassName:  DBUtils
  * @author: Michael

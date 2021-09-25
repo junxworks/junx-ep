@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.junxworks.ep.core.Result;
-import io.github.junxworks.ep.sys.annotations.OpLog;
+import io.github.junxworks.ep.sys.annotations.EpLog;
 import io.github.junxworks.ep.sys.dto.OrgDto;
 import io.github.junxworks.ep.sys.service.OrgService;
 
@@ -76,7 +76,7 @@ public class OrgController {
 	 * @return the result
 	 */
 	@PostMapping()
-	@OpLog("新增组织")
+	@EpLog("EP-系统支撑-新增组织")
 	public Result addOrg(@RequestBody OrgDto dto) {
 		return Result.ok(orgService.saveOrg(dto));
 	}
@@ -88,7 +88,7 @@ public class OrgController {
 	 * @return the result
 	 */
 	@PutMapping()
-	@OpLog("修改组织")
+	@EpLog("EP-系统支撑-修改组织")
 	public Result updateOrg(@RequestBody OrgDto dto) {
 		return Result.ok(orgService.updateOrg(dto));
 	}
@@ -100,7 +100,7 @@ public class OrgController {
 	 * @return the result
 	 */
 	@DeleteMapping("/{id}")
-	@OpLog("删除组织")
+	@EpLog("EP-系统支撑-删除组织")
 	public Result updateOrg(@PathVariable("id") Long id) {
 		return Result.ok(orgService.deleteOrg(id));
 	}

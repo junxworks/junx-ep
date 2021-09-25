@@ -40,15 +40,14 @@ var tableClls=
     [[
         {field: 'id', title: '编号', align: 'center', width: 140},
         {field: 'name', title: '操作用户名',  align: 'center', width: 100},
-        {field: 'operation', title: '操作名称',  align: 'center',width: 130},
-        {field: 'url', title: '请求url', align: 'left', width: 250},
+        {field: 'operation', title: '操作名称',  align: 'left',width: 250},
+        {field: 'url', title: '请求url', align: 'left', width: 300},
         {field: 'ip', title: '客户端ip',align: 'center',width: 150},
-        {field: 'data', title: '请求数据', align: 'left',width: 300},
-        {field: 'method', title: '请求方法', align: 'left',width: 300 },
+        {field: 'data', title: '请求数据', align: 'left',width: 250},
+        {field: 'method', title: '请求方法', align: 'left',width: 200 },
         {field: 'cost', title: '执行耗时', width: 120, align: 'center' ,templet:function(d){
                     return d.cost+'毫秒';}},
-        {field: 'createDate', title: '操作日期', align: 'center',width: 200 ,templet:function(d){
-                return dateFormat(d.createDate,"yyyy-MM-dd hh:mm:ss");}},
+        {field: 'createTime', title: '操作日期', align: 'center',width: 200},
         {title: '操作', width: 100, align: 'center', toolbar: '#operBar', fixed: 'right'}
     ]];
 var layRenderParam=

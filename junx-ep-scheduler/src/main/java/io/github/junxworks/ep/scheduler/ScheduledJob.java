@@ -28,8 +28,8 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import com.alibaba.fastjson.JSON;
 
 import io.github.junxworks.ep.core.utils.SpringContextUtils;
-import io.github.junxworks.ep.scheduler.entity.SJob;
-import io.github.junxworks.ep.scheduler.entity.SJobLog;
+import io.github.junxworks.ep.scheduler.entity.EpSJob;
+import io.github.junxworks.ep.scheduler.entity.EpSJobLog;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobLogService;
 import io.github.junxworks.ep.sys.constants.SuccessFail;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
@@ -58,11 +58,11 @@ public class ScheduledJob extends QuartzJobBean {
 	@Override
 	protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 		String jsonJob = context.getMergedJobDataMap().getString(ScheduleUtils.JOB_PARAM_KEY);
-		SJob scheduleJob = JSON.parseObject(jsonJob, SJob.class);
+		EpSJob scheduleJob = JSON.parseObject(jsonJob, EpSJob.class);
 		//获取scheduleJobLogService
 		ScheduleJobLogService scheduleJobLogService = (ScheduleJobLogService) SpringContextUtils.getBean("scheduleJobLogService");
 		//数据库保存执行记录
-		SJobLog log = new SJobLog();
+		EpSJobLog log = new EpSJobLog();
 		log.setJobId(scheduleJob.getId());
 		log.setBeanName(scheduleJob.getBeanName());
 		log.setMethodName(scheduleJob.getMethodName());

@@ -32,6 +32,7 @@ import com.google.common.collect.Maps;
  */
 @ConfigurationProperties(prefix = "junx.ep.fs")
 public class FSConfig {
+	private boolean enabled = true;
 
 	/** 文件服务器模式，local：本地,oss：阿里云OSS. */
 	private String mode;
@@ -44,6 +45,14 @@ public class FSConfig {
 
 	/** mime types. */
 	private Map<String, String> mimeTypes = Maps.newHashMap();
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	public String getMode() {
 		return mode;

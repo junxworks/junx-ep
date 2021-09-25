@@ -22,15 +22,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Maps;
+
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.sys.service.DataService;
+import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
  * 基于string template进行字符串解析，可用于直接配置sql进行条件查询操作
@@ -49,7 +50,7 @@ public class DataController {
 	private DataService dataService;
 	
 	/**
-	 * Data.
+	 * 根据sqlid以及传入参数，返回ep_s_sql表中对应sql的执行结果，在一些简单的场景可以使用.
 	 *
 	 * @param sqlid the sqlid
 	 * @param request the request
@@ -64,7 +65,7 @@ public class DataController {
 			while (emu_params.hasMoreElements()) {
 				String paraName = emu_params.nextElement();
 				String value = request.getParameter(paraName);
-				if (!StringUtils.isEmpty(value)) {
+				if (StringUtils.notNull(value)) {
 					cond.put(paraName, value);
 				}
 			}

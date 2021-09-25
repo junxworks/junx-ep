@@ -32,7 +32,7 @@ import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.exception.BusinessException;
 import io.github.junxworks.ep.sys.constants.RecordStatus;
 import io.github.junxworks.ep.sys.dto.OrgDto;
-import io.github.junxworks.ep.sys.entity.SOrg;
+import io.github.junxworks.ep.sys.entity.EpSOrg;
 import io.github.junxworks.ep.sys.mapper.OrgMapper;
 import io.github.junxworks.ep.sys.service.OrgService;
 import io.github.junxworks.ep.sys.vo.OrgVo;
@@ -48,7 +48,7 @@ import io.github.junxworks.junx.core.util.StringUtils;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-@Service
+@Service("JunxEPOrgService")
 public class OrgServiceImpl implements OrgService {
 
 	/** 常量 ROOT_ORG. */
@@ -98,7 +98,7 @@ public class OrgServiceImpl implements OrgService {
 		if (exists != null) {
 			throw new BusinessException("组织[" + exists.getOrgName() + "]已经使用了组织编码\"" + dto.getOrgNo() + "\"");
 		}
-		SOrg org = new SOrg();
+		EpSOrg org = new EpSOrg();
 		BeanUtils.copyProperties(dto, org);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		org.setCreateTime(new Date());
@@ -135,6 +135,9 @@ public class OrgServiceImpl implements OrgService {
 	@Override
 	@Transactional
 	public int updateOrg(OrgDto dto) {
+		if (StringUtils.isNull(dto.getParentNo())) {
+			dto.setParentNo(ROOT_ORG);
+		}
 		OrgVo exists = orgMapper.selectByOrgNo(dto.getOrgNo());
 		if (exists != null && !exists.getId().equals(dto.getId())) {
 			throw new BusinessException("组织[" + exists.getOrgName() + "]已经使用了组织编码\"" + dto.getOrgNo() + "\"");
@@ -143,7 +146,7 @@ public class OrgServiceImpl implements OrgService {
 		if (dto.getOrgNo().equals(dto.getParentNo())) {
 			throw new BusinessException("不能选择自己做为上级组织");
 		}
-		SOrg org = new SOrg();
+		EpSOrg org = new EpSOrg();
 		BeanUtils.copyProperties(dto, org);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		org.setUpdateTime(new Date());
@@ -170,7 +173,7 @@ public class OrgServiceImpl implements OrgService {
 		}
 		List<OrgVo> children = orgMapper.queryChildrenByOrgNo(newNo);
 		children.forEach(o -> {
-			SOrg org = new SOrg();
+			EpSOrg org = new EpSOrg();
 			BeanUtils.copyProperties(o, org);
 			setOrgPath(org);
 			orgMapper.updateWithoutNull(org); //更新orgPath
@@ -178,7 +181,7 @@ public class OrgServiceImpl implements OrgService {
 		});
 	}
 
-	private void setOrgPath(SOrg org) {
+	private void setOrgPath(EpSOrg org) {
 		if (StringUtils.notNull(org.getParentNo()) && !ROOT_ORG.equals(org.getParentNo())) {
 			OrgVo parent = queryParents(org.getParentNo());
 			if (parent == null) {
@@ -222,7 +225,7 @@ public class OrgServiceImpl implements OrgService {
 		}).collect(Collectors.toList());
 		Map<String, TreeNodeVo> orgMap = treeNodes.stream().collect(Collectors.toMap(TreeNodeVo::getId, v -> v));
 		treeNodes.forEach(v -> {
-			if (v.getParentId() != null && !ROOT_ORG.equals(v.getParentId())) {
+			if (StringUtils.notNull(v.getParentId()) && !ROOT_ORG.equals(v.getParentId())) {
 				orgMap.get(v.getParentId()).addChildren(v);
 			}
 		});
@@ -242,7 +245,7 @@ public class OrgServiceImpl implements OrgService {
 		if (!orgMapper.queryChildrenById(id).isEmpty()) {
 			throw new BusinessException("存在有效的下级组织，不能删除");
 		}
-		SOrg org = new SOrg();
+		EpSOrg org = new EpSOrg();
 		org.setId(id);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
 		org.setUpdateTime(new Date());

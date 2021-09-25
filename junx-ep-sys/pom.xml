@@ -3,7 +3,7 @@
   <parent>
     <groupId>io.github.junxworks</groupId>
     <artifactId>junx-ep</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.2</version>
   </parent>
   <artifactId>junx-ep-sys</artifactId>
   <dependencies>
@@ -20,23 +20,6 @@
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-		</dependency>
-		<!--pagehelper -->
-		<dependency>
-			<groupId>com.github.pagehelper</groupId>
-			<artifactId>pagehelper-spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>druid-spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.webjars</groupId>
-		    <artifactId>webjars-locator</artifactId>
-		</dependency>
 		<!-- **********************************内部jar引入 start************************************ -->
 		<dependency>
 		    <groupId>io.github.junxworks</groupId>
@@ -51,13 +34,36 @@
 		    <artifactId>junx-ep-auth</artifactId>
 		</dependency>
 		<!-- ***********************************内部jar引入 end************************************** -->
+		<!-- **********************************三方jar引入 start************************************ -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+		</dependency>
+		<!--pagehelper -->
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>webjars-locator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.github.axet</groupId>
+			<artifactId>kaptcha</artifactId>
+		</dependency>
+		<!-- ***********************************内部jar引入 end************************************** -->
 	</dependencies>
 	<build>
 		<resources>
 			<resource>
 				<directory>src/main/java</directory>
 				<includes>
-					<include>**/*.sql</include>
+					<include>**/*</include>
 				</includes>
 				<filtering>false</filtering>
 			</resource>

@@ -33,7 +33,7 @@ import com.github.pagehelper.PageInfo;
 import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.PageUtils;
-import io.github.junxworks.ep.sys.annotations.OpLog;
+import io.github.junxworks.ep.sys.annotations.EpLog;
 import io.github.junxworks.ep.sys.constants.EPConstants;
 import io.github.junxworks.ep.sys.dto.UserInfoDto;
 import io.github.junxworks.ep.sys.dto.UserListConditionDto;
@@ -43,7 +43,7 @@ import io.github.junxworks.ep.sys.vo.RoleInfoVo;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
 
 /**
- * {类的详细说明}.
+ * 操作员管理控制器
  *
  * @ClassName:  UserController
  * @author: Michael
@@ -122,7 +122,7 @@ public class UserController {
 	 * @return the result
 	 */
 	@PostMapping()
-	@OpLog("保存用户信息")
+	@EpLog("EP-系统支撑-保存用户")
 	public Result saveUserInfo(@RequestBody UserInfoDto dto) {
 		userService.saveUserInfo(dto);
 		return Result.ok();
@@ -135,9 +135,9 @@ public class UserController {
 	 * @param userInfoDto the user info dto
 	 * @return the result
 	 */
-	@PutMapping(value = "/{userId}/status")
-	@OpLog("更新用户状态")
-	public Result updateUserStatus(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
+	@PutMapping(value = "/status")
+	@EpLog("EP-系统支撑-更新用户状态")
+	public Result updateUserStatus(@RequestBody UserInfoDto userInfoDto) {
 		return Result.ok(userService.updateUserStatus(userInfoDto));
 	}
 
@@ -148,10 +148,10 @@ public class UserController {
 	 * @param userInfoDto the user info dto
 	 * @return the result
 	 */
-	@PutMapping(value = "/{userId}/pass")
-	@OpLog("重置用户密码")
-	public Result updateUserPass(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
-		return Result.ok(userService.updateUserPass(userId, userInfoDto.getPass()));
+	@PutMapping(value = "/pass")
+	@EpLog("EP-系统支撑-重置用户密码")
+	public Result updateUserPass(@RequestBody UserInfoDto userInfoDto) {
+		return Result.ok(userService.updateUserPass(userInfoDto.getId(), userInfoDto.getPass()));
 	}
 
 	/**
@@ -172,10 +172,10 @@ public class UserController {
 	 * @param userInfoDto the user info dto
 	 * @return the result
 	 */
-	@PutMapping(value = "/{userId}/change-pass")
-	@OpLog("修改用户密码")
-	public Result changeUserPass(@PathVariable Long userId, @RequestBody UserInfoDto userInfoDto) {
-		userService.changeUserPass(userId, userInfoDto);
+	@PutMapping(value = "/passwords")
+	@EpLog("EP-系统支撑-修改用户密码")
+	public Result changeUserPass(@RequestBody UserInfoDto userInfoDto) {
+		userService.changeUserPass(userInfoDto);
 		return Result.ok();
 	}
 }

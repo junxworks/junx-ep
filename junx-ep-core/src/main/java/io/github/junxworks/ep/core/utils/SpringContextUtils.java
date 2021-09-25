@@ -19,6 +19,8 @@ package io.github.junxworks.ep.core.utils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,7 +31,8 @@ import org.springframework.stereotype.Component;
  * @date:   2020-7-19 12:18:37
  * @since:  v1.0
  */
-@Component
+@Component("JunxEpSpringContextUtils")
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class SpringContextUtils implements ApplicationContextAware {
 	
 	/** application context. */

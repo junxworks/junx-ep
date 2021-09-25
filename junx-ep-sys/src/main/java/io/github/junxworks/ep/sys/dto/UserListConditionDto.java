@@ -39,8 +39,18 @@ public class UserListConditionDto extends Pageable {
 	/** roles. */
 	private String roles;
 
+	private Byte status;
+
 	/** role ids. */
 	private List<Long> roleIds;
+
+	public Byte getStatus() {
+		return status;
+	}
+
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
 
 	public String getOrgNo() {
 		return orgNo;

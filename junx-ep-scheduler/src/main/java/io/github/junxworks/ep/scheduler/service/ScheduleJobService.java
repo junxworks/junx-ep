@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.junxworks.ep.scheduler.dto.SJobListConditionDto;
-import io.github.junxworks.ep.scheduler.entity.SJob;
-import io.github.junxworks.ep.scheduler.entity.SJob;
-import io.github.junxworks.ep.scheduler.vo.ScheduleJobVo;
+import io.github.junxworks.ep.scheduler.entity.EpSJob;
+import io.github.junxworks.ep.scheduler.entity.EpSJob;
+import io.github.junxworks.ep.scheduler.vo.EpSJobVo;
 
 /**
  * {类的详细说明}.
@@ -40,7 +40,7 @@ public interface ScheduleJobService {
 	 * @param jobId the job id
 	 * @return the schedule job entity
 	 */
-	SJob queryObject(Long jobId);
+	EpSJob queryObject(Long jobId);
 
 	/**
 	 * Query list.
@@ -48,7 +48,7 @@ public interface ScheduleJobService {
 	 * @param map the map
 	 * @return the list
 	 */
-	List<ScheduleJobVo> queryList(SJobListConditionDto condition);
+	List<EpSJobVo> queryList(SJobListConditionDto condition);
 
 	/**
 	 * Query total.
@@ -63,7 +63,7 @@ public interface ScheduleJobService {
 	 *
 	 * @param scheduleJob the schedule job
 	 */
-	void save(SJob scheduleJob);
+	void save(EpSJob scheduleJob);
 
 	/**
 	 * Delete batch.

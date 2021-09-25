@@ -1,1 +1,0 @@
-INSERT INTO s_user (id,name, username, password, mobile, id_card, email, create_user, create_time, update_user, update_time, status) VALUES (-1,'超级管理员', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '18888888888', 'xxxxxxx', 'xxxxxxx', -1, '2019-01-01 00:00:00', null, null, 0);

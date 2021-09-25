@@ -23,8 +23,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import io.github.junxworks.ep.fs.entity.SFile;
-import io.github.junxworks.ep.fs.entity.SFileThumb;
+import io.github.junxworks.ep.fs.entity.EpSFile;
+import io.github.junxworks.ep.fs.entity.EpSFileThumb;
 import io.github.junxworks.ep.fs.mapper.FileMapper;
 import io.github.junxworks.ep.fs.service.FileService;
 import io.github.junxworks.junx.core.util.StringUtils;
@@ -41,7 +41,7 @@ public class FileServiceImpl implements FileService {
 	@Autowired
 	private FileMapper mapper;
 
-	public void inser(SFile file) {
+	public void inser(EpSFile file) {
 		file.setId(UUID.randomUUID().toString());
 		if (StringUtils.isNull(file.getFileGroup())) {
 			file.setFileGroup(FILE_GROUP_DEFAULT);
@@ -52,15 +52,15 @@ public class FileServiceImpl implements FileService {
 		mapper.insertWithoutNull(file);
 	}
 
-	public SFile findById(String id) {
+	public EpSFile findById(String id) {
 		return mapper.findById(id);
 	}
 
-	public List<SFile> findByGroup(String group) {
+	public List<EpSFile> findByGroup(String group) {
 		return mapper.findByGroup(group);
 	}
 
-	public List<SFile> findByOrg(String orgNo) {
+	public List<EpSFile> findByOrg(String orgNo) {
 		return mapper.findByOrg(orgNo);
 	}
 
@@ -68,21 +68,21 @@ public class FileServiceImpl implements FileService {
 		mapper.deleteById(id);
 	}
 
-	public int saveSysFileThumb(SFileThumb t) {
+	public int saveSysFileThumb(EpSFileThumb t) {
 		t.setId(UUID.randomUUID().toString());
 		t.setCreateTime(new Date());
 		return mapper.insertWithoutNull(t);
 	}
 
-	public SFileThumb findThumbByIdAndSize(String fileId, int width, int height) {
-		List<SFileThumb> ts = mapper.queryThumbList(fileId, width, height);
+	public EpSFileThumb findThumbByIdAndSize(String fileId, int width, int height) {
+		List<EpSFileThumb> ts = mapper.queryThumbList(fileId, width, height);
 		if (ts.isEmpty()) {
 			return null;
 		}
 		if (ts.size() > 1) {
 			for (int i = 1, len = ts.size(); i < len; i++) {
-				SFileThumb t = ts.get(i);
-				mapper.deleteByID(t);
+				EpSFileThumb t = ts.get(i);
+				mapper.deleteByPK(t);
 			}
 		}
 		return ts.get(0);

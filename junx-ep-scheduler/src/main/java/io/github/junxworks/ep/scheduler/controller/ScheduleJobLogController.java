@@ -28,6 +28,7 @@ import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.PageUtils;
 import io.github.junxworks.ep.scheduler.dto.SJobLogListConditionDto;
 import io.github.junxworks.ep.scheduler.service.ScheduleJobLogService;
+import io.github.junxworks.ep.scheduler.vo.EpSJobLogVo;
 
 /**
  * {类的详细说明}.
@@ -54,7 +55,7 @@ public class ScheduleJobLogController {
 	@GetMapping("/logs")
 	public Result list(SJobLogListConditionDto condition) {
 		PageUtils.setPage(condition);
-		return Result.ok(new PageInfo<>(scheduleJobLogService.queryList(condition)));
+		return Result.ok(new PageInfo<EpSJobLogVo>(scheduleJobLogService.queryList(condition)));
 	}
 
 	/**

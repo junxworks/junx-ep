@@ -16,36 +16,27 @@
  */
 package io.github.junxworks.ep.scheduler.config;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.google.common.collect.Lists;
-
-import io.github.junxworks.ep.core.svc.TableInitComponent;
-import io.github.junxworks.ep.core.svc.TableInitializer;
+import io.github.junxworks.ep.core.pvc.PersistenceVersionController;
 import io.github.junxworks.ep.core.utils.SpringContextUtils;
-import io.github.junxworks.ep.scheduler.TestTask;
-import io.github.junxworks.ep.scheduler.controller.ScheduleJobController;
-import io.github.junxworks.ep.scheduler.controller.ScheduleJobLogController;
-import io.github.junxworks.ep.scheduler.service.impl.ScheduleJobLogServiceImpl;
-import io.github.junxworks.ep.scheduler.service.impl.ScheduleJobServiceImpl;
-import io.github.junxworks.junx.core.lang.Initializable;
 
 /**
- * {类的详细说明}.
+ * 定时任务配置类
  *
  * @ClassName:  ScheduleConfiguration
  * @author: Michael
@@ -53,41 +44,21 @@ import io.github.junxworks.junx.core.lang.Initializable;
  * @since:  v1.0
  */
 @Configuration
-@Import({ SpringContextUtils.class, ScheduleJobController.class, ScheduleJobLogController.class, ScheduleJobLogServiceImpl.class, ScheduleJobServiceImpl.class, TestTask.class })
-public class ScheduleConfiguration extends TableInitComponent {
+@EnableConfigurationProperties({ EPSchedulerConfig.class })
+@ConditionalOnClass(name = "io.github.junxworks.ep.sys.config.BaseModuleConfiguration")
+@ConditionalOnProperty(prefix = "junx.ep.scheduler", name = "enabled", havingValue = "true", matchIfMissing = true)
+@ComponentScan(value = "io.github.junxworks.ep.scheduler")
+@Import({ SpringContextUtils.class })
+public class ScheduleConfiguration {
 
-	/** 常量 INIT_PATH. */
-	private static final String INIT_PATH = "/io/github/junxworks/ep/scheduler/init";
+	/** 常量 PVC_PATH.持久化版本控制路径 */
+	private static final String PVC_PATH = "/io/github/junxworks/ep/scheduler/pvc";
 
-	/** 常量 tables. */
-	public static final List<String> tables = Lists.newArrayList("s_job", "s_job_log", "QRTZ_JOB_DETAILS", "QRTZ_TRIGGERS", "QRTZ_SIMPLE_TRIGGERS", "QRTZ_CRON_TRIGGERS", "QRTZ_SIMPROP_TRIGGERS", "QRTZ_BLOB_TRIGGERS", "QRTZ_CALENDARS", "QRTZ_PAUSED_TRIGGER_GRPS", "QRTZ_FIRED_TRIGGERS", "QRTZ_SCHEDULER_STATE", "QRTZ_LOCKS");
+	/** 常量 MODULE_NAME.pvc参数，模块名 */
+	private static final String MODULE_NAME = "junx_ep_scheduler";
 
-	/**
-	 * Schedule DB init.
-	 *
-	 * @param jdbcTemplate the jdbc template
-	 * @return the initializable
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	@Bean(name = "EPScheduleDBInit", initMethod = "initialize", destroyMethod = "destroy")
-	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public Initializable epScheduleDBInit(final JdbcTemplate jdbcTemplate) throws IOException {
-		return new Initializable() {
-			@Override
-			public void initialize() throws Exception {
-				for (String table : tables) {
-					TableInitializer service = createTableValidate(INIT_PATH, table, table);
-					service.setJdbcTemplate(jdbcTemplate);
-					service.start();
-				}
-			}
-
-			@Override
-			public void destroy() throws Exception {
-			}
-		};
-
-	}
+	@Autowired
+	private EPSchedulerConfig config;
 
 	/**
 	 * Scheduler factory bean.
@@ -97,39 +68,47 @@ public class ScheduleConfiguration extends TableInitComponent {
 	 * @return the scheduler factory bean
 	 */
 	@Bean
-	@DependsOn("EPScheduleDBInit")
 	public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource, PlatformTransactionManager transactionManager) {
 		SchedulerFactoryBean factory = new SchedulerFactoryBean();
 		factory.setDataSource(dataSource);
 
 		//quartz参数
 		Properties prop = new Properties();
-		prop.put("org.quartz.scheduler.instanceName", "QuartzScheduler");
-		prop.put("org.quartz.scheduler.instanceId", "AUTO");
+		prop.put("org.quartz.scheduler.instanceName", config.getInstanceName());
+		prop.put("org.quartz.scheduler.instanceId", config.getInstanceId());
 		//线程池配置
 		prop.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
-		prop.put("org.quartz.threadPool.threadCount", "10");
-		prop.put("org.quartz.threadPool.threadPriority", "5");
+		prop.put("org.quartz.threadPool.threadCount", String.valueOf(config.getThreadCount()));
+		prop.put("org.quartz.threadPool.threadPriority", String.valueOf(config.getThreadPriority()));
 		//JobStore配置
 		prop.put("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
 		//集群配置
-		prop.put("org.quartz.jobStore.isClustered", "true");//是否是应用在集群中，当应用在集群中时必须设置为TRUE，否则会出错org.quartz.jobStore.clusterCheckinInterval
-		prop.put("org.quartz.jobStore.clusterCheckinInterval", "15000"); //#scheduler的checkin时间，时间长短影响failure scheduler的发现速度
-		prop.put("org.quartz.jobStore.maxMisfiresToHandleAtATime", "1");
+		prop.put("org.quartz.jobStore.isClustered", String.valueOf(config.isClustered()));//是否是应用在集群中，当应用在集群中时必须设置为TRUE，否则会出错org.quartz.jobStore.clusterCheckinInterval
+		prop.put("org.quartz.jobStore.clusterCheckinInterval", String.valueOf(config.getClusterCheckinInterval())); //#scheduler的checkin时间，时间长短影响failure scheduler的发现速度
+		prop.put("org.quartz.jobStore.maxMisfiresToHandleAtATime", String.valueOf(config.getMaxMisfiresToHandleAtATime()));
 
-		prop.put("org.quartz.jobStore.misfireThreshold", "60000");//最大能忍受的触发超时时间，如果超过则认为“失误”，单位ms
+		prop.put("org.quartz.jobStore.misfireThreshold", String.valueOf(config.getMisfireThreshold()));//最大能忍受的触发超时时间，如果超过则认为“失误”，单位ms
 		prop.put("org.quartz.jobStore.tablePrefix", "QRTZ_");
 		factory.setQuartzProperties(prop);
 
-		factory.setSchedulerName("QuartzScheduler");
+		factory.setSchedulerName(config.getSchedulerName());
 		//延时启动
 		//		factory.setStartupDelay(30);
 		factory.setApplicationContextSchedulerContextKey("applicationContextKey");
 		//可选，QuartzScheduler 启动时更新己存在的Job，这样就不用每次修改targetObject后删除qrtz_job_details表对应记录了
-		factory.setOverwriteExistingJobs(true);
+		factory.setOverwriteExistingJobs(config.isOverwriteExistingJobs());
 		//设置自动启动，默认为true
-		factory.setAutoStartup(true);
+		factory.setAutoStartup(config.isAutoStartup());
 		factory.setTransactionManager(transactionManager);
 		return factory;
+	}
+
+	@DependsOn("JunxEpSpringContextUtils")
+	@Bean(name = "junxEpSchedulerPvc", initMethod = "start", destroyMethod = "stop")
+	public PersistenceVersionController junxEpSchedulerPvc() {
+		PersistenceVersionController pvc = new PersistenceVersionController();
+		pvc.setPvcPath(PVC_PATH);
+		pvc.setModuleName(MODULE_NAME);
+		return pvc;
 	}
 }

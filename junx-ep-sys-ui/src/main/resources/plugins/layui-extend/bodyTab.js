@@ -56,7 +56,7 @@ layui.define(['element', 'layer', 'jquery'], function (drdrdr) {
 
 	                ulHtml += convertIconHtml(item.icon);
 	                ulHtml += '<cite>' + item.name + '</cite>';
-	                ulHtml += '<span class="layui-nav-more"></span>';
+	                ulHtml += '<span class="layui-nav-itemed"></span>';
 	                ulHtml += '</a>';
 	                ulHtml += '<dl class="layui-nav-child">';
 	
@@ -105,7 +105,7 @@ layui.define(['element', 'layer', 'jquery'], function (drdrdr) {
         } else {
             data = strData;
         }
-        var ulHtml = '<ul class="layui-nav layui-nav-tree"  lay-filter="magetree">';
+        var ulHtml = '<ul class="layui-nav layui-nav-tree "  lay-filter="magetree">';
         for (var i = 0; i < data.length; i++) {
             ulHtml += getChildrenHtml(data[i],0);
         }

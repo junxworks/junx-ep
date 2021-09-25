@@ -16,10 +16,10 @@
  */
 package io.github.junxworks.ep.sys.service;
 
-import io.github.junxworks.ep.sys.entity.SParam;
+import io.github.junxworks.ep.sys.entity.EpSParam;
 
 public interface ParamService {
-	SParam queryParamByGroupAndName(String group, String paramName);
+	EpSParam queryParamByGroupAndName(String group, String paramName);
 
-	int updateParam(SParam param);
+	int updateParam(EpSParam param);
 }
