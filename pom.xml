@@ -48,7 +48,7 @@
 		<aspectj.version>1.8.13</aspectj.version>
 		<concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
 		<shiro.version>1.8.0</shiro.version>
-		<httpcomponents.version>4.5.6</httpcomponents.version>
+		<httpcomponents.version>4.5.13</httpcomponents.version>
 		<poi.version>5.0.0</poi.version>
 		<poi-ooxml.version>5.0.0</poi-ooxml.version>
 		<validation.version>1.1.0.Final</validation.version>
