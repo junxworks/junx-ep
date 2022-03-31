@@ -42,7 +42,7 @@
 		<junit.version>4.13.2</junit.version>
 		<slf4j-api.versin>1.7.25</slf4j-api.versin>
 		<log4j-web.version>2.11.2</log4j-web.version>
-		<springboot.version>2.4.1</springboot.version>
+		<springboot.version>2.5.12</springboot.version>
 		<openfeign.version>3.0.0</openfeign.version>
 		<spring.version>5.3.2</spring.version>
 		<aspectj.version>1.8.13</aspectj.version>
