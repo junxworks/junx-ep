@@ -44,7 +44,7 @@
 		<log4j-web.version>2.11.2</log4j-web.version>
 		<springboot.version>2.4.1</springboot.version>
 		<openfeign.version>3.0.0</openfeign.version>
-		<spring.version>5.3.2</spring.version>
+		<spring.version>5.3.18</spring.version>
 		<aspectj.version>1.8.13</aspectj.version>
 		<concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
 		<shiro.version>1.8.0</shiro.version>
