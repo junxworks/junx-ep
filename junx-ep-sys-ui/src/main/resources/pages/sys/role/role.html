@@ -22,31 +22,27 @@
 <div class="portlet light" id="form_wizard_1">
     <div class="portlet-title">
         <div class="caption">
-            <i class="fa fa-beer"></i>
             <span class="caption-subject font-green sbold uppercase">角色管理</span>
         </div>
     </div>
-    <div class="portlet-title">
-        <div class="div-inline" style="clear:both">
-			<form class="layui-form" >
-			    <div class="layui-form-item" style="float: left;">
-			        <div class="layui-inline">
-			        	<label class="layui-form-label">角色名称：</label>
-			            <div class="layui-input-inline">
-			                <input id="roleName" autocomplete="off" placeholder="角色名" class="layui-input">
-			            </div>
-			        </div>
-			        <div class="layui-inline">
-			            <div class="layui-input-inline">
-			                <button type="button" class="layui-btn" onclick="queryTableData()"><i class="fa fa-search"></i> 查询</button>
-			                <button type="button" class="layui-btn layui-btn-normal" onclick="addRolePage()"><i class="fa fa-plus-square"></i> 新增</button>
-			            </div>
-			        </div>
-			    </div>
-			</form>
-        </div>
+    <div class="div-inline" style="clear:both">
+		<form class="layui-form" >
+		    <div class="layui-form-item" style="float: left;">
+		        <div class="layui-inline">
+		        	<label class="layui-form-label">角色名称：</label>
+		            <div class="layui-input-inline">
+		                <input id="roleName" autocomplete="off" placeholder="角色名" class="layui-input">
+		            </div>
+		        </div>
+		        <div class="layui-inline">
+		            <div class="layui-input-inline">
+		                <button type="button" class="layui-btn" onclick="queryTableData()"><i class="fa fa-search"></i> 查询</button>
+		                <button type="button" class="layui-btn layui-btn-normal" onclick="addRolePage()"><i class="fa fa-plus-square"></i> 新增</button>
+		            </div>
+		        </div>
+		    </div>
+		</form>
     </div>
-
     <div class="portlet-body">
         <div class="dataTables_wrapper" style="margin-top: 0px!important" >
 			<table id="roleTable" class="layui-table">
@@ -56,10 +52,10 @@
 </div>
 
 <script type="text/html" id="operateTp">
-    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="addRolePage({{d.id}},'{{d.roleName}}','{{d.roleTag}}')">
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" onclick="addRolePage({{d.id}},'{{d.roleName}}','{{d.roleTag}}')">
         <i class="layui-icon">&#xe642;</i>修改
     </button>
-    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="deleteRole({{d.id}})">
+    <button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick="deleteRole({{d.id}})">
         <i class="layui-icon">&#xe640;</i>删除
     </button>
 </script>

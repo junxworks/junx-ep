@@ -26,14 +26,16 @@ import org.springframework.context.annotation.Import;
 
 import io.github.junxworks.ep.core.pvc.PersistenceVersionController;
 import io.github.junxworks.ep.core.utils.SpringContextUtils;
+import io.github.junxworks.ep.fs.constants.FsConstants;
 import io.github.junxworks.ep.fs.driver.FileRepository;
+import io.github.junxworks.ep.fs.driver.FileRepositoryFactory;
 import io.github.junxworks.ep.fs.driver.LocalFileSystemDriver;
 import io.github.junxworks.ep.fs.driver.OssRepositoryDriver;
 
 @Configuration
 @EnableConfigurationProperties({ FSConfig.class })
 @ComponentScan("io.github.junxworks.ep.fs")
-@Import({ SpringContextUtils.class})
+@Import({ SpringContextUtils.class })
 @ConditionalOnProperty(prefix = "junx.ep.fs", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class FSConfiguration {
 
@@ -49,12 +51,18 @@ public class FSConfiguration {
 	 * @param config the config
 	 * @return the file repository
 	 */
-	@ConditionalOnProperty(prefix = "junx.ep.fs", value = "mode", havingValue = "oss")
+	@ConditionalOnProperty(prefix = "junx.ep.fs", value = "mode", havingValue = FsConstants.MODE_OSS)
 	@Bean(name = "ossRepository", initMethod = "start", destroyMethod = "stop")
 	public FileRepository ossRepository(FSConfig config) {
 		OssRepositoryDriver ossRepository = new OssRepositoryDriver();
 		ossRepository.setConfig(config.getOss());
 		return ossRepository;
+	}
+
+	@Bean(name = "fileRepositoryFactory", initMethod = "initialize", destroyMethod = "destroy")
+	public FileRepositoryFactory fileRepositoryFactory() {
+		FileRepositoryFactory factory = new FileRepositoryFactory();
+		return factory;
 	}
 
 	/**
@@ -63,7 +71,7 @@ public class FSConfiguration {
 	 * @param config the config
 	 * @return the file repository
 	 */
-	@ConditionalOnProperty(prefix = "junx.ep.fs", value = "mode", havingValue = "local", matchIfMissing = true)
+	@ConditionalOnProperty(prefix = "junx.ep.fs", value = "mode", havingValue = FsConstants.MODE_LOCAL, matchIfMissing = true)
 	@Bean(name = "localFileSystemRepository", initMethod = "start", destroyMethod = "stop")
 	public FileRepository localFileSystemRepository(FSConfig config) {
 		LocalFileSystemDriver localFileSystemRepository = new LocalFileSystemDriver();

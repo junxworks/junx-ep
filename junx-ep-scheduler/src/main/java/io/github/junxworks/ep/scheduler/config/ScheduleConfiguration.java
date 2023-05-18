@@ -81,7 +81,10 @@ public class ScheduleConfiguration {
 		prop.put("org.quartz.threadPool.threadCount", String.valueOf(config.getThreadCount()));
 		prop.put("org.quartz.threadPool.threadPriority", String.valueOf(config.getThreadPriority()));
 		//JobStore配置
-		prop.put("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
+		if (config.isUseJobStoreTX()) {
+			// springboot2.5.7之前需要配置，2.5.7及之后版本之后走org.springframework.scheduling.quartz.LocalDataSourceJobStore
+			prop.put("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
+		}
 		//集群配置
 		prop.put("org.quartz.jobStore.isClustered", String.valueOf(config.isClustered()));//是否是应用在集群中，当应用在集群中时必须设置为TRUE，否则会出错org.quartz.jobStore.clusterCheckinInterval
 		prop.put("org.quartz.jobStore.clusterCheckinInterval", String.valueOf(config.getClusterCheckinInterval())); //#scheduler的checkin时间，时间长短影响failure scheduler的发现速度

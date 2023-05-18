@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.google.common.collect.Lists;
 
 import io.github.junxworks.ep.auth.model.UserModel;
-import io.github.junxworks.ep.core.ds.DynamicDataSource;
 
 /**
  * {类的详细说明}.
@@ -60,7 +59,7 @@ public class EPShiroService {
 
 	/** dynamic data source. */
 	@Autowired
-	private DynamicDataSource dynamicDataSource;
+	private DataSource primary;
 
 	/**
 	 * 返回 user 属性.
@@ -72,7 +71,6 @@ public class EPShiroService {
 	 */
 	public UserModel getUser(String username, String password) throws SQLException {
 		//所有验证均从主库中取数据
-		DataSource primary = dynamicDataSource.getPrimaryDataSource();
 		try (Connection conn = primary.getConnection(); PreparedStatement pst = conn.prepareStatement(QUERY_USER);) {
 			pst.setString(1, username);
 			pst.setString(2, password);
@@ -93,7 +91,6 @@ public class EPShiroService {
 	 */
 	public void lockUser(String username) throws SQLException {
 		//所有验证均从主库中取数据
-		DataSource primary = dynamicDataSource.getPrimaryDataSource();
 		try (Connection conn = primary.getConnection(); PreparedStatement pst = conn.prepareStatement(LOCK_USER);) {
 			pst.setString(1, username);
 			pst.execute();
@@ -136,7 +133,6 @@ public class EPShiroService {
 	public List<String> getUserAuthorizations(Long userId) throws SQLException {
 		boolean isAdmin = userId != null && userId == -1;
 		//所有验证均从主库中取数据
-		DataSource primary = dynamicDataSource.getPrimaryDataSource();
 		String sql = QUERY_USER_AUTHORIZATIONS;
 		if (isAdmin) {
 			sql = QUERY_ALL_AUTHORIZATIONS;
@@ -165,7 +161,6 @@ public class EPShiroService {
 	public List<String> getUserRoles(Long userId) throws SQLException {
 		boolean isAdmin = userId != null && userId == -1;
 		//所有验证均从主库中取数据
-		DataSource primary = dynamicDataSource.getPrimaryDataSource();
 		String sql = QUERY_USER_ROLES;
 		if (isAdmin) {
 			sql = QUERY_ALL_ROLES;

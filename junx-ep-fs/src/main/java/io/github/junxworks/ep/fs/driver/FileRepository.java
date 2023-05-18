@@ -67,29 +67,29 @@ public interface FileRepository extends Lifecycle {
 	/**
 	 * 根据文件token获取一个文件字节数组
 	 *
-	 * @param fileToken 文件存储时候返回的文件token
+	 * @param storageId 文件存储时候返回的文件token
 	 * @return the file
 	 * @throws FetchFailedException the fetch file failed exception
 	 */
-	public byte[] fetchFileBytes(String fileToken) throws FetchFailedException;
+	public byte[] fetchFileBytes(String storageId) throws FetchFailedException;
 
 	/**
 	 * 根据文件token获取一个文件，并且将其写入到指定的output流中
 	 *
-	 * @param fileToken 文件存储时候返回的文件token
+	 * @param storageId 文件存储时候返回的文件token
 	 * @param output the output
 	 * @throws FetchFailedException the fetch file failed exception
 	 */
-	public void fetchFileIntoStream(String fileToken, OutputStream output) throws FetchFailedException;
+	public void fetchFileIntoStream(String storageId, OutputStream output) throws FetchFailedException;
 
 	/**
 	 * 根据文件token获取一个文件，并且返回输入流
 	 * 【注意】输入流用完必须关闭，不然会造成资源泄漏
 	 *
-	 * @param fileToken 文件存储时候返回的文件token
+	 * @param storageId 文件存储时候返回的文件token
 	 * @param output the output
 	 * @throws FetchFailedException the fetch file failed exception
 	 */
-	public InputStream fetchFileAsStream(String fileToken) throws FetchFailedException;
+	public InputStream fetchFileAsStream(String storageId) throws FetchFailedException;
 
 }

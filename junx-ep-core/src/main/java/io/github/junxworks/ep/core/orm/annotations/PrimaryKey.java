@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {类的详细说明}.
+ * 主键注解
  *
  * @ClassName:  PrimaryKey
  * @author: Michael

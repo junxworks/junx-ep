@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.junxworks.ep.codegen.mapper.CodegenDatasourceMapper">
+	<select id="queryDatasourceList" resultType="io.github.junxworks.ep.codegen.vo.EpCgDatasourceVo">
+		SELECT ds.*,u.name `create_user_name`
+	    FROM ep_cg_datasource ds,ep_s_user u
+	    where ds.create_user = u.id
+	    and ds.status=0
+        <if test='dsId!=null and dsId!=""'>
+              and ds.ds_id like concat('%',#{dsId},'%')
+        </if>
+        <if test='dsDesc!=null and dsDesc!=""'>
+              and ds.ds_desc like concat('%',#{dsDesc},'%')
+        </if>
+        <if test='dbType!=null and dbType!=""'>
+              and ds.db_type = #{dbType}
+        </if>
+		order by ds.create_time desc
+	</select>
+</mapper>

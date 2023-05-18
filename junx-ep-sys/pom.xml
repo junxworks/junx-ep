@@ -3,23 +3,10 @@
   <parent>
     <groupId>io.github.junxworks</groupId>
     <artifactId>junx-ep</artifactId>
-    <version>1.1.2</version>
+    <version>2.0.1</version>
   </parent>
   <artifactId>junx-ep-sys</artifactId>
   <dependencies>
-  		<dependency>
-		    <groupId>org.apache.logging.log4j</groupId>
-		    <artifactId>log4j-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-log4j2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
 		<!-- **********************************内部jar引入 start************************************ -->
 		<dependency>
 		    <groupId>io.github.junxworks</groupId>
@@ -52,12 +39,13 @@
 		    <groupId>org.webjars</groupId>
 		    <artifactId>webjars-locator</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.github.axet</groupId>
-			<artifactId>kaptcha</artifactId>
-		</dependency>
 		<!-- ***********************************内部jar引入 end************************************** -->
-	</dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+  </dependencies>
 	<build>
 		<resources>
 			<resource>

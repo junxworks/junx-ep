@@ -18,19 +18,25 @@ package io.github.junxworks.ep.fs.service.impl;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Random;
 
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import io.github.junxworks.ep.core.orm.SnowFlake;
 import io.github.junxworks.ep.fs.entity.EpSFile;
 import io.github.junxworks.ep.fs.entity.EpSFileThumb;
 import io.github.junxworks.ep.fs.mapper.FileMapper;
 import io.github.junxworks.ep.fs.service.FileService;
 import io.github.junxworks.junx.core.util.StringUtils;
+import jakarta.annotation.PostConstruct;
 
 @Service
-public class FileServiceImpl implements FileService {
+public class FileServiceImpl implements FileService, ApplicationContextAware {
 
 	/** 常量 FILE_GROUP_DEFAULT.文件所属分组 */
 	private static final String FILE_GROUP_DEFAULT = "default";
@@ -41,8 +47,25 @@ public class FileServiceImpl implements FileService {
 	@Autowired
 	private FileMapper mapper;
 
+	private SnowFlake snowFlake;
+
+	private ApplicationContext applicationContext;
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
+
+	@PostConstruct
+	public void init() {
+		Environment env = applicationContext.getEnvironment();
+		Long nodeId = Long.valueOf(env.getProperty("junxep.fs.nodeid", String.valueOf(new Random().nextInt(30))));
+		Long centerId = Long.valueOf(env.getProperty("junxep.fs.centerid", String.valueOf(new Random().nextInt(30))));
+		snowFlake = new SnowFlake(nodeId, centerId, 1);
+	}
+
 	public void inser(EpSFile file) {
-		file.setId(UUID.randomUUID().toString());
+		file.setId(snowFlake.nextId());
 		if (StringUtils.isNull(file.getFileGroup())) {
 			file.setFileGroup(FILE_GROUP_DEFAULT);
 		}
@@ -52,7 +75,7 @@ public class FileServiceImpl implements FileService {
 		mapper.insertWithoutNull(file);
 	}
 
-	public EpSFile findById(String id) {
+	public EpSFile findById(Long id) {
 		return mapper.findById(id);
 	}
 
@@ -64,17 +87,17 @@ public class FileServiceImpl implements FileService {
 		return mapper.findByOrg(orgNo);
 	}
 
-	public void deleteById(String id) {
+	public void deleteById(Long id) {
 		mapper.deleteById(id);
 	}
 
 	public int saveSysFileThumb(EpSFileThumb t) {
-		t.setId(UUID.randomUUID().toString());
+		t.setId(snowFlake.nextId());
 		t.setCreateTime(new Date());
 		return mapper.insertWithoutNull(t);
 	}
 
-	public EpSFileThumb findThumbByIdAndSize(String fileId, int width, int height) {
+	public EpSFileThumb findThumbByIdAndSize(Long fileId, int width, int height) {
 		List<EpSFileThumb> ts = mapper.queryThumbList(fileId, width, height);
 		if (ts.isEmpty()) {
 			return null;

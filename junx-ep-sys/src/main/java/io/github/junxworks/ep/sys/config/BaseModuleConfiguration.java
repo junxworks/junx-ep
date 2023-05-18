@@ -16,21 +16,32 @@
  */
 package io.github.junxworks.ep.sys.config;
 
-import java.util.Properties;
+import javax.sql.DataSource;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
-
-import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.google.code.kaptcha.util.Config;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import io.github.junxworks.ep.core.pvc.PersistenceVersionController;
 import io.github.junxworks.ep.core.utils.SpringContextUtils;
 import io.github.junxworks.ep.sys.aspect.EpLogAspect;
+import io.github.junxworks.ep.sys.service.DictionaryService;
+import io.github.junxworks.ep.sys.service.MenuService;
+import io.github.junxworks.ep.sys.service.OrgService;
+import io.github.junxworks.ep.sys.service.ParamService;
+import io.github.junxworks.ep.sys.service.RoleService;
+import io.github.junxworks.ep.sys.service.UserService;
+import io.github.junxworks.ep.sys.service.impl.DictionaryServiceImpl;
+import io.github.junxworks.ep.sys.service.impl.MenuServiceImpl;
+import io.github.junxworks.ep.sys.service.impl.OrgServiceImpl;
+import io.github.junxworks.ep.sys.service.impl.ParamServiceImpl;
+import io.github.junxworks.ep.sys.service.impl.RoleServiceImpl;
+import io.github.junxworks.ep.sys.service.impl.UserServiceImpl;
 
 /**
  * EP基础系统模块配置
@@ -40,7 +51,7 @@ import io.github.junxworks.ep.sys.aspect.EpLogAspect;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-@Import({ SpringContextUtils.class, EpLogAspect.class})
+@Import({ SpringContextUtils.class, EpLogAspect.class })
 @Configuration("JunxEPBaseModuleConfiguration")
 @EnableConfigurationProperties({ EPConfig.class })
 @ComponentScan("io.github.junxworks.ep.sys")
@@ -53,17 +64,9 @@ public class BaseModuleConfiguration {
 	private static final String MODULE_NAME = "junx_ep_sys";
 
 	@Bean
-	public DefaultKaptcha producer() {
-		Properties properties = new Properties();
-		properties.put("kaptcha.border", "no");
-		properties.put("kaptcha.textproducer.font.color", "black");
-		properties.put("kaptcha.textproducer.char.space", "5");
-		properties.put("kaptcha.background.clear.from", "gray");
-		properties.put("kaptcha.background.clear.to", "white");
-		Config config = new Config(properties);
-		DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
-		defaultKaptcha.setConfig(config);
-		return defaultKaptcha;
+	@ConditionalOnMissingBean(NamedParameterJdbcTemplate.class)
+	public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource) {
+		return new NamedParameterJdbcTemplate(dataSource);
 	}
 
 	@DependsOn("JunxEpSpringContextUtils")
@@ -74,4 +77,41 @@ public class BaseModuleConfiguration {
 		pvc.setModuleName(MODULE_NAME);
 		return pvc;
 	}
+
+	@Bean("JunxEPDictionaryService")
+	@ConditionalOnMissingBean(DictionaryService.class)
+	public DictionaryService epDictionaryService() {
+		return new DictionaryServiceImpl();
+	}
+
+	@Bean("JunxEPMenuService")
+	@ConditionalOnMissingBean(MenuService.class)
+	public MenuService epMenuService() {
+		return new MenuServiceImpl();
+	}
+
+	@Bean("JunxEPOrgService")
+	@ConditionalOnMissingBean(OrgService.class)
+	public OrgService epOrgService() {
+		return new OrgServiceImpl();
+	}
+
+	@Bean("JunxEPParamService")
+	@ConditionalOnMissingBean(ParamService.class)
+	public ParamService epParamService() {
+		return new ParamServiceImpl();
+	}
+
+	@Bean("JunxEPRoleService")
+	@ConditionalOnMissingBean(RoleService.class)
+	public RoleService epRoleService() {
+		return new RoleServiceImpl();
+	}
+
+	@Bean("JunxEPUserService")
+	@ConditionalOnMissingBean(UserService.class)
+	public UserService epUserService() {
+		return new UserServiceImpl();
+	}
+
 }

@@ -16,9 +16,11 @@
  */
 package io.github.junxworks.ep.sys.vo;
 
-import io.github.junxworks.ep.core.orm.annotations.Column;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import io.github.junxworks.ep.core.orm.annotations.PrimaryKey;
-import io.github.junxworks.ep.core.orm.annotations.Table;
 
 /**
  * {类的详细说明}.
@@ -28,52 +30,43 @@ import io.github.junxworks.ep.core.orm.annotations.Table;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-
-@Table(tableName = "ep_s_org", tableComment = "")
 public class OrgVo {
 
 	/** id. */
 	@PrimaryKey
-	@Column(name = "id", type = "BIGINT", length = "19", nullable = "false", comment = "编号")
 	private Long id;
 
 	/** status. */
-	@Column(name = "status", type = "TINYINT", length = "3", nullable = "true", comment = "状态 -1已删除 0正常")
 	private Byte status;
 
 	/** org no. */
-	@Column(name = "orgNo", type = "VARCHAR", length = "50", nullable = "true", comment = "组织编码")
 	private String orgNo;
 
 	/** org name. */
-	@Column(name = "orgName", type = "VARCHAR", length = "100", nullable = "true", comment = "组织名称")
 	private String orgName;
 
 	/** org type. */
-	@Column(name = "orgType", type = "VARCHAR", length = "20", nullable = "true", comment = "机构类型 参考码表机构类型 orgType")
 	private String orgType;
 
 	/** parent no. */
-	@Column(name = "parentNo", type = "VARCHAR", length = "50", nullable = "true", comment = "直接上级机构编码")
 	private String parentNo;
 
 	/** parent name. */
 	private String parentName;
 
 	/** top level no. */
-	@Column(name = "topLevelNo", type = "VARCHAR", length = "50", nullable = "true", comment = "顶级机构编码")
 	private String topLevelNo;
 
 	/** org path. */
-	@Column(name = "orgPath", type = "VARCHAR", length = "200", nullable = "true", comment = "组织路径")
 	private String orgPath;
 
 	/** remark. */
-	@Column(name = "remark", type = "VARCHAR", length = "200", nullable = "true", comment = "备注")
 	private String remark;
 
 	/** parent. */
 	private OrgVo parent;
+
+	private List<OrgVo> children;
 
 	public String getParentName() {
 		return parentName;
@@ -161,6 +154,17 @@ public class OrgVo {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+
+	public List<OrgVo> getChildren() {
+		return children;
+	}
+
+	public void addChild(OrgVo child) {
+		if (children == null) {
+			children = Lists.newArrayList();
+		}
+		this.children.add(child);
 	}
 
 }

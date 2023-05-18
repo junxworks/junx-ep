@@ -16,14 +16,20 @@
  */
 package io.github.junxworks.ep.core.utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import io.github.junxworks.junx.core.util.ObjectUtils;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Http工具类
@@ -95,15 +101,42 @@ public class HttpUtils {
 	 * @param cookieName the cookie name
 	 * @return cookie 属性
 	 */
-	public static javax.servlet.http.Cookie getCookie(HttpServletRequest request, String cookieName) {
-		javax.servlet.http.Cookie cookies[] = request.getCookies();
+	public static Cookie getCookie(HttpServletRequest request, String cookieName) {
+		Cookie cookies[] = request.getCookies();
 		if (cookies != null) {
-			for (javax.servlet.http.Cookie cookie : cookies) {
+			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals(cookieName)) {
 					return cookie;
 				}
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * 从URL下载文件到指定file.
+	 *
+	 * @param downloadUrl the download url
+	 * @param target the target
+	 * @throws Exception the exception
+	 */
+	public static void download(String downloadUrl, File target) throws Exception {
+		URL url = null;
+		try {
+			url = new URL(downloadUrl);
+		} catch (MalformedURLException e) {
+			throw e;
+		}
+
+		URLConnection conn = null;
+		try {
+			conn = url.openConnection();
+			conn.setConnectTimeout(10 * 1000);
+		} catch (IOException e) {
+			throw e;
+		}
+		try (InputStream is = conn.getInputStream()) {
+			FileUtils.copyInputStreamToFile(is, target);
+		}
 	}
 }

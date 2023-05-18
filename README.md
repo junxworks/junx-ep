@@ -19,7 +19,7 @@
 	<dependency>
 		<groupId>io.github.junxworks</groupId>
 		<artifactId>junx-ep-sys</artifactId>
-		<version>1.1.2</version>
+		<version>1.1.4</version>
 	</dependency>
 
 注意，EP框架本身依赖mybatis，目前数据库只支持mysql（或者兼容mysql的DB），springboot框架只支持springboot2.0以上。项目启动完毕后，即可通过地址 http://localhost:端口/上下文/eui/login.html 地址进行项目访问了，初始用户名admin，初始密码123456。

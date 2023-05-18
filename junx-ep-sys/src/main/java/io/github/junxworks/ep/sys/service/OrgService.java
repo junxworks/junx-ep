@@ -32,7 +32,7 @@ import io.github.junxworks.ep.sys.vo.TreeSelectVo;
  * @since:  v1.0
  */
 public interface OrgService {
-	
+
 	/**
 	 * Query org list.
 	 *
@@ -40,6 +40,13 @@ public interface OrgService {
 	 * @return the list
 	 */
 	List<OrgVo> queryOrgList(OrgDto dto);
+
+	/**
+	 * Query org tree for list.
+	 *
+	 * @return the list
+	 */
+	List<OrgVo> queryOrgTreeForList();
 
 	/**
 	 * Query org by id.

@@ -2,7 +2,7 @@ function isNull(obj){
 	if(obj===0){
 		return false;
 	}
-	return obj == null || typeof(obj) == "undefined" || obj == "undefined" || obj=="" || obj=="null";
+	return obj == null || typeof(obj) == "undefined" || obj == "undefined" || obj==="" || obj=="null";
 }
 
 var io={
@@ -1253,7 +1253,14 @@ function returnPreviousPage(){
  * @returns
  */
 function addMenuTab(url,title,iconCss){
-	window.parent.addTabByUrlTitleIcon(url,title,iconCss);
+	if(window.parent.addTabByUrlTitleIcon){
+		window.parent.addTabByUrlTitleIcon(url,title,iconCss);
+		return;
+	}
+	if(window.parent.parent && window.parent.parent.addTabByUrlTitleIcon){
+		window.parent.parent.addTabByUrlTitleIcon(url,title,iconCss);
+		return;
+	}
 }
 
 /**

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.junxworks.ep.codegen.mapper.CodegenGeneratorMapper">
+	<select id="queryList" resultType="io.github.junxworks.ep.codegen.vo.EpCgGeneratorVo">
+		SELECT t.*,u.name `create_user_name`
+	    FROM ep_cg_generator t,ep_s_user u
+	    where t.create_user = u.id
+	    and t.status=0
+        <if test='genName!=null and genName!=""'>
+              and t.gen_name like concat('%',#{genName},'%')
+        </if>
+		order by t.create_time desc
+	</select>
+</mapper>

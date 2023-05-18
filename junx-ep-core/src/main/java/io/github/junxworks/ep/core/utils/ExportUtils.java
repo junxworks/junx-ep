@@ -28,9 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -44,6 +41,8 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import io.github.junxworks.junx.core.util.DateUtils;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Excel导出工具类
@@ -57,7 +56,7 @@ public class ExportUtils {
 
 	/** 常量 EXCEL_SHEET_MAXSIZE. */
 	//设置一个sheet最大行数
-	private static final int EXCEL_SHEET_MAXSIZE = 50001;
+	public static final int EXCEL_SHEET_MAXSIZE = 50001;
 
 	/**
 	 * Download excel.
@@ -109,7 +108,7 @@ public class ExportUtils {
 	 * @return the list
 	 * @throws Exception the exception
 	 */
-	private static List<Map<String, Object>> createExcelRecord(List<?> projects, String[] keys) throws Exception {
+	public static List<Map<String, Object>> createExcelRecord(List<?> projects, String[] keys) throws Exception {
 		List<Map<String, Object>> listmap = new ArrayList<>();
 		for (Object project : projects) {
 			Map<String, Object> mapValue = new HashMap<>();
@@ -189,7 +188,7 @@ public class ExportUtils {
 	 * @param wb the wb
 	 * @return the cell style
 	 */
-	private static CellStyle createCellStyleTocolumn(Workbook wb) {
+	public static CellStyle createCellStyleTocolumn(Workbook wb) {
 		CellStyle cs = wb.createCellStyle();
 		Font f = wb.createFont();
 		// 创建第一种字体样式（用于列名）
@@ -212,7 +211,7 @@ public class ExportUtils {
 	 * @param wb the wb
 	 * @return the cell style
 	 */
-	private static CellStyle createCellStyleToValue(Workbook wb) {
+	public static CellStyle createCellStyleToValue(Workbook wb) {
 		CellStyle cs = wb.createCellStyle();
 		Font f = wb.createFont();
 		// 创建第二种字体样式（用于值）
@@ -238,7 +237,7 @@ public class ExportUtils {
 	 * @param columnNames the column names
 	 * @return the sheet
 	 */
-	private static Sheet createSheet(Workbook wb, CellStyle cs, String sheetName, String[] keys, String columnNames[]) {
+	public static Sheet createSheet(Workbook wb, CellStyle cs, String sheetName, String[] keys, String columnNames[]) {
 		// 创建第一个sheet（页），并命名
 		Sheet sheet = wb.createSheet(sheetName);
 		// 手动设置列宽。第一个参数表示要为第几列设；，第二个参数表示列的宽度，n为列高的像素数。

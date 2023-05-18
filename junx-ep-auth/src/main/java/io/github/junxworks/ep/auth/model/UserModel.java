@@ -174,7 +174,7 @@ public class UserModel implements Serializable {
 	}
 
 	public boolean isAdmin() {
-		return SUPER_ADMIN == id;
+		return id != null && SUPER_ADMIN == id;
 	}
 
 	/**

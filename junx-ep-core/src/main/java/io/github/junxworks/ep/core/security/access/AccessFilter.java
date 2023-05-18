@@ -18,18 +18,10 @@ package io.github.junxworks.ep.core.security.access;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.AntPathMatcher;
@@ -39,9 +31,17 @@ import com.google.common.collect.Lists;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.googlecode.concurrentlinkedhashmap.Weighers;
 
+import io.github.junxworks.ep.core.security.ServletRequestContext;
 import io.github.junxworks.ep.core.utils.IPUtils;
 import io.github.junxworks.junx.core.util.ByteUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 访问日志打印filter
@@ -55,6 +55,10 @@ public class AccessFilter implements Filter {
 
 	/** 常量 log. */
 	private static final Logger log = LoggerFactory.getLogger(AccessFilter.class);
+
+	private static final String POST_METHOD = "POST";
+
+	public static final String MULTIPART = "multipart/";
 
 	private Map<String, Boolean> lruCache;
 
@@ -124,7 +128,7 @@ public class AccessFilter implements Filter {
 			isLog = false;
 		}
 		if (isLog && validateUrl(url)) {
-			if (!ServletFileUpload.isMultipartContent(req)) {
+			if (!isMultipartContent(req)) {
 				request = new BodyReaderHttpServletRequestWrapper(req);
 				payload = new String(ByteUtils.inputStreamToBytes(request.getInputStream()));
 				if (StringUtils.notNull(payload)) {
@@ -202,5 +206,20 @@ public class AccessFilter implements Filter {
 			return false;
 		}
 		return pathMatcher.match(antExps, url);
+	}
+
+	public static final boolean isMultipartContent(HttpServletRequest request) {
+		if (!POST_METHOD.equalsIgnoreCase(request.getMethod())) {
+			return false;
+		}
+		ServletRequestContext ctx = new ServletRequestContext(request);
+		String contentType = ctx.getContentType();
+		if (contentType == null) {
+			return false;
+		}
+		if (contentType.toLowerCase(Locale.ENGLISH).startsWith(MULTIPART)) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -18,6 +18,7 @@ package io.github.junxworks.ep.core.utils;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.junxworks.ep.core.ds.DynamicDataSource;
+import io.github.junxworks.ep.core.orm.BaseMapper;
 
 /**
  * DB工具类
@@ -104,4 +106,25 @@ public class DBUtils {
 		}
 	}
 
+	/**
+	 * 批量插入数据
+	 *
+	 * @param mapper the mapper
+	 * @param objects the objects
+	 * @param batchSize the batch size
+	 * @return the int
+	 */
+	public static int insertObjectsByBatch(BaseMapper mapper, List<?> objects, int batchSize) {
+		int count = 0;
+		for (int page = 1, index = 0, len = objects.size(); index < len; page++) {
+			int toIndex = page * batchSize;
+			if (toIndex >= len) {
+				toIndex = len;
+			}
+			List<?> subList = objects.subList(index, toIndex);
+			count += mapper.insertBatch(subList);
+			index = toIndex;
+		}
+		return count;
+	}
 }

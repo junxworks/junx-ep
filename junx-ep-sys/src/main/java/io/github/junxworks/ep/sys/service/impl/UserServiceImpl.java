@@ -26,7 +26,6 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.cache.Cache;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
@@ -39,32 +38,31 @@ import io.github.junxworks.ep.sys.dto.UserInfoDto;
 import io.github.junxworks.ep.sys.dto.UserListConditionDto;
 import io.github.junxworks.ep.sys.entity.EpSUser;
 import io.github.junxworks.ep.sys.entity.EpSUserRole;
-import io.github.junxworks.ep.sys.mapper.UserMapper;
-import io.github.junxworks.ep.sys.mapper.UserRoleMapper;
+import io.github.junxworks.ep.sys.mapper.EpUserMapper;
+import io.github.junxworks.ep.sys.mapper.EpUserRoleMapper;
 import io.github.junxworks.ep.sys.service.UserService;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * 用户服务实现类
  *
  * @ClassName:  UserServiceImpl
  * @author: Michael
  * @date:   2020-7-19 12:17:47
  * @since:  v1.0
  */
-@Service("JunxEPUserService")
 public class UserServiceImpl implements UserService {
 
 	/** user mapper. */
 	@Autowired
-	private UserMapper userMapper;
+	private EpUserMapper userMapper;
 
 	/** user role mapper. */
 	@Autowired
-	private UserRoleMapper userRoleMapper;
+	private EpUserRoleMapper userRoleMapper;
 
-	@Autowired
+	@Autowired(required = false)
 	Cache<Object, AuthenticationInfo> authenticationCache;
 
 	/**

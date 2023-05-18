@@ -114,7 +114,7 @@ function fillData(id)
                 $("#divDialog textarea[name='method']").val(respData.method);
                 $("#divDialog input[name='cost']").val(respData.cost+"毫秒");
                 $("#divDialog input[name='url']").val(respData.url);
-                $("#divDialog input[name='div_createDate']").val(dateFormat(respData.createDate,"yyyy-MM-dd hh:mm:ss"));
+                $("#divDialog input[name='div_createDate']").val(respData.createTime);
             }
         }
     })

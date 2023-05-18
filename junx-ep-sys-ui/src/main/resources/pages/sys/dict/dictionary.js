@@ -9,13 +9,13 @@ layui.use(['table','form'], function () {
         , page: true
         , even: true
         , cols: [[ //表头
-            {field: 'id', title: '字典ID'}
-            , {field: 'parentCode', title: '上级编码'}
-            , {field: 'dataCode', title: '数据项编码'}
-            , {field: 'dataLabel', title: '数据项名称'}
-            , {field: 'sort', title: '排序'}
-            , {field: 'remark', title: '字段描述'}
-            , {field: 'operate', title: '操作',width:300, templet: '#operBar'}
+            {field: 'id', title: '字典ID', align: 'center', width: 100}
+            , {field: 'parentCode', title: '上级编码', align: 'center', width: 250}
+            , {field: 'dataCode', title: '数据项编码', align: 'center', width: 250}
+            , {field: 'dataLabel', title: '数据项名称', align: 'center', width: 250}
+            , {field: 'sort', title: '排序', align: 'center', width: 100}
+            , {field: 'remark', title: '字段描述', align: 'left', width: 200}
+            , {field: 'operate', title: '操作', align: 'left', templet: '#operBar'}
         ]]
         , request: {
             pageName: 'pageNo' //页码的参数名称，默认：page

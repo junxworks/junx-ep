@@ -3,22 +3,13 @@
   <parent>
     <groupId>io.github.junxworks</groupId>
     <artifactId>junx-ep</artifactId>
-    <version>1.1.2</version>
+    <version>2.0.1</version>
   </parent>
   <artifactId>junx-ep-scheduler</artifactId>
   <dependencies>
   		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-configuration-processor</artifactId>
-			<optional>true</optional>
-		</dependency>
-  		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -57,7 +48,12 @@
 		    <artifactId>junx-ep-scheduler-ui</artifactId>
 		</dependency>
 		<!-- ***********************************内部jar引入 end************************************** -->
-	</dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+  </dependencies>
 	<build>
 		<resources>
 			<resource>

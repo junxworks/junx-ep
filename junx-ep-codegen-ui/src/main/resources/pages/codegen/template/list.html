@@ -1,0 +1,101 @@
+ <!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="../../../plugins/layui/css/layui.css" rel="stylesheet" media="all" />
+    <link href="../../../css/components.min.css" rel="stylesheet" media="all" />
+    <link href="../../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" media="all" />
+    <link rel="stylesheet" href="../../../css/font_tnyc012u2rlwstt9.css" media="all" />
+</head>
+
+<body>
+<script src="../../../js/base.js"></script>
+<script src="../../../plugins/layui/layui.js"></script>
+<script src="../../../plugins/jquery.min.js"></script>
+<script src="list.js"></script>
+
+<div class="layui-tab" lay-filter="demo">
+  <ul class="layui-tab-title">
+    <li class="layui-this">模板列表</li>
+    <li>模板说明</li>
+  </ul>
+  	<div class="layui-tab-content">
+    	<div class="layui-tab-item layui-show">
+			<form class="layui-form">
+			    <div class="layui-form-item">
+			        <div class="layui-inline">
+			        	<label class="layui-form-label" style="width:120px">模板标识：</label>
+			            <div class="layui-input-inline">
+			                <input name="tmpId" class="layui-input">
+			            </div>
+			        </div>
+			         <div class="layui-inline">
+			        	<label class="layui-form-label" style="width:120px">模板描述：</label>
+			            <div class="layui-input-inline">
+			                <input name="tmpDesc" class="layui-input">
+			            </div>
+			        </div>
+			        <div class="layui-inline">
+			            <div class="layui-input-inline" >
+			                <button type="button" class="layui-btn" lay-submit="" lay-filter="search"><i class="fa fa-search"></i> 查询</button>
+			            	<button type="button" class="layui-btn layui-btn-normal" onclick="edit()"><i class="fa fa-plus-square"></i> 新增</button>
+			            </div>
+			        </div>
+			    </div>
+			</form>
+		    <div class="portlet-body">
+		        <div class="dataTables_wrapper" style="margin-top: 0px!important" >
+					<table id="lTable" class="layui-table"> </table>
+		        </div>
+		    </div>
+   	 	</div>
+    	<div class="layui-tab-item">
+	    	<div class="layui-bg-gray" style="padding: 30px;">
+			  <div class="layui-row layui-col-space15">
+			    <div class="layui-col-md15">
+			      <div class="layui-card">
+			        <div class="layui-card-header">模板引擎说明</div>
+			        <div class="layui-card-body">
+			          <p><b>模板引擎分类</b>：当前EP框架生成代码一共采用了两种模板技术，分别是生成<b>文件内容</b>所使用的<b>freemarker</b>(官网http://freemarker.apache.org/)模板引擎，与生成<b>文件名</b>所使用的<b>StringTemplate</b>（参考https://www.oschina.net/p/stringtemplate）模板引擎。</p>
+			          <p>生成文件内容的模板语法规则请参考freemarker的语法规则。<br/>生成文件名的模板语法规则请参考StringTemplate的语法规则，但请注意，EP的StringTemplate模板调整了默认的开始和结束符号，分别为'{'与'}'，如我们以数据库表Class名为输出的文件名，则输出文件名属性填{table.className}.java。</p>
+			          
+			        </div>
+			      </div>
+			    </div>
+			    <div class="layui-col-md15">
+			      <div class="layui-card">
+			        <div class="layui-card-header">内置变量说明</div>
+			        <div class="layui-card-body">
+			          <p>虽然生成代码的模板引擎使用的是两种不同的引擎，但是内置变量的来源却是相同的，目前有两类内置变量来源：
+				      <br/>· 基于数据库表结构解析所得来的表结构相关数据，如表结构信息、字段信息等变量，具体数据可以参考代码io.github.junxworks.ep.codegen.core.Table。
+				      <br/>· 基于外部配置得来的数据，参考junx.ep.codegen.templateAttr配置。</p>
+				      <p><b>文件内容freemarker变量：</b>
+				      <br/>·文件内容生成的时候，基于数据库表结构解析所得来的数据模型，在freemaker的数据模型中命名为table，是io.github.junxworks.ep.codegen.core.Table的实例，所有内置属性基于freemaker的语法都可以使用,如${table.className}。
+				      <br/>·生成文件内容的时候还有一个变量可以使用，那就是junx.ep.codegen.templateAttr，在freemaker的数据模型中命名为attr，意义为外部属性，在freemaker中使用${attr.attr1}即可获得templateAttr配置的外部变量。
+				      <br/><b>文件名StringTemplate变量：</b>
+				      <br/>·文件名生成的时候，同freemaker一样，也有table变量，与freemaker使用的是同一个table对象，如{table.className}。
+				      <br/>·文件名生成的时候也可以使用junx.ep.codegen.templateAttr，但是与freemaker有所不同，StringTemplate中把所有templateAttr配置当做map的key与value存储到ST模板引擎的属性中，不必通过attr对象即可使用，例如要获得templateAttr配置的attr1属性，写{attr1}即可。
+				      </p>
+			        </div>
+			      </div>
+			    </div>
+			  </div>
+			</div> 
+    	</div>
+  	</div>
+</div>
+<script type="text/html" id="operateTp">
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="edit({{d.id}})">
+        <i class="fa fa-edit"></i>修改
+    </button>
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-danger" onclick="del({{d.id}})">
+        <i class="fa fa-trash"></i>删除
+    </button>
+</script>
+</body>
+
+</html>

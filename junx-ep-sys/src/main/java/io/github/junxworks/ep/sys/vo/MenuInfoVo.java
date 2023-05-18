@@ -18,8 +18,6 @@ package io.github.junxworks.ep.sys.vo;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
-
 /**
  * {类的详细说明}.
  *
@@ -64,7 +62,7 @@ public class MenuInfoVo {
 	private boolean checked;
 
 	/** children. */
-	private List<MenuInfoVo> children = Lists.newArrayList();
+	private List<MenuInfoVo> children ;
 
 	public Long getId() {
 		return id;

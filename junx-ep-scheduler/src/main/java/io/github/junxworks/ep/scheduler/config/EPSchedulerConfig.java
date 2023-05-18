@@ -1,13 +1,13 @@
 /*
  ***************************************************************************************
  * EP for web developers.Supported By Junxworks
- * @Title:  EPConfig.java   
- * @Package io.github.junxworks.ep.sys.config   
+ * @Title:  EPSchedulerConfig.java   
+ * @Package io.github.junxworks.ep.scheduler.config   
  * @Description: (用一句话描述该文件做什么)   
  * @author: Administrator
- * @date:   2021-1-24 15:35:41   
+ * @date:   2022年11月15日 上午11:26:59   
  * @version V1.0 
- * @Copyright: 2021 Junxworks. All rights reserved. 
+ * @Copyright: 2022 Junxworks. All rights reserved. 
  * 注意：
  *  ---------------------------------------------------------------------------------- 
  * 文件修改记录
@@ -53,6 +53,17 @@ public class EPSchedulerConfig {
 	private long StartupDelay = 5;
 
 	private boolean OverwriteExistingJobs = true;
+
+	/**springboot2.5.7之前需要配置，2.5.7及之后版本无需配置，采用默认的org.springframework.scheduling.quartz.LocalDataSourceJobStore */
+	private boolean useJobStoreTX;
+
+	public boolean isUseJobStoreTX() {
+		return useJobStoreTX;
+	}
+
+	public void setUseJobStoreTX(boolean useJobStoreTX) {
+		this.useJobStoreTX = useJobStoreTX;
+	}
 
 	public boolean isEnabled() {
 		return enabled;

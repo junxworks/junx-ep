@@ -16,6 +16,8 @@
  */
 package io.github.junxworks.ep.core.fs;
 
+import java.util.Date;
+
 /**
  * 文件存储对象
  *
@@ -26,7 +28,7 @@ package io.github.junxworks.ep.core.fs;
  */
 public class FileInfo {
 	/** id. */
-	private String id;
+	private Long id;
 
 	/** 指定文件名. */
 	private String fileName;
@@ -41,7 +43,7 @@ public class FileInfo {
 	private Integer fileSize;
 
 	/** 文件扩展名. */
-	private String fileExtension;
+	private String fileExt;
 
 	/** 存储id. */
 	private String storageId;
@@ -52,11 +54,13 @@ public class FileInfo {
 	/** 存储驱动. */
 	private String storageDriver;
 
-	public String getId() {
+	private Date createTime;
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -92,14 +96,6 @@ public class FileInfo {
 		this.fileSize = fileSize;
 	}
 
-	public String getFileExtension() {
-		return fileExtension;
-	}
-
-	public void setFileExtension(String fileExtension) {
-		this.fileExtension = fileExtension;
-	}
-
 	public String getStorageId() {
 		return storageId;
 	}
@@ -122,6 +118,22 @@ public class FileInfo {
 
 	public void setStorageDriver(String storageDriver) {
 		this.storageDriver = storageDriver;
+	}
+
+	public String getFileExt() {
+		return fileExt;
+	}
+
+	public void setFileExt(String fileExt) {
+		this.fileExt = fileExt;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 }

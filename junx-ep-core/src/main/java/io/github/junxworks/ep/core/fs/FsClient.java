@@ -23,32 +23,36 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.util.Map;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.mime.HttpMultipartMode;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.http.ContentType;
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.BasicHttpRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSON;
@@ -60,6 +64,7 @@ import io.github.junxworks.junx.core.exception.FatalException;
 import io.github.junxworks.junx.core.lifecycle.Service;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 文件访问客户端[线程安全]
@@ -81,12 +86,22 @@ public class FsClient extends Service {
 	/** 基础restful地址. */
 	private String baseUrl;
 
+	private Map<String, String> headers;
+
 	/**
 	 * 构造一个新的 file storage client 对象.
 	 */
 	public FsClient(String fsAddr, String orgNo) {
 		this.fsAddr = fsAddr;
 		this.orgNo = orgNo;
+	}
+
+	public Map<String, String> getHeaders() {
+		return headers;
+	}
+
+	public void setHeaders(Map<String, String> headers) {
+		this.headers = headers;
 	}
 
 	public String getFsAddr() {
@@ -113,6 +128,14 @@ public class FsClient extends Service {
 		this.orgNo = orgNo;
 	}
 
+	private void initHeaders(BasicHttpRequest req) {
+		if (headers != null && !headers.isEmpty()) {
+			headers.entrySet().forEach(en -> {
+				req.addHeader(en.getKey(), en.getValue());
+			});
+		}
+	}
+
 	/**
 	 * Upload file.
 	 *
@@ -126,53 +149,74 @@ public class FsClient extends Service {
 	 * @throws Exception the exception
 	 */
 	public Result upload(MultipartFile file) {
+		return upload(null, file);
+	}
+
+	public Result upload(String mode, MultipartFile file) {
 		try {
-			return upload(file.getOriginalFilename(), file.getInputStream());
+			return upload(mode, file.getOriginalFilename(), file.getInputStream());
 		} catch (IOException e) {
 			return Result.error("Upload resource failed,error=" + ExceptionUtils.getCause(e).toString());
 		}
 	}
 
 	public Result upload(File localFile) {
+		return upload(null, localFile);
+	}
+
+	public Result upload(String mode, File localFile) {
 		try (FileInputStream fi = new FileInputStream(localFile)) {
-			return upload(localFile.getName(), fi);
+			return upload(mode, localFile.getName(), fi);
 		} catch (IOException e) {
 			return Result.error("Upload resource failed,error=" + ExceptionUtils.getCause(e).toString());
 		}
 	}
 
 	public Result upload(String fileName, InputStream fileInputStream) {
+		return upload(null, fileName, fileInputStream);
+	}
+
+	public Result upload(String mode, String fileName, InputStream fileInputStream) {
 		try {
 			if (!isRunning()) {
 				throw new BaseRuntimeException("File storage client is not running.");
 			}
 			CloseableHttpClient httpClient = createHttpClient();
 			// 创建自定义的httpclient对象
-			String result = "";
 			try {
 				HttpPost httpPost = new HttpPost(baseUrl);
-				MultipartEntityBuilder builder = MultipartEntityBuilder.create().setCharset(Charset.forName("UTF-8")).setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+				MultipartEntityBuilder builder = MultipartEntityBuilder.create()
+						.setCharset(StandardCharsets.UTF_8)
+						.setContentType(ContentType.MULTIPART_FORM_DATA)
+						.setMode(HttpMultipartMode.LEGACY);
 				builder.addBinaryBody("file", fileInputStream, ContentType.MULTIPART_FORM_DATA, fileName);// 文件流
-				builder.addTextBody("filename", fileName);
+				builder.addTextBody("filename", fileName,ContentType.create("text/plain", StandardCharsets.UTF_8));
 				builder.addTextBody("orgNo", orgNo);
 				builder.addTextBody("group", fileGroup);
+				if (StringUtils.notNull(mode)) {
+					builder.addTextBody("mode", mode);
+				}
+				initHeaders(httpPost);
 				HttpEntity entity = builder.build();
 				httpPost.setEntity(entity);
-
-				HttpResponse response = httpClient.execute(httpPost);// 执行提交
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode == 200) {
-					HttpEntity responseEntity = response.getEntity();
-					result = EntityUtils.toString(responseEntity, Charset.forName("UTF-8"));
-					Result res = JSON.parseObject(result, Result.class);
-					if (res.isOk()) {
-						JSONObject jo = (JSONObject) res.getData();
-						res.setData(JSON.toJavaObject(jo, FileInfo.class));
+				return httpClient.execute(httpPost, new HttpClientResponseHandler<Result>() {
+					@Override
+					public Result handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
+						int statusCode = response.getCode();
+						if (statusCode == 200) {
+							HttpEntity responseEntity = response.getEntity();
+							String result = EntityUtils.toString(responseEntity, Charset.forName("UTF-8"));
+							Result res = JSON.parseObject(result, Result.class);
+							if (res.isOk()) {
+								JSONObject jo = (JSONObject) res.getData();
+								res.setData(JSON.toJavaObject(jo, FileInfo.class));
+							}
+							return res;
+						} else {
+							return Result.error("Upload resource failed,response status " + statusCode);
+						}
 					}
-					return res;
-				} else {
-					return Result.error("Upload resource failed,response status " + statusCode);
-				}
+				});// 执行提交
 			} finally {
 				if (httpClient != null) {
 					httpClient.close();
@@ -189,31 +233,36 @@ public class FsClient extends Service {
 	 * @param fileId the file id
 	 * @return file info 属性
 	 */
-	public FileInfo getFileInfo(String fileId) throws Exception {
+	public FileInfo getFileInfo(Long fileId) throws Exception {
 		try {
 			if (!isRunning()) {
 				throw new BaseRuntimeException("File storage client is not running.");
 			}
 			CloseableHttpClient httpClient = createHttpClient();
 			// 创建自定义的httpclient对象
-			String result = "";
 			try {
 				HttpGet get = new HttpGet(baseUrl + "/" + fileId + "/metadata");
-				HttpResponse response = httpClient.execute(get);// 执行提交
-				int statusCode = response.getStatusLine().getStatusCode();
-				if (statusCode == 200) {
-					HttpEntity responseEntity = response.getEntity();
-					result = EntityUtils.toString(responseEntity, Charset.forName("UTF-8"));
-					Result res = JSON.parseObject(result, Result.class);
-					if (res.isOk()) {
-						JSONObject jo = (JSONObject) res.getData();
-						return JSON.toJavaObject(jo, FileInfo.class);
-					} else {
-						throw new BaseRuntimeException("Get file metadata failed,message:" + res.getMsg());
+				initHeaders(get);
+				return httpClient.execute(get, new HttpClientResponseHandler<FileInfo>() {
+					@Override
+					public FileInfo handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
+						int statusCode = response.getCode();
+						if (statusCode == 200) {
+							HttpEntity responseEntity = response.getEntity();
+							String result = EntityUtils.toString(responseEntity, Charset.forName("UTF-8"));
+							Result res = JSON.parseObject(result, Result.class);
+							if (res.isOk()) {
+								JSONObject jo = (JSONObject) res.getData();
+								return JSON.toJavaObject(jo, FileInfo.class);
+							} else {
+								throw new BaseRuntimeException("Get file metadata failed,message:" + res.getMsg());
+							}
+						} else {
+							throw new BaseRuntimeException("Get file metadata failed,response status " + statusCode);
+						}
 					}
-				} else {
-					throw new BaseRuntimeException("Get file metadata failed,response status " + statusCode);
-				}
+				});
+
 			} finally {
 				if (httpClient != null) {
 					httpClient.close();
@@ -233,7 +282,7 @@ public class FsClient extends Service {
 	 * @param accSecret   the acc secret
 	 * @throws Exception the exception
 	 */
-	public void downloadIntoResponse(String fileId, HttpServletResponse httpReponse) throws Exception {
+	public void downloadIntoResponse(Long fileId, HttpServletResponse httpReponse) throws Exception {
 		downloadIntoResponse(fileId, baseUrl + "/" + fileId, httpReponse);
 	}
 
@@ -246,7 +295,7 @@ public class FsClient extends Service {
 	 * @param accSecret   the acc secret
 	 * @throws Exception the exception
 	 */
-	public void downloadAttachmentIntoResponse(String fileId, HttpServletResponse httpReponse) throws Exception {
+	public void downloadAttachmentIntoResponse(Long fileId, HttpServletResponse httpReponse) throws Exception {
 		downloadIntoResponse(fileId, baseUrl + "/" + fileId + "/attachments", httpReponse);
 	}
 
@@ -259,7 +308,7 @@ public class FsClient extends Service {
 	 * @param httpReponse the http reponse
 	 * @throws Exception the exception
 	 */
-	public void downloadThumbnailIntoResponse(String fileId, int width, int height, HttpServletResponse httpReponse) throws Exception {
+	public void downloadThumbnailIntoResponse(Long fileId, int width, int height, HttpServletResponse httpReponse) throws Exception {
 		downloadIntoResponse(fileId, baseUrl + "/" + fileId + "/thumbnails/" + width + "/" + height, httpReponse);
 	}
 
@@ -272,7 +321,7 @@ public class FsClient extends Service {
 	 * @param httpReponse the http reponse
 	 * @throws Exception the exception
 	 */
-	public void downloadThumbnailAttachmentIntoResponse(String fileId, int width, int height, HttpServletResponse httpReponse) throws Exception {
+	public void downloadThumbnailAttachmentIntoResponse(Long fileId, int width, int height, HttpServletResponse httpReponse) throws Exception {
 		downloadIntoResponse(fileId, baseUrl + "/" + fileId + "/thumbnails/" + width + "/" + height + "/attachments", httpReponse);
 	}
 
@@ -285,32 +334,39 @@ public class FsClient extends Service {
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyManagementException
 	 */
-	public void downloadIntoResponse(String fileId, String url, HttpServletResponse httpReponse) throws Exception {
+	public void downloadIntoResponse(Long fileId, String url, HttpServletResponse httpReponse) throws Exception {
 		if (!isRunning()) {
 			throw new BaseRuntimeException("File storage client is not running.");
 		}
 		CloseableHttpClient httpClient = createHttpClient();
 		try {
 			HttpGet get = new HttpGet(url);
-			HttpResponse response = httpClient.execute(get);// 执行提交
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				httpReponse.setContentLength((int) entity.getContentLength());
-				Header[] headers = response.getAllHeaders();
-				if (headers != null) {
-					for (Header h : headers) {
-						httpReponse.addHeader(h.getName(), h.getValue());
+			initHeaders(get);
+
+			httpClient.execute(get, new HttpClientResponseHandler<Object>() {
+				@Override
+				public Object handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
+					int statusCode = response.getCode();
+					if (statusCode == 200) {
+						HttpEntity entity = response.getEntity();
+						httpReponse.setContentLength((int) entity.getContentLength());
+						Header[] headers = response.getHeaders();
+						if (headers != null) {
+							for (Header h : headers) {
+								httpReponse.addHeader(h.getName(), h.getValue());
+							}
+						}
+						try (InputStream in = entity.getContent()) {
+							inputStreamToOutputStream(in, httpReponse.getOutputStream());
+						}
+					} else {
+						httpReponse.setStatus(statusCode);
+						httpReponse.getWriter().print(Result.error("Download resource failed,code[" + statusCode + "].").toJson());
 					}
+					return null;
 				}
-				try (InputStream in = entity.getContent()) {
-					inputStreamToOutputStream(in, httpReponse.getOutputStream());
-				}
-			} else {
-				httpReponse.setStatus(statusCode);
-				httpReponse.getWriter().print(Result.error("Download resource failed,code[" + statusCode + "].").toJson());
-				return;
-			}
+			});
+
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -328,23 +384,29 @@ public class FsClient extends Service {
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyManagementException
 	 */
-	public void downloadIntoOutputStream(String fileId, OutputStream out) throws Exception {
+	public void downloadIntoOutputStream(Long fileId, OutputStream out) throws Exception {
 		if (!isRunning()) {
 			throw new BaseRuntimeException("File storage client is not running.");
 		}
 		CloseableHttpClient httpClient = createHttpClient();
 		try {
 			HttpGet get = new HttpGet(baseUrl + "/" + fileId);
-			HttpResponse response = httpClient.execute(get);// 执行提交
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				try (InputStream in = entity.getContent()) {
-					inputStreamToOutputStream(in, out);
+			initHeaders(get);
+			httpClient.execute(get, new HttpClientResponseHandler<Object>() {
+				@Override
+				public Object handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
+					int statusCode = response.getCode();
+					if (statusCode == 200) {
+						HttpEntity entity = response.getEntity();
+						try (InputStream in = entity.getContent()) {
+							inputStreamToOutputStream(in, out);
+						}
+					} else {
+						throw new BaseRuntimeException("Download file failed,response status " + statusCode);
+					}
+					return null;
 				}
-			} else {
-				throw new BaseRuntimeException("Download file failed,response status " + statusCode);
-			}
+			});
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -358,7 +420,7 @@ public class FsClient extends Service {
 	/**
 	 * 下载文件
 	 */
-	public void downloadFileIntoResponse(String fileId, String fileName, HttpServletResponse httpReponse) throws Exception {
+	public void downloadFileIntoResponse(Long fileId, String fileName, HttpServletResponse httpReponse) throws Exception {
 		if (!isRunning()) {
 			throw new BaseRuntimeException("File storage client is not running.");
 		}
@@ -366,29 +428,35 @@ public class FsClient extends Service {
 		CloseableHttpClient httpClient = createHttpClient();
 		try {
 			HttpGet get = new HttpGet(url);
-			HttpResponse response = httpClient.execute(get);// 执行提交
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				httpReponse.setContentLength((int) entity.getContentLength());
-				Header[] headers = response.getAllHeaders();
-				if (headers != null) {
-					for (Header h : headers) {
-						httpReponse.addHeader(h.getName(), h.getValue());
-					}
-				}
+			initHeaders(get);
+			httpClient.execute(get, new HttpClientResponseHandler<Object>() {
+				@Override
+				public Object handleResponse(ClassicHttpResponse response) throws HttpException, IOException {
+					int statusCode = response.getCode();
+					if (statusCode == 200) {
+						HttpEntity entity = response.getEntity();
+						httpReponse.setContentLength((int) entity.getContentLength());
+						Header[] headers = response.getHeaders();
+						if (headers != null) {
+							for (Header h : headers) {
+								httpReponse.addHeader(h.getName(), h.getValue());
+							}
+						}
 
-				//处理中文文件名
-				String downloadFileName = URLEncoder.encode(fileName, "UTF-8");
-				httpReponse.setHeader("Content-Disposition", "attachment;filename=" + downloadFileName);
-				try (InputStream in = entity.getContent()) {
-					inputStreamToOutputStream(in, httpReponse.getOutputStream());
+						//处理中文文件名
+						String downloadFileName = URLEncoder.encode(fileName, "UTF-8");
+						httpReponse.setHeader("Content-Disposition", "attachment;filename=" + downloadFileName);
+						try (InputStream in = entity.getContent()) {
+							inputStreamToOutputStream(in, httpReponse.getOutputStream());
+						}
+					} else {
+						httpReponse.setStatus(statusCode);
+						httpReponse.getWriter().print(Result.error("Download resource failed,code[" + statusCode + "].").toJson());
+					}
+					return null;
 				}
-			} else {
-				httpReponse.setStatus(statusCode);
-				httpReponse.getWriter().print(Result.error("Download resource failed,code[" + statusCode + "].").toJson());
-				return;
-			}
+			});
+
 		} catch (Exception e) {
 			throw e;
 		} finally {
@@ -402,12 +470,11 @@ public class FsClient extends Service {
 	private CloseableHttpClient createHttpClient() throws KeyManagementException, NoSuchAlgorithmException {
 		// 采用绕过验证的方式处理https请求
 		SSLContext sslcontext = createIgnoreVerifySSL();
-
 		// 设置协议http和https对应的处理socket链接工厂的对象
-		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create().register("http", PlainConnectionSocketFactory.INSTANCE).register("https", new SSLConnectionSocketFactory(sslcontext)).build();
+		Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory> create()
+				.register("http", PlainConnectionSocketFactory.INSTANCE)
+				.register("https", new SSLConnectionSocketFactory(sslcontext)).build();
 		PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-		HttpClients.custom().setConnectionManager(connManager);
-
 		// 创建自定义的httpclient对象
 		return HttpClients.custom().setConnectionManager(connManager).build();
 	}

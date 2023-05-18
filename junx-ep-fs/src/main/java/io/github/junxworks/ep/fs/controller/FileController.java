@@ -24,9 +24,6 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,18 +37,23 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import io.github.junxworks.ep.core.Result;
+import io.github.junxworks.ep.core.fs.FsMode;
 import io.github.junxworks.ep.fs.config.FSConfig;
 import io.github.junxworks.ep.fs.constants.ContentType;
 import io.github.junxworks.ep.fs.driver.FileRepository;
+import io.github.junxworks.ep.fs.driver.FileRepositoryFactory;
 import io.github.junxworks.ep.fs.entity.EpSFile;
 import io.github.junxworks.ep.fs.entity.EpSFileThumb;
 import io.github.junxworks.ep.fs.service.impl.FileServiceImpl;
+import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 import io.github.junxworks.junx.core.util.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import net.coobird.thumbnailator.Thumbnails;
 
 /**
- * {类的详细说明}.
+ * 文件处理controller
  *
  * @ClassName:  FileController
  * @author: Michael
@@ -66,7 +68,9 @@ public class FileController {
 	private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
 	/** 常量 ATTACHMENT. */
-	private static final String ATTACHMENT = "file";
+	private static final String FILE = "file";
+
+	private static final String FILENAME = "filename";
 
 	/** 常量 FILE_GROUP. */
 	private static final String FILE_GROUP = "group";
@@ -74,9 +78,11 @@ public class FileController {
 	/** 常量 ORG_NO. */
 	private static final String ORG_NO = "orgNo";
 
+	private static final String MODE = "mode";
+
 	/** fr. */
 	@Autowired
-	private FileRepository fr;
+	private FileRepository defaultFr;
 
 	/** file service. */
 	@Autowired
@@ -89,6 +95,9 @@ public class FileController {
 	/** 常量 DEFAULT_TYPE. */
 	private static final String DEFAULT_TYPE = "application/octet-stream";
 
+	@Autowired
+	private FileRepositoryFactory fileRepositoryFactory;
+
 	/**
 	 * 文件上传，支持多文件同时上传，返回的元数据数组顺序同文件传入顺序
 	 *
@@ -97,7 +106,7 @@ public class FileController {
 	 */
 	@PostMapping(consumes = "multipart/form-data", produces = "application/json; charset=UTF-8")
 	public Result multiUpload(MultipartHttpServletRequest multiReq) {
-		List<MultipartFile> fs = multiReq.getFiles(ATTACHMENT);
+		List<MultipartFile> fs = multiReq.getFiles(FILE);
 		if (fs == null || fs.isEmpty()) {
 			return Result.error("Empty file.");
 		}
@@ -110,8 +119,21 @@ public class FileController {
 		}
 		String orgNo = multiReq.getParameter(ORG_NO);
 		String fileGroup = multiReq.getParameter(FILE_GROUP);
+		String mode = multiReq.getParameter(MODE);
+		String fileName = multiReq.getParameter(FILENAME);
 		String storageId = null;
+		FileRepository fr = null;
 		try (InputStream in = file.getInputStream()) {
+			if (StringUtils.isNull(mode)) {
+				fr = this.defaultFr;
+			} else {
+				FsMode repo = FsMode.getEnum(mode);
+				if (repo == null) {
+					throw new BaseRuntimeException("未定义的存储驱动类型：" + mode);
+				} else {
+					fr = fileRepositoryFactory.getRepository(repo.getDriver(), fsConfig);
+				}
+			}
 			storageId = fr.storeFile(in);
 		} catch (Exception e) {
 			logger.error("Store file failed.", e);
@@ -121,15 +143,18 @@ public class FileController {
 		sysFile.setStorageId(storageId);
 		sysFile.setStorageDriver(fr.getClass().getCanonicalName());
 		sysFile.setCreateTime(new Date());
-		String fileName = file.getOriginalFilename();
+		if (StringUtils.isNull(fileName)) {
+			fileName = file.getOriginalFilename();
+		}
 		String extName = null;
-		int idx = fileName.lastIndexOf(".");
+		String originalName = file.getOriginalFilename();
+		int idx = originalName.lastIndexOf(".");
 		if (idx > 0) {
-			extName = fileName.substring(idx + 1);
+			extName = originalName.substring(idx + 1);
 			sysFile.setFileExt(extName);
 		}
-		sysFile.setFileName(file.getName());
-		sysFile.setOraginalName(file.getOriginalFilename());
+		sysFile.setFileName(fileName);
+		sysFile.setOraginalName(originalName);
 		sysFile.setFileSize((int) file.getSize());
 		sysFile.setOrgNo(orgNo);
 		sysFile.setFileGroup(fileGroup);
@@ -145,7 +170,7 @@ public class FileController {
 	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}/attachments")
-	public void downloadAttachment(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void downloadAttachment(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		download(id, ContentType.ATTACHMENT.getValue(), request, response);
 	}
 
@@ -157,7 +182,7 @@ public class FileController {
 	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}")
-	public void downloadInline(@PathVariable("id") String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void downloadInline(@PathVariable("id") Long id, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		download(id, ContentType.INLINE.getValue(), request, response);
 	}
 
@@ -169,7 +194,7 @@ public class FileController {
 	 * @param response the response
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void download(@PathVariable("id") String id, String type, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private void download(@PathVariable("id") Long id, String type, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		EpSFile sysFile = fileService.findById(id);
 		if (sysFile == null) {
 			response.setStatus(HttpStatus.SC_NOT_FOUND);
@@ -190,8 +215,11 @@ public class FileController {
 			response.addHeader("Content-Disposition", type + ";filename=" + formFileName);
 			String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(sysFile.getFileExt()), DEFAULT_TYPE);
 			response.setContentType(contentType);
-			response.addHeader("Content-Length", "" + sysFile.getFileSize());
-			fr.fetchFileIntoStream(sysFile.getStorageId(), outStream);
+			if (fsConfig.isResponseHeaderWithContentLength()) {
+				response.addHeader("Content-Length", "" + sysFile.getFileSize());
+			}
+			FileRepository repo = fileRepositoryFactory.getRepository(sysFile.getStorageDriver(), fsConfig);
+			repo.fetchFileIntoStream(sysFile.getStorageId(), outStream);
 			outStream.flush();
 		} catch (Exception e) {
 			response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
@@ -206,7 +234,7 @@ public class FileController {
 	 * @return the result
 	 */
 	@GetMapping("/{id}/metadata")
-	public Result info(@PathVariable String id) {
+	public Result info(@PathVariable Long id) {
 		EpSFile fi = fileService.findById(id);
 		if (fi != null) {
 			return Result.ok(fi);
@@ -224,7 +252,7 @@ public class FileController {
 	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}/thumbnails/{width}/{height}")
-	public void imageThumbnail(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
+	public void imageThumbnail(@PathVariable Long id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
 		imageThumbnail(id, width, height, "inline", response);
 	}
 
@@ -238,7 +266,7 @@ public class FileController {
 	 * @throws Exception the exception
 	 */
 	@GetMapping("/{id}/thumbnails/{width}/{height}/attachments")
-	public void imageThumbnailAttachment(@PathVariable String id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
+	public void imageThumbnailAttachment(@PathVariable Long id, @PathVariable Integer width, @PathVariable Integer height, HttpServletResponse response) throws Exception {
 		imageThumbnail(id, width, height, "attachment", response);
 	}
 
@@ -252,15 +280,17 @@ public class FileController {
 	 * @param response the response
 	 * @throws Exception the exception
 	 */
-	private void imageThumbnail(String id, Integer width, Integer height, String type, HttpServletResponse response) throws Exception {
+	private void imageThumbnail(Long id, Integer width, Integer height, String type, HttpServletResponse response) throws Exception {
 		EpSFile fi = fileService.findById(id);
 		if (fi == null) {
 			response.setStatus(HttpStatus.SC_NOT_FOUND);
 			response.getWriter().print(Result.error("File does't exists.").toJson());
 			return;
 		}
-		if (!readFromCache(fi, width, height, type, response))
-			writeThumbnail(fi, fr.fetchFileAsStream(fi.getStorageId()), width, height, type, response);
+		if (!readFromCache(fi, width, height, type, response)) {
+			FileRepository repo = fileRepositoryFactory.getRepository(fi.getStorageDriver(), fsConfig);
+			writeThumbnail(fi, repo.fetchFileAsStream(fi.getStorageId()), width, height, type, response);
+		}
 	}
 
 	/**
@@ -279,7 +309,8 @@ public class FileController {
 		if (t == null) {
 			return false;
 		}
-		byte[] data = fr.fetchFileBytes(t.getStorageId());
+		FileRepository repo = fileRepositoryFactory.getRepository(file.getStorageDriver(), fsConfig);
+		byte[] data = repo.fetchFileBytes(t.getStorageId());
 		response.reset();
 		response.addHeader("Content-Disposition", type + ";filename=thumbnail." + t.getFileExt());
 		String contentType = StringUtils.defaultString(fsConfig.getMimeTypes().get(t.getFileExt()), DEFAULT_TYPE);
@@ -318,14 +349,14 @@ public class FileController {
 			} catch (Throwable e) {
 				logger.error("Exception occurred when response thumbnail data.\"{}\"", ExceptionUtils.getCause(e));
 			} finally {
-				String token = fr.storeFile(data);
+				String token = defaultFr.storeFile(data);
 				EpSFileThumb t = new EpSFileThumb();
 				t.setFileExt(file.getFileExt());
 				t.setFileId(file.getId());
 				t.setFileSize(Long.valueOf(data.length));
 				t.setHeight(height);
 				t.setWidth(width);
-				t.setStorageDriver(fr.getClass().getCanonicalName());
+				t.setStorageDriver(defaultFr.getClass().getCanonicalName());
 				t.setStorageId(token);
 				fileService.saveSysFileThumb(t);
 			}

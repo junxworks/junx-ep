@@ -20,8 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.servlet.Filter;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -35,7 +33,6 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -47,6 +44,7 @@ import org.springframework.core.annotation.Order;
 import com.google.common.collect.Maps;
 
 import io.github.junxworks.ep.auth.cache.EPShiroRedisCacheManager;
+import jakarta.servlet.Filter;
 
 /**
  * {类的详细说明}.
@@ -74,10 +72,10 @@ public class EPShiroConfiguration {
 	 * @return the EP shiro service
 	 */
 	@Bean
-	public EPShiroService shiroService() {
+	public EPShiroService epShiroService() {
 		return new EPShiroService();
 	}
-
+	
 	/**
 	 * Shiro filter.
 	 *
@@ -86,11 +84,13 @@ public class EPShiroConfiguration {
 	 * @return the shiro filter factory bean
 	 */
 	@Bean
-	public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager, EPShiroConfig shiroConfig) {
+	@ConditionalOnMissingBean(ShiroFilterFactoryBean.class)
+	public EpShiroFilterFactoryBean epShiroFilter(SecurityManager securityManager, EPShiroConfig shiroConfig) {
 		EPTokenAuthenticatingFilter authenticatingFilter = new EPTokenAuthenticatingFilter();
 		authenticatingFilter.setLoginUrl(shiroConfig.getLoginUrl());
 		authenticatingFilter.setConfig(shiroConfig);
-		ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
+		authenticatingFilter.setSimpleAccounts(shiroConfig.getSimpleAccounts());
+		EpShiroFilterFactoryBean shiroFilter = new EpShiroFilterFactoryBean();
 		shiroFilter.setSecurityManager(securityManager);
 		Map<String, Filter> filters = new HashMap<>();
 		filters.put("ep", authenticatingFilter);
@@ -121,7 +121,8 @@ public class EPShiroConfiguration {
 	 * @return the EP shiro realm
 	 */
 	@Bean
-	public EPShiroRealm shiroRealm(Cache<Object, AuthenticationInfo> authenticationCache, Cache<Object, AuthorizationInfo> authorizationCache, EPShiroConfig shiroConfig) {
+	@ConditionalOnMissingBean(AuthorizingRealm.class)
+	public EPShiroRealm epShiroRealm(Cache<Object, AuthenticationInfo> authenticationCache, Cache<Object, AuthorizationInfo> authorizationCache, EPShiroConfig shiroConfig) {
 		EPShiroRealm shiroRealm = new EPShiroRealm();
 		shiroRealm.setAuthenticationCachingEnabled(shiroConfig.isAuthenticationCachingEnabled());//认证
 		shiroRealm.setAuthenticationCache(authenticationCache);
@@ -139,7 +140,7 @@ public class EPShiroConfiguration {
 	 */
 	@Bean
 	@ConditionalOnMissingBean(CacheManager.class)
-	public CacheManager cacheManager() {
+	public CacheManager epCacheManager() {
 		return new EPShiroRedisCacheManager();
 	}
 
@@ -151,12 +152,14 @@ public class EPShiroConfiguration {
 	 * @return the session manager
 	 */
 	@Bean
-	public SessionManager sessionManager(CacheManager cacheManager, EPShiroConfig config) {
-		DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+	@ConditionalOnMissingBean(SessionManager.class)
+	public SessionManager epSessionManager(CacheManager epCacheManager, EPShiroConfig config) {
+		EPWebSessionManager sessionManager = new EPWebSessionManager();
+		sessionManager.setHeaderTokenName(config.getHeaderTokenName());
 		sessionManager.setSessionValidationSchedulerEnabled(true); //定期检查session，如果是集中缓存，那么会从cachemanager中获取所有活动session过来检查，检查周期默认1小时1次
 		sessionManager.setSessionIdCookieEnabled(true);
 		sessionManager.setDeleteInvalidSessions(true); //删除过期session
-		sessionManager.setCacheManager(cacheManager); //设置缓存管理器
+		sessionManager.setCacheManager(epCacheManager); //设置缓存管理器
 		sessionManager.setSessionDAO(new EnterpriseCacheSessionDAO()); //设置sessiondao
 		sessionManager.setGlobalSessionTimeout(config.getGlobalSessionTimeout());
 		return sessionManager;
@@ -169,8 +172,8 @@ public class EPShiroConfiguration {
 	 * @return the cache
 	 */
 	@Bean
-	public Cache<Object, AuthenticationInfo> authenticationCache(CacheManager cacheManager) {
-		return cacheManager.getCache(AUTHENTICATION_CACHE);
+	public Cache<Object, AuthenticationInfo> epAuthenticationCache(CacheManager epCacheManager) {
+		return epCacheManager.getCache(AUTHENTICATION_CACHE);
 	}
 
 	/**
@@ -180,8 +183,8 @@ public class EPShiroConfiguration {
 	 * @return the cache
 	 */
 	@Bean
-	public Cache<Object, AuthorizationInfo> authorizationCache(CacheManager cacheManager) {
-		return cacheManager.getCache(AUTHORIZATION_CACHE);
+	public Cache<Object, AuthorizationInfo> epAuthorizationCache(CacheManager epCacheManager) {
+		return epCacheManager.getCache(AUTHORIZATION_CACHE);
 	}
 
 	/**
@@ -195,11 +198,12 @@ public class EPShiroConfiguration {
 	 * @return the security manager
 	 */
 	@Bean
-	public SecurityManager securityManager(AuthorizingRealm shiroRealm, SessionManager sessionManager, CacheManager cacheManager) {
+	@ConditionalOnMissingBean(SecurityManager.class)
+	public SecurityManager epSecurityManager(AuthorizingRealm epShiroRealm, SessionManager epSessionManager, CacheManager epCacheManager) {
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-		securityManager.setRealm(shiroRealm);
-		securityManager.setSessionManager(sessionManager);
-		securityManager.setCacheManager(cacheManager);
+		securityManager.setRealm(epShiroRealm);
+		securityManager.setSessionManager(epSessionManager);
+		securityManager.setCacheManager(epCacheManager);
 		SecurityUtils.setSecurityManager(securityManager);
 		return securityManager;
 	}
@@ -210,7 +214,8 @@ public class EPShiroConfiguration {
 	 * @return the lifecycle bean post processor
 	 */
 	@Bean
-	public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+	@ConditionalOnMissingBean(LifecycleBeanPostProcessor.class)
+	public LifecycleBeanPostProcessor epLifecycleBeanPostProcessor() {
 		return new LifecycleBeanPostProcessor();
 	}
 
@@ -220,7 +225,8 @@ public class EPShiroConfiguration {
 	 * @return the default advisor auto proxy creator
 	 */
 	@Bean
-	public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+	@ConditionalOnMissingBean(DefaultAdvisorAutoProxyCreator.class)
+	public DefaultAdvisorAutoProxyCreator epDefaultAdvisorAutoProxyCreator() {
 		DefaultAdvisorAutoProxyCreator proxyCreator = new DefaultAdvisorAutoProxyCreator();
 		proxyCreator.setProxyTargetClass(true);
 		return proxyCreator;
@@ -233,7 +239,8 @@ public class EPShiroConfiguration {
 	 * @return the authorization attribute source advisor
 	 */
 	@Bean
-	public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+	@ConditionalOnMissingBean(AuthorizationAttributeSourceAdvisor.class)
+	public AuthorizationAttributeSourceAdvisor epAuthorizationAttributeSourceAdvisor(SecurityManager securityManager) {
 		AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
 		advisor.setSecurityManager(securityManager);
 		return advisor;

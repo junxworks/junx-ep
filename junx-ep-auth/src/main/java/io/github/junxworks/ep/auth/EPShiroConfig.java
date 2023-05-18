@@ -16,11 +16,15 @@
  */
 package io.github.junxworks.ep.auth;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import io.github.junxworks.ep.auth.simple.SimpleAccount;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -33,6 +37,9 @@ import com.google.common.collect.Maps;
  */
 @ConfigurationProperties(prefix = "junx.ep.auth.shiro")
 public class EPShiroConfig {
+
+	/** The header token name. */
+	private String headerTokenName = "_ht_";
 
 	/** global session timeout. */
 	private long globalSessionTimeout = 30 * 60 * 1000;
@@ -51,6 +58,16 @@ public class EPShiroConfig {
 
 	/** filters. */
 	private Map<String, String> filters = Maps.newLinkedHashMap();
+
+	private List<SimpleAccount> simpleAccounts = Lists.newArrayList();
+
+	public String getHeaderTokenName() {
+		return headerTokenName;
+	}
+
+	public void setHeaderTokenName(String headerTokenName) {
+		this.headerTokenName = headerTokenName;
+	}
 
 	public boolean isAuthenticationCachingEnabled() {
 		return authenticationCachingEnabled;
@@ -139,4 +156,13 @@ public class EPShiroConfig {
 	public void setLoginFailThreshold(int loginFailThreshold) {
 		this.loginFailThreshold = loginFailThreshold;
 	}
+
+	public List<SimpleAccount> getSimpleAccounts() {
+		return simpleAccounts;
+	}
+
+	public void setSimpleAccounts(List<SimpleAccount> simpleAccounts) {
+		this.simpleAccounts = simpleAccounts;
+	}
+
 }

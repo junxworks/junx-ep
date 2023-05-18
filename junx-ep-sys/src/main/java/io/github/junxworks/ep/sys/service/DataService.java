@@ -28,7 +28,7 @@ import java.util.Map;
  * @since:  v1.0
  */
 public interface DataService {
-	
+
 	/**
 	 * 返回 sql template 属性.
 	 *
@@ -46,5 +46,7 @@ public interface DataService {
 	 * @return data by SQL uid 属性
 	 * @throws Exception the exception
 	 */
-	List<Map<String, Object>> getDataBySQLUid(String uid, Map<String, String> cond)  throws Exception;
+	List<Map<String, Object>> getDataBySQLUid(String uid, Map<String, String> cond) throws Exception;
+
+	List<Map<String, Object>> getDataBySQL(String sql, Map<String, String> cond) throws Exception;
 }

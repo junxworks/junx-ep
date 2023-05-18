@@ -62,9 +62,10 @@ public class EPShiroRedisCache<K, V> extends EPBaseCache<K, V> {
 	 */
 	@Override
 	public V get(K key) throws CacheException {
-		Object value = redis.opsForValue().get(getCacheKey(key));
+		String k = getCacheKey(key).toString();
+		Object value = redis.opsForValue().get(k);
 		if (expire != NOT_EXPIRE) {
-			redis.expire(key.toString(), expire, TimeUnit.MILLISECONDS);
+			redis.expire(k, expire, TimeUnit.MILLISECONDS);
 		}
 		return value == null ? null : (V) value;
 	}
@@ -104,7 +105,8 @@ public class EPShiroRedisCache<K, V> extends EPBaseCache<K, V> {
 	@Override
 	public V remove(K key) throws CacheException {
 		V old = get(key);
-		redis.delete(getCacheKey(key).toString());
+		String k = getCacheKey(key).toString();
+		redis.delete(k);
 		return old;
 	}
 

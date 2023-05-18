@@ -37,6 +37,9 @@ public class FSConfig {
 	/** 文件服务器模式，local：本地,oss：阿里云OSS. */
 	private String mode;
 
+	/** 返回response的header中带入 ContentLength属性，如果有些文件发生过修改，可能会导致文件与数据库中大小不一致*/
+	private boolean responseHeaderWithContentLength = true;
+
 	/** 阿里云的OSS存储配置. */
 	private AliyunOssConfig oss = new AliyunOssConfig();
 
@@ -45,6 +48,14 @@ public class FSConfig {
 
 	/** mime types. */
 	private Map<String, String> mimeTypes = Maps.newHashMap();
+
+	public boolean isResponseHeaderWithContentLength() {
+		return responseHeaderWithContentLength;
+	}
+
+	public void setResponseHeaderWithContentLength(boolean responseHeaderWithContentLength) {
+		this.responseHeaderWithContentLength = responseHeaderWithContentLength;
+	}
 
 	public boolean isEnabled() {
 		return enabled;

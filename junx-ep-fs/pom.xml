@@ -3,14 +3,14 @@
   <parent>
     <groupId>io.github.junxworks</groupId>
     <artifactId>junx-ep</artifactId>
-    <version>1.1.2</version>
+    <version>2.0.1</version>
   </parent>
   <artifactId>junx-ep-fs</artifactId>
   <dependencies>
   	<dependency>
 	    <groupId>com.aliyun.oss</groupId>
 	    <artifactId>aliyun-sdk-oss</artifactId>
-	    <version>3.10.2</version>
+	    <version>3.16.2</version>
 	</dependency>
 	<dependency>
 	    <groupId>net.coobird</groupId>
@@ -26,25 +26,19 @@
 	    <artifactId>junx-ep-sys</artifactId>
 	</dependency>
 	<!-- ***********************************内部jar引入 end************************************** -->
-	<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-configuration-processor</artifactId>
-		<optional>true</optional>
-	</dependency>
 	 <dependency>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter</artifactId>
 	</dependency>
 	<dependency>
-	        <groupId>org.springframework.boot</groupId>
-	        <artifactId>spring-boot-starter-jdbc</artifactId>
-	        <exclusions>
-	        	<exclusion>
-	        		<groupId>org.springframework.boot</groupId>
-	        		<artifactId>spring-boot-starter-logging</artifactId>
-	        	</exclusion>
-	        </exclusions>
-		</dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-jdbc</artifactId>
+	</dependency>
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-configuration-processor</artifactId>
+		<optional>true</optional>
+	</dependency>
   </dependencies>
   <build>
 		<resources>

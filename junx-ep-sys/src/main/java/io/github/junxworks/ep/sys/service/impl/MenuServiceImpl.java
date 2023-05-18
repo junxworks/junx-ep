@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
@@ -37,7 +36,7 @@ import io.github.junxworks.ep.sys.dto.MenuDto;
 import io.github.junxworks.ep.sys.dto.MenuPageable;
 import io.github.junxworks.ep.sys.entity.EpSMenu;
 import io.github.junxworks.ep.sys.exception.DuplicateMenuMarkException;
-import io.github.junxworks.ep.sys.mapper.MenuMapper;
+import io.github.junxworks.ep.sys.mapper.EpMenuMapper;
 import io.github.junxworks.ep.sys.service.MenuService;
 import io.github.junxworks.ep.sys.vo.MenuInfoVo;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
@@ -45,14 +44,13 @@ import io.github.junxworks.ep.sys.vo.TreeSelectVo;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * 菜单服务实现
  *
  * @ClassName: MenuServiceImpl
  * @author: Michael
  * @date: 2020-7-19 12:17:47
  * @since: v1.0
  */
-@Service("JunxEPMenuService")
 public class MenuServiceImpl implements MenuService {
 
 	/** 常量 ROOT. */
@@ -60,7 +58,7 @@ public class MenuServiceImpl implements MenuService {
 
 	/** menu mapper. */
 	@Autowired
-	private MenuMapper menuMapper;
+	private EpMenuMapper menuMapper;
 
 	/**
 	 * 分页查询菜单信息
@@ -133,14 +131,20 @@ public class MenuServiceImpl implements MenuService {
 	 */
 	@Override
 	public int saveMenuInfo(MenuDto menuInfo) {
-		if (StringUtils.notNull(menuInfo.getMark())) {
-			if (menuMapper.queryCountByMenuMark(menuInfo.getMark()) > 0) {
+		String mark = menuInfo.getMark();
+		if (StringUtils.notNull(mark)) {
+			menuInfo.setMark(mark.trim());
+			EpSMenu exists = menuMapper.queryMenuItemByMark(mark);
+			if (exists != null && exists.getId() != menuInfo.getId()) {
 				throw new DuplicateMenuMarkException("重复的菜单标识");
 			}
 		}
 		EpSMenu menu = new EpSMenu();
 		BeanUtils.copyProperties(menuInfo, menu);
 		UserModel user = (UserModel) SecurityUtils.getSubject().getPrincipal();
+		if (StringUtils.notNull(menu.getIcon())) {
+			menu.setIcon(menu.getIcon().trim());
+		}
 		if (menuInfo.getId() == null) {
 			if (menu.getParentId() == null) {
 				menu.setParentId(0L);
@@ -210,7 +214,10 @@ public class MenuServiceImpl implements MenuService {
 		Map<String, TreeSelectVo> menuMap = treeNodes.stream().collect(Collectors.toMap(TreeSelectVo::getId, v -> v));
 		treeNodes.forEach(v -> {
 			if (v.getParentId() != null && !ROOT.equals(v.getParentId())) {
-				menuMap.get(v.getParentId()).addChild(v);
+				TreeSelectVo p = menuMap.get(v.getParentId());
+				if (p != null) {
+					p.addChild(v);
+				}
 			}
 		});
 		return treeNodes.stream().filter(t -> {

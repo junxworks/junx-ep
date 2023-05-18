@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {类的详细说明}.
+ * 表注解
  *
  * @ClassName:  Table
  * @author: Michael
@@ -34,14 +34,14 @@ import java.lang.annotation.Target;
 public @interface Table {
 
 	/**
-	 * Table name.
+	 * 表名
 	 *
 	 * @return the string
 	 */
 	String tableName();
 
 	/**
-	 * Table comment.
+	 * 表注释
 	 *
 	 * @return the string
 	 */

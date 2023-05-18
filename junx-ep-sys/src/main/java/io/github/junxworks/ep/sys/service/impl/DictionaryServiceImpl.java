@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.core.exception.BusinessException;
@@ -32,24 +34,23 @@ import io.github.junxworks.ep.sys.constants.RecordStatus;
 import io.github.junxworks.ep.sys.dto.DictConditionDto;
 import io.github.junxworks.ep.sys.dto.SDictDto;
 import io.github.junxworks.ep.sys.entity.EpSDict;
-import io.github.junxworks.ep.sys.mapper.DictMapper;
+import io.github.junxworks.ep.sys.mapper.EpDictMapper;
 import io.github.junxworks.ep.sys.service.DictionaryService;
 import io.github.junxworks.ep.sys.vo.DictVo;
 
 /**
- * {类的详细说明}.
+ * 数据字典服务类实现
  *
  * @ClassName:  DictionaryServiceImpl
  * @author: Michael
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-@Service("JunxEPDictionaryService")
 public class DictionaryServiceImpl implements DictionaryService {
 
 	/** dict mapper. */
 	@Autowired
-	private DictMapper dictMapper;
+	private EpDictMapper dictMapper;
 
 	/**
 	 * 返回 dictionary list by page 属性.
@@ -137,4 +138,23 @@ public class DictionaryServiceImpl implements DictionaryService {
 		}
 	}
 
+	@Override
+	public Map<String, List<DictVo>> getAllDictionaries() {
+		DictConditionDto condition = new DictConditionDto();
+		condition.setStatus(RecordStatus.NORMAL.getValue());
+		List<DictVo> vos = dictMapper.selectByCondition(condition);
+		Map<String, List<DictVo>> res = Maps.newHashMap();
+		DictVo lastVo = null;
+		List<DictVo> subDict = null;
+		for (DictVo vo : vos) {
+			String parentCode = vo.getParentCode();
+			if (lastVo == null || !lastVo.getParentCode().equals(parentCode)) {
+				subDict = Lists.newArrayList();
+				res.put(parentCode, subDict);
+			}
+			subDict.add(vo);
+			lastVo = vo;
+		}
+		return res;
+	}
 }

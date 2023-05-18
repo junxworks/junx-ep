@@ -21,7 +21,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 /**
- * {类的详细说明}.
+ * 树形结构对象
  *
  * @ClassName:  TreeNodeVo
  * @author: Michael
@@ -43,7 +43,7 @@ public class TreeNodeVo {
 	private String field;
 
 	/** children. */
-	private List<Object> children = Lists.newArrayList();
+	private List<Object> children;
 
 	/** href. */
 	private String href;
@@ -135,6 +135,9 @@ public class TreeNodeVo {
 	 * @param child the child
 	 */
 	public void addChildren(Object child) {
+		if (children == null) {
+			children = Lists.newArrayList();
+		}
 		this.children.add(child);
 	}
 }

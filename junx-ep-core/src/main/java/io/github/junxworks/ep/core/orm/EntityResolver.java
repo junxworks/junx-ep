@@ -41,7 +41,7 @@ import net.vidageek.mirror.list.dsl.MirrorList;
  * @since:  v1.0
  */
 public class EntityResolver {
-	
+
 	/** 常量 ID. */
 	public static final String ID = "id";
 
@@ -77,20 +77,19 @@ public class EntityResolver {
 					continue;
 				}
 				String javaFieldName = f.getName();
-				PrimaryKey pk = f.getAnnotation(PrimaryKey.class);
-				if (pk != null) {
-					ed.setPkName(javaFieldName);
-				}
 				if (ID.equalsIgnoreCase(javaFieldName)) {
 					hasID = true;
 					idName = f.getName();
 				}
 				Column column = f.getAnnotation(Column.class);
-
 				if (column != null) {
 					fieldName = column.name();
 				} else {
 					fieldName = javaFieldName;
+				}
+				PrimaryKey pk = f.getAnnotation(PrimaryKey.class);
+				if (pk != null) {
+					ed.setPkName(fieldName);
 				}
 				fields.add(fieldName);
 				ed.addField(fieldName, f);

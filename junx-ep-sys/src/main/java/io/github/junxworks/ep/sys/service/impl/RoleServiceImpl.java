@@ -18,11 +18,12 @@ package io.github.junxworks.ep.sys.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
@@ -37,31 +38,30 @@ import io.github.junxworks.ep.sys.dto.RoleConditionDto;
 import io.github.junxworks.ep.sys.dto.RoleInfoDto;
 import io.github.junxworks.ep.sys.entity.EpSRole;
 import io.github.junxworks.ep.sys.entity.EpSRoleMenu;
-import io.github.junxworks.ep.sys.mapper.RoleMapper;
-import io.github.junxworks.ep.sys.mapper.RoleMenuMapper;
+import io.github.junxworks.ep.sys.mapper.EpRoleMapper;
+import io.github.junxworks.ep.sys.mapper.EpRoleMenuMapper;
 import io.github.junxworks.ep.sys.service.RoleService;
 import io.github.junxworks.ep.sys.vo.RoleInfoVo;
 import io.github.junxworks.ep.sys.vo.UserInfoVo;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * 角色服务实现类
  *
  * @ClassName:  RoleServiceImpl
  * @author: Michael
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-@Service("JunxEPRoleService")
 public class RoleServiceImpl implements RoleService {
 
 	/** role mapper. */
 	@Autowired
-	private RoleMapper roleMapper;
+	private EpRoleMapper roleMapper;
 
 	/** role menu mapper. */
 	@Autowired
-	private RoleMenuMapper roleMenuMapper;
+	private EpRoleMenuMapper roleMenuMapper;
 
 	/**
 	 * Find role list by page.
@@ -101,8 +101,15 @@ public class RoleServiceImpl implements RoleService {
 		if (StringUtils.notNull(dto.getRoleTag())) {
 			tagRole = roleMapper.selectByTag(dto.getRoleTag());
 		}
-		JSONArray menuInfoVoList = JSON.parseArray(dto.getMenuInfoList());
-		List<Long> menuIdList = this.getMenuIdList(menuInfoVoList);
+		List<Long> menuIdList = Lists.newArrayList();
+		if (StringUtils.notNull(dto.getMenuInfoList())) {
+			JSONArray menuInfoVoList = JSON.parseArray(dto.getMenuInfoList());
+			menuIdList = this.getMenuIdList(menuInfoVoList);
+		} else if (StringUtils.notNull(dto.getSelectedMenus())) {
+			menuIdList = Lists.newArrayList(dto.getSelectedMenus().split(",")).stream().flatMap(f -> {
+				return Stream.of(Long.valueOf(f));
+			}).collect(Collectors.toList());
+		}
 		if (role.getId() == null) {//新增
 			if (nameRole != null) {
 				throw new BusinessException("角色名：" + dto.getRoleName() + ",已存在");

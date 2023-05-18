@@ -16,16 +16,19 @@
  */
 package io.github.junxworks.ep.qlexp;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.ql.util.express.ExpressRunner;
 
 import io.github.junxworks.ep.qlexp.functions.DateFunc;
+import io.github.junxworks.ep.qlexp.functions.ClassFunctionDefinition;
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 
 /**
- * {类的详细说明}.
+ * 规则引擎builder
  *
  * @ClassName:  RuleEngineBuilder
  * @author: Michael
@@ -48,6 +51,9 @@ public class RuleEngineBuilder {
 
 	/** inner keywords. */
 	private static Map<String, String> innerKeywords = Maps.newHashMap();
+
+	/** 自定义函数. */
+	private List<ClassFunctionDefinition> customizedClassFunctions = new ArrayList<>();
 
 	static {
 		/*默认中文关键字*/
@@ -129,6 +135,20 @@ public class RuleEngineBuilder {
 		return this;
 	}
 
+	public List<ClassFunctionDefinition> getCustomizedClassFunctions() {
+		return customizedClassFunctions;
+	}
+
+	public RuleEngineBuilder setCustomizedClassFunctions(List<ClassFunctionDefinition> customizedClassFunctions) {
+		this.customizedClassFunctions = customizedClassFunctions;
+		return this;
+	}
+
+	public RuleEngineBuilder addFunction(ClassFunctionDefinition functionDef) {
+		this.customizedClassFunctions.add(functionDef);
+		return this;
+	}
+
 	/**
 	 * Builds the.
 	 *
@@ -180,6 +200,16 @@ public class RuleEngineBuilder {
 		engine.setOriginalEngine(runner);
 		/*内置函数初始化*/
 		initInnerFunction(engine);
+		/*自定义函数初始化，允许覆盖内置函数*/
+		if (!customizedClassFunctions.isEmpty()) {
+			customizedClassFunctions.forEach(f -> {
+				try {
+					runner.addFunctionOfClassMethod(f.getName(), f.getaClassName(), f.getaFunctionName(), f.getaParameterClassTypes(), f.getaParameterDesc(), f.getaParameterAnnotation(), f.getErrorInfo());
+				} catch (Exception e) {
+					throw new BaseRuntimeException(e);
+				}
+			});
+		}
 		return engine;
 	}
 
@@ -190,13 +220,10 @@ public class RuleEngineBuilder {
 	 * @return the rule engine
 	 * @throws Exception the exception
 	 */
-	public RuleEngine initInnerFunction(RuleEngine engine) throws Exception {
+	private RuleEngine initInnerFunction(RuleEngine engine) throws Exception {
 		ExpressRunner runner = engine.getOriginalEngine();
 		runner.addFunctionOfClassMethod("dateFormat", DateFunc.class.getCanonicalName(), "dateFormat", new String[] { "String", "String", "String" }, null);
 		runner.addFunctionOfClassMethod("parseDate", DateFunc.class.getCanonicalName(), "parseDate", new String[] { "String", "String" }, null);
-//		runner.addFunctionOfClassMethod("daysBefore", DateFunc.class.getCanonicalName(), "daysBefore", new String[] { Date.class.getName(), Date.class.getName() }, null);
-//		runner.addFunctionOfClassMethod("月间隔", DateFunc.class.getCanonicalName(), "monthsBefore", new String[] { Date.class.getName(), Date.class.getName() }, null);
-//		runner.addFunctionOfClassMethod("年间隔", DateFunc.class.getCanonicalName(), "yearsBefore", new String[] { Date.class.getName(), Date.class.getName() }, null);
 		return engine;
 	}
 }

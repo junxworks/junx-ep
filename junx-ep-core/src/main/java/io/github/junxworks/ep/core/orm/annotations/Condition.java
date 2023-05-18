@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 import io.github.junxworks.ep.core.orm.CompareOperators;
 
 /**
- * {类的详细说明}.
+ * 条件注解，在解析sql条件的时候，会根据此条件进行解析
  *
  * @ClassName:  Condition
  * @author: Michael

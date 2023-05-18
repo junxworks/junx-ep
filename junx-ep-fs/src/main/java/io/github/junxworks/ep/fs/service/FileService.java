@@ -12,16 +12,16 @@ public interface FileService {
 
 	void inser(EpSFile file);
 
-	EpSFile findById(String id);
+	EpSFile findById(Long id);
 
 	List<EpSFile> findByGroup(String group);
 
 	List<EpSFile> findByOrg(String orgNo);
 
-	void deleteById(String id);
+	void deleteById(Long id);
 
 	int saveSysFileThumb(EpSFileThumb t);
 
-	EpSFileThumb findThumbByIdAndSize(String fileId, int width, int height);
+	EpSFileThumb findThumbByIdAndSize(Long fileId, int width, int height);
 
 }

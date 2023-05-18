@@ -9,5 +9,5 @@ public interface TBaseMapper<T> extends BaseMapper {
 	T selectEntityByID(@Param("class") Class<T> entity, @Param("id") Long id);
 
 	@SelectProvider(type = MybatisObjectSqlProvider.class, method = "getOneByPKNameAndValue")
-	T selectEntityByPKNameAndValue(@Param("class")Class<T> entity,  @Param("pkName")String pkName, @Param("id") Long id);
+	T selectEntityByPKNameAndValue(@Param("class")Class<T> entity,  @Param("pkName")String pkName, @Param("pkValue") Object pkValue);
 }

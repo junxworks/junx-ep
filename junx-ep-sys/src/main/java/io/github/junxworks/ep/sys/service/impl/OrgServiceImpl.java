@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.github.junxworks.ep.auth.model.UserModel;
@@ -33,7 +32,7 @@ import io.github.junxworks.ep.core.exception.BusinessException;
 import io.github.junxworks.ep.sys.constants.RecordStatus;
 import io.github.junxworks.ep.sys.dto.OrgDto;
 import io.github.junxworks.ep.sys.entity.EpSOrg;
-import io.github.junxworks.ep.sys.mapper.OrgMapper;
+import io.github.junxworks.ep.sys.mapper.EpOrgMapper;
 import io.github.junxworks.ep.sys.service.OrgService;
 import io.github.junxworks.ep.sys.vo.OrgVo;
 import io.github.junxworks.ep.sys.vo.TreeNodeVo;
@@ -41,14 +40,13 @@ import io.github.junxworks.ep.sys.vo.TreeSelectVo;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * 组织机构服务类
  *
  * @ClassName:  OrgServiceImpl
  * @author: Michael
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
-@Service("JunxEPOrgService")
 public class OrgServiceImpl implements OrgService {
 
 	/** 常量 ROOT_ORG. */
@@ -59,7 +57,7 @@ public class OrgServiceImpl implements OrgService {
 
 	/** org mapper. */
 	@Autowired
-	private OrgMapper orgMapper;
+	private EpOrgMapper orgMapper;
 
 	/**
 	 * Query org list.
@@ -215,7 +213,11 @@ public class OrgServiceImpl implements OrgService {
 	 */
 	@Override
 	public List<TreeNodeVo> queryOrgTree(String rootNo) {
-		List<OrgVo> orgs = orgMapper.queryOrgList(new OrgDto());
+		OrgDto condition = new OrgDto();
+		if (!ROOT_ORG.equals(rootNo)) {
+			condition.setRootNo(rootNo);
+		}
+		List<OrgVo> orgs = orgMapper.queryOrgList(condition);
 		List<TreeNodeVo> treeNodes = orgs.stream().flatMap(o -> {
 			TreeNodeVo node = new TreeNodeVo();
 			node.setId(o.getOrgNo());
@@ -262,7 +264,11 @@ public class OrgServiceImpl implements OrgService {
 	 */
 	@Override
 	public List<TreeSelectVo> queryTreeSelect(String rootNo) {
-		List<OrgVo> orgs = orgMapper.queryOrgList(new OrgDto());
+		OrgDto condition = new OrgDto();
+		if (!ROOT_ORG.equals(rootNo)) {
+			condition.setRootNo(rootNo);
+		}
+		List<OrgVo> orgs = orgMapper.queryOrgList(condition);
 		List<TreeSelectVo> treeNodes = orgs.stream().flatMap(o -> {
 			TreeSelectVo node = new TreeSelectVo();
 			node.setId(o.getOrgNo());
@@ -279,6 +285,20 @@ public class OrgServiceImpl implements OrgService {
 		});
 		return treeNodes.stream().filter(t -> {
 			return ROOT_ORG.equals(t.getParentId());
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<OrgVo> queryOrgTreeForList() {
+		List<OrgVo> orgs = orgMapper.queryOrgList(new OrgDto());
+		Map<String, OrgVo> orgMap = orgs.stream().collect(Collectors.toMap(OrgVo::getOrgNo, v -> v));
+		orgs.forEach(v -> {
+			if (StringUtils.notNull(v.getParentNo()) && !ROOT_ORG.equals(v.getParentNo())) {
+				orgMap.get(v.getParentNo()).addChild(v);
+			}
+		});
+		return orgs.stream().filter(t -> {
+			return ROOT_ORG.equals(t.getParentNo());
 		}).collect(Collectors.toList());
 	}
 

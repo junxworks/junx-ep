@@ -24,99 +24,116 @@ package io.github.junxworks.ep.sys.dto;
  * @date:   2020-7-19 12:17:48
  * @since:  v1.0
  */
- 
+
 public class OrgDto {
-	
-    /** id. */
-    private Long id;
-    
-    /** status. */
-    private Byte status;	
-    
-    /** org no. */
-    private String orgNo;	
-    
-    /** org name. */
-    private String orgName;	
-    
-    /** org type. */
-    private String orgType;	
-    
-    /** parent no. */
-    private String parentNo;	
-    
-    /** top level no. */
-    private String topLevelNo;	
-    
-    /** org path. */
-    private String orgPath;	
-    
-    /** remark. */
-    private String remark;	
-    
 
-    public Long getId(){
-        return this.id;
-    }
+	/** id. */
+	private Long id;
 
-    public void setId(Long id){
-        this.id = id;
-    }
+	/** status. */
+	private Byte status;
 
-    public Byte getStatus(){
-        return this.status;
-    }
+	/** org no. */
+	private String orgNo;
 
-    public void setStatus(Byte status){
-        this.status = status;
-    }
-    public String getOrgNo(){
-        return this.orgNo;
-    }
+	/** org name. */
+	private String orgName;
 
-    public void setOrgNo(String orgNo){
-        this.orgNo = orgNo;
-    }
-    public String getOrgName(){
-        return this.orgName;
-    }
+	/** org type. */
+	private String orgType;
 
-    public void setOrgName(String orgName){
-        this.orgName = orgName;
-    }
-    public String getOrgType(){
-        return this.orgType;
-    }
+	/** parent no. */
+	private String parentNo;
 
-    public void setOrgType(String orgType){
-        this.orgType = orgType;
-    }
-    public String getParentNo(){
-        return this.parentNo;
-    }
+	/** top level no. */
+	private String topLevelNo;
 
-    public void setParentNo(String parentNo){
-        this.parentNo = parentNo;
-    }
-    public String getTopLevelNo(){
-        return this.topLevelNo;
-    }
+	/** org path. */
+	private String orgPath;
 
-    public void setTopLevelNo(String topLevelNo){
-        this.topLevelNo = topLevelNo;
-    }
-    public String getOrgPath(){
-        return this.orgPath;
-    }
+	/** remark. */
+	private String remark;
 
-    public void setOrgPath(String orgPath){
-        this.orgPath = orgPath;
-    }
-    public String getRemark(){
-        return this.remark;
-    }
+	private String rootNo;
 
-    public void setRemark(String remark){
-        this.remark = remark;
-    }
+	public Long getId() {
+		return this.id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Byte getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Byte status) {
+		this.status = status;
+	}
+
+	public String getOrgNo() {
+		return this.orgNo;
+	}
+
+	public void setOrgNo(String orgNo) {
+		this.orgNo = orgNo;
+	}
+
+	public String getOrgName() {
+		return this.orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getOrgType() {
+		return this.orgType;
+	}
+
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+
+	public String getParentNo() {
+		return this.parentNo;
+	}
+
+	public void setParentNo(String parentNo) {
+		this.parentNo = parentNo;
+	}
+
+	public String getTopLevelNo() {
+		return this.topLevelNo;
+	}
+
+	public void setTopLevelNo(String topLevelNo) {
+		this.topLevelNo = topLevelNo;
+	}
+
+	public String getOrgPath() {
+		return this.orgPath;
+	}
+
+	public void setOrgPath(String orgPath) {
+		this.orgPath = orgPath;
+	}
+
+	public String getRemark() {
+		return this.remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getRootNo() {
+		return rootNo;
+	}
+
+	public void setRootNo(String rootNo) {
+		this.rootNo = rootNo;
+	}
+
 }

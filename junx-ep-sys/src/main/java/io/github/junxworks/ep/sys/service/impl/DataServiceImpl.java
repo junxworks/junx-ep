@@ -25,13 +25,13 @@ import org.springframework.stereotype.Service;
 import org.stringtemplate.v4.ST;
 
 import io.github.junxworks.ep.sys.entity.EpSSql;
-import io.github.junxworks.ep.sys.mapper.DataMapper;
+import io.github.junxworks.ep.sys.mapper.EpDataMapper;
 import io.github.junxworks.ep.sys.service.DataService;
 import io.github.junxworks.junx.core.exception.BaseRuntimeException;
 import io.github.junxworks.junx.core.util.StringUtils;
 
 /**
- * {类的详细说明}.
+ * sql查询服务实现类
  *
  * @ClassName:  DataServiceImpl
  * @author: Michael
@@ -43,7 +43,7 @@ public class DataServiceImpl implements DataService {
 
 	/** data mapper. */
 	@Autowired
-	private DataMapper dataMapper;
+	private EpDataMapper dataMapper;
 
 	/** jdbc template. */
 	@Autowired
@@ -82,6 +82,14 @@ public class DataServiceImpl implements DataService {
 		String sql = getSqlTemplate(uid, cond);
 		if (StringUtils.isNull(sql)) {
 			throw new BaseRuntimeException("SQL not found by UID \"" + uid + "\"");
+		}
+		return getDataBySQL(sql, cond);
+	}
+
+	@Override
+	public List<Map<String, Object>> getDataBySQL(String sql, Map<String, String> cond) throws Exception {
+		if (StringUtils.isNull(sql)) {
+			throw new BaseRuntimeException("SQL can not be empty.");
 		}
 		return jdbcTemplate.queryForList(sql, cond);
 	}

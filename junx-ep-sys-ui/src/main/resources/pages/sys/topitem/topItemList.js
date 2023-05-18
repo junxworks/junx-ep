@@ -17,7 +17,8 @@ layui.use(['table', 'form'], function() {
 			, { field: 'remark', title: '组件备注', align: 'left',width: 300 }
 			, { field: 'createUserName', title: '创建人员', align: 'center', width: 180 }
 			, { field: 'createDate', title: '创建时间', align: 'center', width: 180 }
-			, { field: 'operate', title: '操作', width: 300, templet: '#operateTp' }
+			, { field: '', title: '启用', width: 100, align: 'center', templet: '#availableTp' }
+			, { field: '', title: '操作', width: 300, templet: '#operateTp' }
 		]]
 		, request: {
 			pageName: 'pageNo' //页码的参数名称，默认：page
@@ -43,7 +44,7 @@ layui.use(['table', 'form'], function() {
 		return false;
 	});
 
-	form.on('checkbox(itemUse)', function(data) {
+	form.on('switch(itemUse)', function(data) {
 		if (data.elem.checked) {
 			updateItemStstus(data.value, 1);
 		} else {

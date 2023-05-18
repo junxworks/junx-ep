@@ -115,7 +115,7 @@ public class MybatisObjectSqlProvider {
 
 	@SuppressWarnings("rawtypes")
 	public String getOneByPKNameAndValue(Map params) throws Exception {
-		return SqlGenerator.getOneSQL((Class) params.get("class"), String.valueOf(params.get("pkName")), Long.valueOf(params.get("id").toString()));
+		return SqlGenerator.getOneSQL((Class) params.get("class"), String.valueOf(params.get("pkName")), params.get("pkValue"));
 	}
 
 	/**

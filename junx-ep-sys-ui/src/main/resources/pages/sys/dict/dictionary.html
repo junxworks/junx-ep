@@ -16,37 +16,34 @@
 <div class="portlet light" id="form_wizard_1">
     <div class="portlet-title">
         <div class="caption">
-            <i class="fa fa-server"></i>
             <span class="caption-subject font-green sbold uppercase">数据字典配置</span>
         </div>
     </div>
-    <div class="portlet-title">
-        <div class="div-inline" style="clear:both">
-			<form class="layui-form">
-	            <div class="layui-form-item">
-	                <div class="layui-inline">
-	                    <label class="layui-form-label" style="width:100px">上级编码：</label>
-	                    <div class="layui-input-inline" >
-	                        <input type="text" name="parentCode"  autocomplete="off"  class="layui-input">
-	                    </div>
-	                </div>
-	                <div class="layui-inline">
-	                    <label class=" layui-form-label" style="width:100px">数据项编码：</label>
-	                    <div class="layui-input-inline">
-	                        <input type="text" name="dataCode"  autocomplete="off"  class="layui-input">
-	                    </div>
-	                </div>
-	                <div class="layui-inline">
-	                    <label class=" layui-form-label" style="width:100px">数据项名称：</label>
-	                    <div class="layui-input-inline">
-	                        <input type="text" name="dataLabel"  autocomplete="off"  class="layui-input">
-	                    </div>
-	                </div>
-	                <button type="button" class="layui-btn" lay-submit="" lay-filter="search"><i class="fa fa-search"></i> 查询</button>
-	            	<button type="button" class="layui-btn layui-btn-normal" onclick="editDict()"><i class="fa fa-plus-square"></i> 新增</button>
-	            </div>
-            </form>
-        </div>
+    <div class="div-inline" style="clear:both">
+		<form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:100px">上级编码：</label>
+                    <div class="layui-input-inline" >
+                        <input type="text" name="parentCode"  autocomplete="off"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class=" layui-form-label" style="width:100px">数据项编码：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="dataCode"  autocomplete="off"  class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class=" layui-form-label" style="width:100px">数据项名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="dataLabel"  autocomplete="off"  class="layui-input">
+                    </div>
+                </div>
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="search"><i class="fa fa-search"></i> 查询</button>
+            	<button type="button" class="layui-btn layui-btn-normal" onclick="editDict()"><i class="fa fa-plus-square"></i> 新增</button>
+            </div>
+        </form>
     </div>
     <div class="portlet-body">
         <div class="dataTables_wrapper" style="margin-top: 0px!important" >

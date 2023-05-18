@@ -16,8 +16,6 @@
  */
 package io.github.junxworks.ep.core;
 
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -80,31 +78,6 @@ public class GlobalExceptionHandler {
 	public Result handleUnknownTokenException(UnknownTokenException e) {
 		logger.warn(e.getMessage(), e);
 		return Result.error("token unavailable");
-	}
-
-	/**
-	 * Handle authorization exception.
-	 *
-	 * @param e the e
-	 * @return the result
-	 */
-	@ExceptionHandler(AuthorizationException.class)
-	public Result handleAuthorizationException(AuthorizationException e) {
-		logger.warn(e.getMessage(), e);
-		return Result.error("Insufficient authority");
-	}
-
-	/**
-	 * Handle authorization exception.
-	 *
-	 * @param e the e
-	 * @return the result
-	 */
-	@ExceptionHandler(AuthenticationException.class)
-	public Result handleAuthorizationException(AuthenticationException e) {
-		logger.error(e.getMessage(), e);
-		String message = ExceptionUtils.getCauseMessage(e);
-		return Result.error(StringUtils.isNull(message) ? "Authentication failed" : message);
 	}
 
 	/**

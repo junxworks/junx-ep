@@ -18,21 +18,20 @@ package io.github.junxworks.ep.auth;
 
 import java.io.IOException;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.util.WebUtils;
 
 import com.alibaba.fastjson.JSON;
 
+import io.github.junxworks.ep.auth.simple.EPSimpleAuthenticationFilter;
 import io.github.junxworks.ep.core.Result;
 import io.github.junxworks.ep.core.utils.HttpUtils;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Shiro 认证filter
@@ -42,7 +41,7 @@ import io.github.junxworks.junx.core.util.ExceptionUtils;
  * @date:   2020-7-19 12:18:41
  * @since:  v1.0
  */
-public class EPTokenAuthenticatingFilter extends AuthenticatingFilter {
+public class EPTokenAuthenticatingFilter extends EPSimpleAuthenticationFilter {
 
 	/** 常量 USERNAME. */
 	private static final String USERNAME = "username";
@@ -60,7 +59,7 @@ public class EPTokenAuthenticatingFilter extends AuthenticatingFilter {
 	public void setConfig(EPShiroConfig config) {
 		this.config = config;
 	}
-	
+
 	/**
 	 * Creates the token.
 	 *
@@ -96,6 +95,9 @@ public class EPTokenAuthenticatingFilter extends AuthenticatingFilter {
 	protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
 		if (isLoginRequest(request, response)) {
 			return executeLogin(request, response);
+		}
+		if (this.isRamRequest((HttpServletRequest) request)) {
+			return super.onAccessDenied(request, response);
 		}
 		Result res = Result.unauthenticated();
 		HttpServletResponse httpResponse = (HttpServletResponse) response;

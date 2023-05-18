@@ -78,10 +78,6 @@ layui.use(['form','xmSelect','transfer'], function () {
     //监听提交
     form.on('submit(save)', function (form) {
         var data = form.field;
-        if(isNull(data.orgNo)){
-        	layer.msg("请选择组织", {icon: 2});
-        	return false;
-        }
         data.roles = transfer.getData('roles');
         io.post('/ep/sys/users',JSON.stringify(data),function(res){
         	 //关闭当前页

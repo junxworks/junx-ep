@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 import org.springframework.context.annotation.Import;
 
 import io.github.junxworks.ep.sys.config.BaseModuleConfiguration;
-import io.github.junxworks.ep.sys.config.WebConfig;
+import io.github.junxworks.ep.sys.config.EpWebConfig;
 
 /**
  * 开启EP系统支撑基础功能模块
@@ -38,7 +38,7 @@ import io.github.junxworks.ep.sys.config.WebConfig;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ BaseModuleConfiguration.class, WebConfig.class })
+@Import({ BaseModuleConfiguration.class, EpWebConfig.class })
 public @interface EnableBaseEPModules {
 
 }

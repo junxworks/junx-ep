@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {类的详细说明}.
+ * 数据库列注解，含有此注解的属性将会按此注解进行解析，如果不含，则采用默认逻辑解析。
  *
  * @ClassName:  Column
  * @author: Michael

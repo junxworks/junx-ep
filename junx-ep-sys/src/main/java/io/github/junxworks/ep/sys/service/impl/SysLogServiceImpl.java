@@ -23,12 +23,12 @@ import org.springframework.stereotype.Service;
 
 import io.github.junxworks.ep.sys.dto.SystemLogConditionDto;
 import io.github.junxworks.ep.sys.entity.EpSLog;
-import io.github.junxworks.ep.sys.mapper.OpLogMapper;
+import io.github.junxworks.ep.sys.mapper.EpOpLogMapper;
 import io.github.junxworks.ep.sys.service.SysLogService;
 import io.github.junxworks.ep.sys.vo.SLogVo;
 
 /**
- * {类的详细说明}.
+ * 系统日志服务实现类
  *
  * @ClassName:  SystemLogServiceImpl
  * @author: Michael
@@ -40,7 +40,7 @@ public class SysLogServiceImpl implements SysLogService {
 
     /** op log mapper. */
     @Autowired
-    private OpLogMapper opLogMapper;
+    private EpOpLogMapper opLogMapper;
 
     /**
      * 返回 system log list by page 属性.

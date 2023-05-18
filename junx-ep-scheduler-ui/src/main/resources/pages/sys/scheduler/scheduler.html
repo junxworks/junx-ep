@@ -19,39 +19,37 @@
   </ul>
   <div class="layui-tab-content">
     <div class="layui-tab-item layui-show">
-		    <div class="portlet light" id="form_wizard_1">
-		    <div class="portlet-title">
-		        <div class="div-inline" style="clear:both">
-					<form class="layui-form">
-			            <div class="layui-form-item">
-			                <div class="layui-inline">
-			                    <label class="layui-form-label" style="width:100px">任务名称：</label>
-			                    <div class="layui-input-inline" >
-			                        <input type="text" name="jobName"  autocomplete="off"  class="layui-input">
-			                    </div>
-			                </div>
-			                <div class="layui-inline">
-			                    <label class=" layui-form-label" style="width:100px">Bean名称：</label>
-			                    <div class="layui-input-inline">
-			                        <input type="text" name="beanName"  autocomplete="off"  class="layui-input">
-			                    </div>
-			                </div>
-			                <div class="layui-inline">
-			                    <label class=" layui-form-label" style="width:100px">任务状态：</label>
-			                    <div class="layui-input-inline">
-			                       	<select name="status">
-					                    <option value="">请选择</option>
-					                    <option value="0">正常</option>
-					                    <option value="1">暂停</option>
-					                </select>
-			                    </div>
-			                </div>
-			                <button type="button" class="layui-btn" lay-submit lay-filter="searchJobs"><i class="fa fa-search"></i> 查询</button>
-			                <button type="button" class="layui-btn layui-btn-normal" lay-submit  lay-filter="addJob"><i class="fa fa-plus-circle"></i> 增加</button>
-			            </div>
-			        </form>
-		    	</div>
-		    </div>
+	    <div class="portlet light" id="form_wizard_1">
+	        <div class="div-inline" style="clear:both">
+				<form class="layui-form">
+		            <div class="layui-form-item">
+		                <div class="layui-inline">
+		                    <label class="layui-form-label" style="width:100px">任务名称：</label>
+		                    <div class="layui-input-inline" >
+		                        <input type="text" name="jobName"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <div class="layui-inline">
+		                    <label class=" layui-form-label" style="width:100px">Bean名称：</label>
+		                    <div class="layui-input-inline">
+		                        <input type="text" name="beanName"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <div class="layui-inline">
+		                    <label class=" layui-form-label" style="width:100px">任务状态：</label>
+		                    <div class="layui-input-inline">
+		                       	<select name="status">
+				                    <option value="">请选择</option>
+				                    <option value="0">正常</option>
+				                    <option value="1">暂停</option>
+				                </select>
+		                    </div>
+		                </div>
+		                <button type="button" class="layui-btn" lay-submit lay-filter="searchJobs"><i class="fa fa-search"></i> 查询</button>
+		                <button type="button" class="layui-btn layui-btn-normal" lay-submit  lay-filter="addJob"><i class="fa fa-plus-circle"></i> 增加</button>
+		            </div>
+		        </form>
+	    	</div>
 		    <div class="portlet-body">
 		        <div class="dataTables_wrapper" style="margin-top: 0px!important" >
 		            <table class="layui-hide" id="jobsTable" lay-filter="jobsTable"></table>
@@ -72,59 +70,57 @@
     </div>
     <div class="layui-tab-item">
     	<div class="portlet light" id="form_wizard_1">
-		     <div class="portlet-title">
-		        <div class="div-inline" style="clear:both">
-					<form class="layui-form">
-			            <div class="layui-form-item">
-			                <div class="layui-inline">
-			                    <label class="layui-form-label" style="width:100px">任务名称：</label>
-			                    <div class="layui-input-inline" >
-			                        <input type="text" name="jobName"  autocomplete="off"  class="layui-input">
-			                    </div>
-			                </div>
-			                <div class="layui-inline">
-			                    <label class=" layui-form-label" style="width:100px">Bean名称：</label>
-			                    <div class="layui-input-inline">
-			                        <input type="text" name="beanName"  autocomplete="off"  class="layui-input">
-			                    </div>
-			                </div>
-			                <div class="layui-inline">
-			                    <label class="layui-form-label" style="width:100px">Bean方法：</label>
-			                    <div class="layui-input-inline" >
-			                        <input type="text" name="methodName"  autocomplete="off"  class="layui-input">
-			                    </div>
-			                </div>
-			            </div>
-			            <div class="layui-form-item">
-			            	<div class="layui-inline">
-			                    <label class="layui-form-label" style="width:100px">执行状态：</label>
-			                    <div class="layui-input-inline" >
-					            	<select name="status">
-					                    <option value="">请选择</option>
-					                    <option value="1">成功</option>
-					                    <option value="0">失败</option>
-					                </select>
-			                    </div>
-			                </div>
-			            	<div class="layui-inline">
-			                    <label class="layui-form-label" style="width:100px">开始时间：</label>
-			                    <div class="layui-input-inline" >
-			                        <input id="startTime" type="text" name="startTime"  autocomplete="off"  class="layui-input">
-			                    </div>
-			                </div>
-			                <div class="layui-inline">
-			                    <label class="layui-form-label" style="width:100px">结束时间：</label>
-			                    <div class="layui-input-inline">
-			                        <input id="endTime" type="text" name="endTime"  autocomplete="off"  class="layui-input">
-			                    </div>
-			                </div>
-			                <div class="layui-inline">
-			                	<button class="layui-btn" lay-submit=""  lay-filter="searchLogs"><i class="fa fa-search"></i> 查询</button>
-			                </div>
-			            </div>
-			         </form>
-		        </div>
-		    </div>
+	        <div class="div-inline" style="clear:both">
+				<form class="layui-form">
+		            <div class="layui-form-item">
+		                <div class="layui-inline">
+		                    <label class="layui-form-label" style="width:100px">任务名称：</label>
+		                    <div class="layui-input-inline" >
+		                        <input type="text" name="jobName"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <div class="layui-inline">
+		                    <label class=" layui-form-label" style="width:100px">Bean名称：</label>
+		                    <div class="layui-input-inline">
+		                        <input type="text" name="beanName"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <div class="layui-inline">
+		                    <label class="layui-form-label" style="width:100px">Bean方法：</label>
+		                    <div class="layui-input-inline" >
+		                        <input type="text" name="methodName"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		            </div>
+		            <div class="layui-form-item">
+		            	<div class="layui-inline">
+		                    <label class="layui-form-label" style="width:100px">执行状态：</label>
+		                    <div class="layui-input-inline" >
+				            	<select name="status">
+				                    <option value="">请选择</option>
+				                    <option value="1">成功</option>
+				                    <option value="0">失败</option>
+				                </select>
+		                    </div>
+		                </div>
+		            	<div class="layui-inline">
+		                    <label class="layui-form-label" style="width:100px">开始时间：</label>
+		                    <div class="layui-input-inline" >
+		                        <input id="startTime" type="text" name="startTime"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <div class="layui-inline">
+		                    <label class="layui-form-label" style="width:100px">结束时间：</label>
+		                    <div class="layui-input-inline">
+		                        <input id="endTime" type="text" name="endTime"  autocomplete="off"  class="layui-input">
+		                    </div>
+		                </div>
+		                <div class="layui-inline">
+		                	<button class="layui-btn" lay-submit=""  lay-filter="searchLogs"><i class="fa fa-search"></i> 查询</button>
+		                </div>
+		            </div>
+		         </form>
+	        </div>
 		    <div class="portlet-body">
 		        <div class="dataTables_wrapper" style="margin-top: 0px!important" >
 		            <table class="layui-hide" id="jobLogTable" lay-filter="jobLogTable"></table>

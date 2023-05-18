@@ -38,7 +38,7 @@ import net.vidageek.mirror.reflect.dsl.ReflectionHandler;
  * @since:  v1.0
  */
 public class SqlGenerator {
-	
+
 	/**
 	 * Insert SQL.
 	 *
@@ -52,11 +52,12 @@ public class SqlGenerator {
 		SQL sql = new SQL();
 		sql.INSERT_INTO(ed.getTableName());
 		String pkName = ed.getPkName();
+		String pkJavaFieldName = ed.dbFieldNameToJavaFieldName(pkName);
 		// 首先判断主键是否有传值
 		GetterHandler getter = ObjectUtils.mirror().on(entity).get();
-		Object pkValue = getter.field(pkName);
+		Object pkValue = getter.field(pkJavaFieldName);
 		if (pkValue != null) {
-			sql.VALUES(pkName, "#{" + ed.dbFieldNameToJavaFieldName(pkName) + "}");
+			sql.VALUES(pkName, "#{" + pkJavaFieldName + "}");
 		}
 		ed.getDbFieldsExcludePK().stream().forEach(f -> {
 			String javaFieldName = ed.dbFieldNameToJavaFieldName(f);
@@ -76,22 +77,31 @@ public class SqlGenerator {
 		return sql.toString();
 	}
 
-	/**
-	 * Insert batch SQL.
-	 *
-	 * @param entities the entities
-	 * @return the string
-	 * @throws Exception the exception
-	 */
 	public static final String insertBatchSQL(List<?> entities) throws Exception {
 		Object entity = entities.get(0);
 		EntityDescription ed = EntityResolver.resolveClass(entity.getClass());
+		String pkName = ed.getPkName();
+		String pkJavaFieldName = ed.dbFieldNameToJavaFieldName(pkName);
+		//通过传值判断是否要写入主键
+		GetterHandler getter = ObjectUtils.mirror().on(entity).get();
+		Object pkValue = getter.field(pkJavaFieldName);
+		boolean writePrimaryKey = false;
+		if (pkValue != null) {
+			writePrimaryKey = true;
+		}
 		List<String> columns = ed.getDbFieldsExcludePK();
 		StringBuilder sb = new StringBuilder();
 		sb.append("INSERT INTO ").append(ed.getTableName());
-		sb.append(" (`").append(StringUtils.join("`,`", columns.toArray(new String[0]))).append("`) ");
+		sb.append(" (`");
+		if (writePrimaryKey) {
+			sb.append(pkName).append("`,`");
+		}
+		sb.append(StringUtils.join("`,`", columns.toArray(new String[0]))).append("`) ");
 		sb.append(" VALUES ");
 		List<String> v = Lists.newArrayList();
+		if (writePrimaryKey) {
+			v.add("#'{'list[{0}]." + pkJavaFieldName + "}");
+		}
 		for (int i = 0, len = columns.size(); i < len; i++) {
 			String f = columns.get(i);
 			v.add("#'{'list[{0}]." + ed.dbFieldNameToJavaFieldName(f) + "}");
@@ -119,8 +129,9 @@ public class SqlGenerator {
 		SQL sql = new SQL();
 		sql.UPDATE(ed.getTableName());
 		String pkName = ed.getPkName();
+		String pkJavaFieldName = ed.dbFieldNameToJavaFieldName(pkName);
 		GetterHandler getter = ObjectUtils.mirror().on(entity).get();
-		Object pkValue = getter.field(pkName);
+		Object pkValue = getter.field(pkJavaFieldName);
 		if (pkValue == null) {
 			throw new BaseRuntimeException("Null primary key value when update entity.");
 		}
@@ -144,7 +155,7 @@ public class SqlGenerator {
 			}
 		});
 		sql.SET(sets.toString());
-		sql.WHERE(pkName + "= #{" + ed.dbFieldNameToJavaFieldName(pkName) + "}");
+		sql.WHERE(pkName + "= #{" + pkJavaFieldName + "}");
 		return sql.toString();
 	}
 
@@ -153,12 +164,13 @@ public class SqlGenerator {
 		SQL sql = new SQL();
 		sql.DELETE_FROM(ed.getTableName());
 		String pkName = ed.getPkName();
+		String pkJavaFieldName = ed.dbFieldNameToJavaFieldName(pkName);
 		GetterHandler getter = ObjectUtils.mirror().on(entity).get();
-		Object pkValue = getter.field(pkName);
+		Object pkValue = getter.field(pkJavaFieldName);
 		if (pkValue == null) {
 			throw new BaseRuntimeException("Null primary key value when delete entity.");
 		}
-		sql.WHERE(pkName + "= #{" + ed.dbFieldNameToJavaFieldName(pkName) + "}");
+		sql.WHERE(pkName + "= #{" + pkJavaFieldName + "}");
 		return sql.toString();
 	}
 
@@ -189,14 +201,14 @@ public class SqlGenerator {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static final String getOneSQL(Class clazz,String pkName, Long id) throws Exception {
+	public static final String getOneSQL(Class clazz, String pkName, Object pkValue) throws Exception {
 		EntityDescription ed = EntityResolver.resolveClass(clazz);
 		SQL sql = new SQL();
 		sql.SELECT("*").FROM(ed.getTableName());
-		if (id == null) {
+		if (pkValue == null) {
 			throw new BaseRuntimeException("Null primary key value when get one entity.");
 		}
-		sql.WHERE(pkName + "= #{id}");
+		sql.WHERE(pkName + "= #{pkValue}");
 		return sql.toString();
 	}
 

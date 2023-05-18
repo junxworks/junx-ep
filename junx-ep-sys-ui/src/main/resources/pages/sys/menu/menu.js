@@ -142,7 +142,7 @@ function roles(name,cid){
 }
 
 function deleteFunc(id) {
-    var url=appendCtx('/ep/sys//menus/'+id);
+    var url=appendCtx('/ep/sys/menus/'+id);
     layer.confirm('确定删除该菜单吗?', {icon: 3, title:'确认提示'},function(index) {
             $.ajax({
                 url: url,

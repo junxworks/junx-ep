@@ -35,8 +35,11 @@ public class RoleInfoDto {
 	/** role tag. */
 	private String roleTag;
 
-	/** menu info list. */
+	/** menu info list.是一个menu info对象数组的json串 */
 	private String menuInfoList;
+
+	/** 逗号隔开的menu id. */
+	private String selectedMenus;
 
 	public Long getId() {
 		return id;
@@ -69,4 +72,13 @@ public class RoleInfoDto {
 	public void setMenuInfoList(String menuInfoList) {
 		this.menuInfoList = menuInfoList;
 	}
+
+	public String getSelectedMenus() {
+		return selectedMenus;
+	}
+
+	public void setSelectedMenus(String selectedMenus) {
+		this.selectedMenus = selectedMenus;
+	}
+
 }

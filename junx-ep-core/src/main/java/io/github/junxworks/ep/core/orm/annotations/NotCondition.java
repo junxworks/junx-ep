@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {类的详细说明}.
+ * 非条件注解，在拼接条件sql的时候不会纳入到拼接逻辑中
  *
  * @ClassName:  NotCondition
  * @author: Michael

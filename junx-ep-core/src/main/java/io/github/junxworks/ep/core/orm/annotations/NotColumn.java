@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {类的详细说明}.
+ * 非数据库列，在解析数据库相关sql的时候，不会解析该属性
  *
  * @ClassName:  NotColumn
  * @author: Michael

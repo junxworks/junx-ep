@@ -16,12 +16,12 @@
  */
 package io.github.junxworks.ep.core.security.xss;
 
-import javax.servlet.DispatcherType;
-
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+
+import jakarta.servlet.DispatcherType;
 
 /**
  * {类的详细说明}.

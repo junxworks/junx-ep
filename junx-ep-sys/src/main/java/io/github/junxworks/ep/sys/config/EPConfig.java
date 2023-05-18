@@ -32,11 +32,22 @@ public class EPConfig {
 	/** main page. */
 	private String mainPage = "/eui/pages/main/main.html";
 
+	/** 系统默认首页. */
+	private String homePage = "/index.html";
+
 	/** system name. */
 	private String systemName = "Junx-EP开发平台";
 
 	/** system short name. */
 	private String systemShortName = "EP";
+
+	public String getHomePage() {
+		return homePage;
+	}
+
+	public void setHomePage(String homePage) {
+		this.homePage = homePage;
+	}
 
 	public String getMainPage() {
 		return mainPage;

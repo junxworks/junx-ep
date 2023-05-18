@@ -20,7 +20,6 @@ import java.lang.reflect.Method;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -37,10 +36,11 @@ import com.alibaba.fastjson.JSON;
 import io.github.junxworks.ep.core.utils.IPUtils;
 import io.github.junxworks.ep.sys.annotations.EpLog;
 import io.github.junxworks.ep.sys.entity.EpSLog;
-import io.github.junxworks.ep.sys.mapper.OpLogMapper;
+import io.github.junxworks.ep.sys.mapper.EpOpLogMapper;
 import io.github.junxworks.junx.core.executor.StandardThreadExecutor;
 import io.github.junxworks.junx.core.util.ExceptionUtils;
 import io.github.junxworks.junx.core.util.ObjectUtils;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * EP日志AOP类，输出日志到ep_s_log表
@@ -65,7 +65,7 @@ public class EpLogAspect {
 
 	/** op log mapper. */
 	@Autowired
-	private OpLogMapper opLogMapper;
+	private EpOpLogMapper opLogMapper;
 
 	/** executor. */
 	private StandardThreadExecutor executor;
@@ -167,11 +167,15 @@ public class EpLogAspect {
 				log.setUrl(url);
 			}
 		}
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				opLogMapper.insertWithNull(log);
-			}
-		});
+		if (executor != null) {
+			executor.submit(new Runnable() {
+				@Override
+				public void run() {
+					opLogMapper.insertWithNull(log);
+				}
+			});
+		} else {
+			opLogMapper.insertWithNull(log);
+		}
 	}
 }

@@ -72,5 +72,5 @@ layui.use(["form", "layer"], function () {
 });
 
 function resetVCode(){
-	 $("#vcImg").attr("src",appendCtx("/ep/sys/verification-codes"));
+	 $("#vcImg").attr("src",appendCtx("/ep/sys/verification-codes?_t="+new Date().getMilliseconds()));
 }

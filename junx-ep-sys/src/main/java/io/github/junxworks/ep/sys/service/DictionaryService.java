@@ -43,6 +43,13 @@ public interface DictionaryService {
 	List<DictVo> getDictionaryListByCondition(DictConditionDto condition);
 
 	/**
+	 * 获取所有数据字典
+	 *
+	 * @return the all dictionary list
+	 */
+	Map<String, List<DictVo>> getAllDictionaries();
+
+	/**
 	 * 返回 dictionary info by id 属性.
 	 *
 	 * @param id the id

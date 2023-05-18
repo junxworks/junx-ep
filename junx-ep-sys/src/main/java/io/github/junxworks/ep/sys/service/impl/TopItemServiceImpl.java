@@ -28,7 +28,7 @@ import io.github.junxworks.ep.auth.model.UserModel;
 import io.github.junxworks.ep.sys.dto.TopItemConditionDto;
 import io.github.junxworks.ep.sys.dto.TopItemDto;
 import io.github.junxworks.ep.sys.entity.EpSTopItem;
-import io.github.junxworks.ep.sys.mapper.TopItemMapper;
+import io.github.junxworks.ep.sys.mapper.EpTopItemMapper;
 import io.github.junxworks.ep.sys.service.TopItemService;
 import io.github.junxworks.ep.sys.vo.TopItemVo;
 
@@ -39,7 +39,7 @@ import io.github.junxworks.ep.sys.vo.TopItemVo;
 public class TopItemServiceImpl implements TopItemService {
 
 	@Autowired
-	private TopItemMapper topItemMapper;
+	private EpTopItemMapper topItemMapper;
 
 	@Override
 	public List<TopItemVo> queryItemListByCondition(TopItemConditionDto cond) {
